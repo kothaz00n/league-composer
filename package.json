@@ -1,0 +1,31 @@
+{
+  "name": "league-team-comp",
+  "version": "1.0.0",
+  "description": "Real-time League of Legends Draft Recommender",
+  "main": "src/main/main.js",
+  "scripts": {
+    "dev": "concurrently -k \"vite\" \"wait-on http://localhost:5173 && electron .\"",
+    "build": "vite build && electron-builder",
+    "vite:dev": "vite",
+    "electron:dev": "electron ."
+  },
+  "keywords": ["league-of-legends", "draft", "recommender", "electron"],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "axios": "^1.7.9",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "ws": "^8.18.1"
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "^4.0.6",
+    "@vitejs/plugin-react": "^4.3.4",
+    "concurrently": "^9.1.2",
+    "electron": "^34.1.1",
+    "tailwindcss": "^4.0.6",
+    "vite": "^6.1.0",
+    "wait-on": "^8.0.3"
+  }
+}

@@ -1,0 +1,26 @@
+{
+    "myRole": "top",
+    "gameMode": "solo",
+    "roster": {
+        "top": {
+            "player": "Me",
+            "favorites": []
+        },
+        "jungle": {
+            "player": "",
+            "favorites": []
+        },
+        "mid": {
+            "player": "",
+            "favorites": []
+        },
+        "adc": {
+            "player": "",
+            "favorites": []
+        },
+        "support": {
+            "player": "",
+            "favorites": []
+        }
+    }
+}

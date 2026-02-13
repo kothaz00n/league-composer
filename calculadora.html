@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Cotización - Parser</title>
+    <link rel="stylesheet" href="index.css">
+    <link rel="stylesheet" href="calculadora.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+
+    <div class="container">
+        <header class="header">
+            <div class="header-content">
+                <h1 class="title">
+                    <svg class="title-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M4 19a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H4z"></path>
+                        <path d="M8 9h8"></path>
+                        <path d="M8 13h8"></path>
+                        <path d="M8 17h8"></path>
+                    </svg>
+                    Calculadora de Cotización
+                </h1>
+                <p class="subtitle">Selecciona tu plan y obtén una cotización precisa</p>
+                <div class="header-actions"
+                    style="margin-top: var(--spacing-md); display: flex; justify-content: center; gap: 1rem;">
+                    <a href="index.html" class="btn-secondary" style="text-decoration: none;">
+                        <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="19" y1="12" x2="5" y2="12"></line>
+                            <polyline points="12 19 5 12 12 5"></polyline>
+                        </svg>
+                        Volver al Inicio
+                    </a>
+                    <a href="admin.html" class="btn-secondary" style="text-decoration: none;">
+                        <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 20h9"></path>
+                            <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
+                        </svg>
+                        Adm. Precios
+                    </a>
+                </div>
+            </div>
+        </header>
+
+        <main class="main-content">
+            <section class="input-section">
+                <form id="calcForm" class="calc-form">
+                    <div class="form-section-title">Configuración del Plan</div>
+
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="region" class="input-label">Localidad/Región</label>
+                            <select id="region" class="message-input" required>
+                                <option value="" disabled selected>Selecciona una región</option>
+                                <option value="AMBA">AMBA (Capital Federal y Gran Bs. As.)</option>
+                                <option value="BSAS_SF">Buenos Aires y Santa Fe (Interior de BsAs y Santa Fe)</option>
+                                <option value="CORDOBA">Córdoba</option>
+                                <option value="PATAGONIA_SALTA">Patagonia y Salta (Río Negro, Neuquén, Chubut, Santa
+                                    Cruz y Salta)</option>
+                                <option value="TIERRA_DEL_FUEGO">Tierra del Fuego</option>
+                                <option value="INTERIOR">Interior del País (La Pampa, Mendoza, San Juan, San Luis, La
+                                    Rioja, Catamarca, Tucumán, Jujuy, Sgo. del Estero, Formosa, Chaco, Misiones,
+                                    Corrientes, Entre Ríos)</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="tipoPlan" class="input-label">Tipo de Plan</label>
+                            <select id="tipoPlan" class="message-input" required>
+                                <option value="" disabled selected>Selecciona un tipo</option>
+                                <option value="CON_IVA">Directo Con I.V.A.</option>
+                                <option value="DERIVACION">Derivación Directa</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="plan" class="input-label">Plan</label>
+                            <select id="plan" class="message-input" required>
+                                <option value="" disabled selected>Selecciona una región primero</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-section-title">Beneficios y Situación</div>
+                    <div class="form-grid">
+                        <div class="toggle-group-container">
+                            <div class="toggle-group">
+                                <label class="toggle-label">
+                                    <input type="checkbox" id="esMonotributista">
+                                    <span class="toggle-custom"></span>
+                                    Monotributista / Particular (Sin rel. dep.)
+                                </label>
+                            </div>
+                            <div id="legend-esMonotributista" class="promo-legend hidden">
+                                <strong>Puntos importantes:</strong>
+                                <ul>
+                                    <li>❌ No es acumulable ni combinable con ninguna otra campaña</li>
+                                    <li>❌ No aplica descuento 50% para menores de 26 años</li>
+                                    <li>✅ Solo para altas totales si el monotributista es el titular</li>
+                                    <li>📋 Nota: SMMP-Monotributistas Descuento 25% y Form 184</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="toggle-group-container">
+                            <div class="toggle-group">
+                                <label class="toggle-label">
+                                    <input type="checkbox" id="esZonaEspecial">
+                                    <span class="toggle-custom"></span>
+                                    NORDELTA
+                                </label>
+                            </div>
+                            <div id="legend-esZonaEspecial" class="promo-legend hidden">
+                                <strong>Puntos importantes:</strong>
+                                <ul>
+                                    <li>🏘️ Residentes de Tigre, Pilar y Escobar (verificar DNI)</li>
+                                    <li>❌ 25% de descuento no acumulable con otras campañas</li>
+                                    <li>🧒 Menores de 26 años reciben el 50% (obligatorio)</li>
+                                    <li>📋 Nota: SMMP-Nordelta Descuento 25% (o 25%+50%)</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="toggle-group-container">
+                            <div class="toggle-group">
+                                <label class="toggle-label">
+                                    <input type="checkbox" id="esPromo15">
+                                    <span class="toggle-custom"></span>
+                                    Campaña 15% (Opcional)
+                                </label>
+                            </div>
+                            <div id="legend-esPromo15" class="promo-legend hidden">
+                                <strong>Puntos importantes:</strong>
+                                <ul>
+                                    <li>⚙️ El descuento es de carácter opcional</li>
+                                    <li>🎂 Aplica para socios mayores de 26 años</li>
+                                    <li>🤝 Es combinable con el 50% de menores (no acumulable)</li>
+                                    <li>📋 Nota: SMMP-Descuento 15% (o 15%+50%)</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="seccionSueldo" class="form-group hidden" style="margin: var(--spacing-lg) 0;">
+                        <label for="sueldo" class="input-label">Sueldo Bruto Mensual (Relación de Dependencia)</label>
+                        <input type="number" id="sueldo" class="message-input" placeholder="Ej: 500000" min="0"
+                            step="1000">
+                        <small style="color: var(--text-secondary); display: block; margin-top: var(--spacing-xs);">
+                            💼 Se aplicará un descuento del 7.65% sobre el sueldo ingresado
+                        </small>
+                    </div>
+
+                    <div class="form-section-title">Datos Personales</div>
+                    <div class="form-grid">
+
+                        <div class="form-group titular-group">
+                            <label for="titular" class="input-label">Titular</label>
+                            <input type="text" id="titular" class="message-input" placeholder="Nombre completo"
+                                required>
+                        </div>
+
+                        <div class="form-group edad-group">
+                            <label for="edad" class="input-label">Edad</label>
+                            <input type="number" id="edad" class="message-input" placeholder="Ej: 30" required min="0"
+                                max="120">
+                        </div>
+
+                        <div class="personal-extra-group"
+                            style="grid-column: 1 / -1; display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: var(--spacing-md);">
+                            <div class="pareja-container">
+                                <div class="toggle-group">
+                                    <label class="toggle-label">
+                                        <input type="checkbox" id="tienePareja">
+                                        <span class="toggle-custom"></span>
+                                        ¿Tiene pareja?
+                                    </label>
+                                </div>
+                                <div id="seccionPareja" class="form-group hidden"
+                                    style="margin-top: var(--spacing-sm);">
+                                    <label for="edadPareja" class="input-label">Edad de la pareja</label>
+                                    <input type="number" id="edadPareja" class="message-input" placeholder="Ej: 28"
+                                        min="0" max="120">
+                                </div>
+                            </div>
+
+                            <div class="hijos-container">
+                                <div class="toggle-group">
+                                    <label class="toggle-label">
+                                        <input type="checkbox" id="tieneHijos">
+                                        <span class="toggle-custom"></span>
+                                        ¿Tiene hijos?
+                                    </label>
+                                </div>
+                                <div id="seccionHijos" class="form-group hidden" style="margin-top: var(--spacing-sm);">
+                                    <div class="hijos-header">
+                                        <label class="input-label">Edades de los hijos</label>
+                                        <button type="button" id="addHijoBtn" class="btn-secondary btn-small">+ Agregar
+                                            Hijo</button>
+                                    </div>
+                                    <div id="listaHijos" class="lista-hijos"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn-primary">
+                        <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
+                            <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
+                        </svg>
+                        Calcular
+                    </button>
+                </form>
+            </section>
+
+            <div id="resultadoCalculo" class="results-section hidden">
+                <h2 class="results-title">Resumen de Datos</h2>
+                <div id="resumenContent" class="resumen-content">
+                    <!-- Resumen generado por JS -->
+                </div>
+            </div>
+        </main>
+        <footer class="footer">
+            <div class="footer-links">
+                <a href="privacy.html" class="footer-link">Política de Privacidad</a>
+                <a href="terms.html" class="footer-link">Condiciones del Servicio</a>
+            </div>
+            <p style="margin-top: 1rem; color: var(--color-text-muted); font-size: 0.8rem;">&copy; 2026 Parser PDF -
+                Todos los derechos reservados</p>
+        </footer>
+    </div>
+
+    <script src="aportes.js"></script>
+    <script src="precios.js"></script>
+    <script src="calculadora.js"></script>
+
+</body>
+
+</html>

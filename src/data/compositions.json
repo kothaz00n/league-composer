@@ -1,0 +1,573 @@
+{
+    "version": "Updated Clash Comps",
+    "last_updated": "2025",
+    "compositions": [
+        {
+            "best_in_meta": false,
+            "name": "Hard Engage (Wombo Combo)",
+            "roles": {
+                "top": "Malphite",
+                "jungle": "Nocturne",
+                "mid": "Orianna",
+                "adc": "Kaisa",
+                "support": "Rakan"
+            },
+            "good_against": "Low mobility",
+            "bad_against": "Anti Engage",
+            "difficulty": "Easy: everyone ults at the same time (Wombo combo)",
+            "key_focus": "Objectives: group for drakes and crush teamfights"
+        },
+        {
+            "best_in_meta": true,
+            "name": "Dive",
+            "roles": {
+                "top": "Ambessa / Yone*",
+                "jungle": "Vi",
+                "mid": "Ahri",
+                "adc": "Samira",
+                "support": "Nautilus"
+            },
+            "good_against": "Low mobility / 1-3-1",
+            "bad_against": "Anti Engage / Early game",
+            "difficulty": "Medium: requires communication on ult timings but is basically a one button syncronized combo when noc turns the lights off",
+            "key_focus": "Punish miss steps and overextends, in teamfights run down the backline"
+        },
+        {
+            "best_in_meta": true,
+            "name": "Peel ADC (Protect comp)",
+            "roles": {
+                "top": "Ksante",
+                "jungle": "Xin zhao",
+                "mid": "Tristana",
+                "adc": "Seraphine",
+                "support": "Sona"
+            },
+            "good_against": "Tank / Engage",
+            "bad_against": "Poke / Early game",
+            "difficulty": "Medium: needs to be played with a bot side focus (+needs time to scale) and usually this teamcomp fits teams where the ad is the best player",
+            "key_focus": "Protect the president"
+        },
+        {
+            "best_in_meta": false,
+            "name": "Anti Engage",
+            "roles": {
+                "top": "Poppy",
+                "jungle": "Xin zhao",
+                "mid": "Azir",
+                "adc": "Swain",
+                "support": "Senna"
+            },
+            "good_against": "Hard engage / Low range",
+            "bad_against": "Poke",
+            "difficulty": "Advanced: requires scaling, good positioning and communication)",
+            "key_focus": "Kite back and let them come into you"
+        },
+        {
+            "best_in_meta": false,
+            "name": "Pick (Catch)",
+            "roles": {
+                "top": "Ornn",
+                "jungle": "Vi",
+                "mid": "Leblanc",
+                "adc": "Jhin",
+                "support": "Ashe"
+            },
+            "good_against": "Low range / 1-3-1",
+            "bad_against": "Teamfight / Protect",
+            "difficulty": "Medium: requires communication and teamplay but works really well vs teams that lack those (usually lower elos)",
+            "key_focus": "Vision (pinks + red trinkets NEEDED)"
+        },
+        {
+            "best_in_meta": false,
+            "name": "Poke (Siege)",
+            "roles": {
+                "top": "Ksante",
+                "jungle": "Sejuani",
+                "mid": "Corki",
+                "adc": "Ezreal / Varus",
+                "support": "Karma / Ashe"
+            },
+            "good_against": "Low engage / Protect",
+            "bad_against": "Engage",
+            "difficulty": "Medium: requires positioning and map awareness (deep wards for flank tps are your biggest ennemies)",
+            "key_focus": "Siege turrets, dance around objectives and use your range advantage to poke the ennemy team before fighting"
+        },
+        {
+            "best_in_meta": false,
+            "name": "Early game",
+            "roles": {
+                "top": "Renekton",
+                "jungle": "Elise",
+                "mid": "Tristana",
+                "adc": "Kalista",
+                "support": "Renata"
+            },
+            "good_against": "Scaling / Weak lane",
+            "bad_against": "Teamfight",
+            "difficulty": "Hard: seems easy due to winning lane but you need to have a game plan to make sure you snoball the early game (you can't fall behind)",
+            "key_focus": "First herald, early drakes and plate leads are the focus. Midlane aims to push and roam for 4-men dives to use the full power of the comp"
+        },
+        {
+            "best_in_meta": false,
+            "name": "1-3-1",
+            "roles": {
+                "top": "Camille",
+                "jungle": "Lilia",
+                "mid": "Galio",
+                "adc": "Kalista",
+                "support": "Braum"
+            },
+            "good_against": "Low engage / Teamfight",
+            "bad_against": "Hard engage / Pick",
+            "difficulty": "Hard: requires great communication and map awareness and deep vision (sidelaners can't get collapsed on and the 3-man gotta care about hard engages",
+            "key_focus": "Camille-Galio combo for early kills to make sure you scale enough to set up the split push, not necessary to contest all the drakes but the comp has some tools to win good teamfights"
+        },
+        {
+            "best_in_meta": true,
+            "name": "Mid game Teamfights",
+            "roles": {
+                "top": "Rumble",
+                "jungle": "Xin zhao",
+                "mid": "Neeko",
+                "adc": "Lucian",
+                "support": "Nami / Milio"
+            },
+            "good_against": "Weak lane",
+            "bad_against": "Late game",
+            "difficulty": "Medium: require some coordination and game plan but it is a solid win lane win fights team comp",
+            "key_focus": "Play for lane, convert to objectives with the strong mid game spike and end before 40 mins"
+        },
+        {
+            "best_in_meta": false,
+            "name": "Simple Scaling Teamfight",
+            "roles": {
+                "top": "Ksante",
+                "jungle": "Maokai",
+                "mid": "Azir / Corki",
+                "adc": "Aphelios",
+                "support": "Milio"
+            },
+            "good_against": "Mid game / Pick",
+            "bad_against": "Early game / Dive",
+            "difficulty": "Easy: Super generic team comp with a super strong teamfight to take over the game at 3rd drake, going even = winning",
+            "key_focus": "Don't force anything, punish over aggression and play to your strenghs. Dont be afraid to give up objectives to ensure your scaling goes through"
+        }
+    ],
+    "archetypes": [
+        {
+            "name": "Hard engage",
+            "description": "How does the comp work ?",
+            "notes": "",
+            "examples": "Classic wombo combo hard engage comps are Ori + Hard engage with the ball (malphite, jarvan etc..) or Yas Gragas combo (but not that good in the current meta)",
+            "typical_comp": {
+                "top": "Malphite",
+                "jungle": "Nocturne",
+                "mid": "Orianna",
+                "adc": "Kaisa",
+                "support": "Rakan"
+            },
+            "champion_pool": {
+                "top": [
+                    "Kled",
+                    "Ambessa*",
+                    "Kennen",
+                    "Gnar"
+                ],
+                "jungle": [
+                    "Maokai*",
+                    "Hecarim",
+                    "Zac",
+                    "Sejuani"
+                ],
+                "mid": [
+                    "Yasuo",
+                    "Vex",
+                    "Yone",
+                    "Ahri"
+                ],
+                "adc": [
+                    "Ziggs",
+                    "MF",
+                    "Sivir",
+                    "Tristana"
+                ],
+                "support": [
+                    "Leona",
+                    "Amumu",
+                    "Alistar",
+                    "Nautilus"
+                ]
+            },
+            "pro_games_info": "Pro games playing this comp"
+        },
+        {
+            "name": "Dive",
+            "description": "How does the comp work ?",
+            "notes": "",
+            "examples": "The best version is Nocturne based comps since he is a 3-flex AND noc's ult is both really good engage and the ult's first activation is huge to cut the ennemies vision during the 5-man engage",
+            "typical_comp": {
+                "top": "Yone*",
+                "jungle": "Vi",
+                "mid": "Ahri",
+                "adc": "Samira",
+                "support": "Nautilus"
+            },
+            "champion_pool": {
+                "top": [
+                    "Olaf",
+                    "Irelia",
+                    "Shen",
+                    "Malphite"
+                ],
+                "jungle": [
+                    "Xin zhao",
+                    "Naafiri / J4",
+                    "Karthus",
+                    "Diana *"
+                ],
+                "mid": [
+                    "Akali",
+                    "Sylas",
+                    "Naafiri",
+                    "Yasuo"
+                ],
+                "adc": [
+                    "Kalista",
+                    "Tristana*",
+                    "Kaisa"
+                ],
+                "support": [
+                    "Alistar",
+                    "Galio*",
+                    "Rakan",
+                    "Amumu"
+                ]
+            },
+            "pro_games_info": "Pro games playing this comp"
+        },
+        {
+            "name": "Protect",
+            "description": "How does the comp work ?",
+            "notes": "",
+            "examples": "Chinese smurf duoQs use mostly those kind of method with like Kog/Lulu, Taric/Yi etc",
+            "typical_comp": {
+                "top": "Xin zhao",
+                "jungle": "Tristana",
+                "mid": "Seraphine",
+                "adc": "Sona / Senna / Lux",
+                "support": ""
+            },
+            "champion_pool": {
+                "top": [
+                    "Maokai",
+                    "Jarvan",
+                    "Poppy",
+                    "Sejuani"
+                ],
+                "jungle": [
+                    "Seraphine / Zilean",
+                    "Galio",
+                    "Azir",
+                    "Karma"
+                ],
+                "mid": [
+                    "Aphelios",
+                    "Sivir",
+                    "Ashe",
+                    "Zeri"
+                ],
+                "adc": [
+                    "Milio",
+                    "Janna",
+                    "Braum",
+                    "Taric"
+                ],
+                "support": []
+            },
+            "pro_games_info": "Pro games playing this comp"
+        },
+        {
+            "name": "Anti Engage",
+            "description": "How does the comp work ?",
+            "notes": "",
+            "examples": "Picks that hate their lives against this comp are the likes of Darius, Olaf, Renekton, Lee sin, Nocturne, Rell, Kha'zix",
+            "typical_comp": {
+                "top": "Poppy*",
+                "jungle": "Viktor / Hwei",
+                "mid": "Xayah",
+                "adc": "Maokai*",
+                "support": ""
+            },
+            "champion_pool": {
+                "top": [
+                    "Xin zhao",
+                    "Kindred",
+                    "Maokai",
+                    "Lee sin"
+                ],
+                "jungle": [
+                    "Azir",
+                    "Swain",
+                    "Cassiopeia / Vex",
+                    "Veigar"
+                ],
+                "mid": [
+                    "Swain",
+                    "Ashe",
+                    "Sivir",
+                    "Vayne"
+                ],
+                "adc": [
+                    "Senna",
+                    "Heimerdinger",
+                    "Taric",
+                    "Renata"
+                ],
+                "support": []
+            },
+            "pro_games_info": ""
+        },
+        {
+            "name": "Pick",
+            "description": "How does the comp work ?",
+            "notes": "",
+            "examples": "Be creative and be aggressive, the more aggressive you are the more ground you will gain just by exerting pressure and being feared. Don't get predictable and use Fog of war to your advantage: Fake recalls, fake roams.",
+            "typical_comp": {
+                "top": "Vi / Pantheon",
+                "jungle": "Leblanc",
+                "mid": "Jhin",
+                "adc": "Ashe",
+                "support": ""
+            },
+            "champion_pool": {
+                "top": [
+                    "Nocturne / Sej",
+                    "Lilia",
+                    "Xin zhao / Viego",
+                    "Kha'zix"
+                ],
+                "jungle": [
+                    "Ahri / Akali",
+                    "TF AD",
+                    "Malzahar",
+                    "Taliyah"
+                ],
+                "mid": [
+                    "Varus",
+                    "Jinx",
+                    "Sivir",
+                    "Seraphine"
+                ],
+                "adc": [
+                    "Blitzcrank",
+                    "Bard",
+                    "Thresh",
+                    "Pyke"
+                ],
+                "support": []
+            },
+            "pro_games_info": "Pro games playing this comp"
+        },
+        {
+            "name": "Poke",
+            "description": "How does the comp work ?",
+            "notes": "",
+            "examples": "Baron/Dragon dances where you engage the drake to bait the ennemies in and then use range to poke.",
+            "typical_comp": {
+                "top": "Sejuani",
+                "jungle": "Corki",
+                "mid": "Ezreal",
+                "adc": "Karma",
+                "support": ""
+            },
+            "champion_pool": {
+                "top": [
+                    "Maokai",
+                    "Trundle",
+                    "Nidalee"
+                ],
+                "jungle": [
+                    "Azir",
+                    "Xerath",
+                    "Jayce",
+                    "Zoe"
+                ],
+                "mid": [
+                    "Varus",
+                    "Caitlynn",
+                    "Ziggs",
+                    "Miss Fortune"
+                ],
+                "adc": [
+                    "Ashe",
+                    "Lux",
+                    "Alistar",
+                    "Janna"
+                ],
+                "support": []
+            },
+            "pro_games_info": "Pro games playing this comp"
+        },
+        {
+            "name": "Early game",
+            "description": "How does the comp work ?",
+            "notes": "",
+            "examples": "Push lane → scuttle and early skirmish → 3-4-men dives → invade enemy jungle → Play for Grubs and Herald",
+            "typical_comp": {
+                "top": "Elise",
+                "jungle": "Tristana",
+                "mid": "Kalista",
+                "adc": "Renata",
+                "support": ""
+            },
+            "champion_pool": {
+                "top": [
+                    "Xin zhao / Bel Veth",
+                    "Graves",
+                    "Lee sin",
+                    "Jarvan"
+                ],
+                "jungle": [
+                    "Leblanc / Neeko",
+                    "Ryze",
+                    "Twisted fate",
+                    "Syndra / Hwei"
+                ],
+                "mid": [
+                    "Caitlynn",
+                    "Lucian",
+                    "Draven",
+                    "Miss Fortune"
+                ],
+                "adc": [
+                    "Lux",
+                    "Nami",
+                    "Nautilus / Leona / Pyke",
+                    "Amumu"
+                ],
+                "support": []
+            },
+            "pro_games_info": "Pro games playing this comp"
+        },
+        {
+            "name": "1-3-1",
+            "description": "How does the comp work ?",
+            "notes": "",
+            "examples": "Communication and Vision are the most important. Using both threats of ending the game if not answered and engage/tp if answered is key.",
+            "typical_comp": {
+                "top": "Lilia",
+                "jungle": "Galio",
+                "mid": "Kalista",
+                "adc": "Thresh",
+                "support": ""
+            },
+            "champion_pool": {
+                "top": [
+                    "Jarvan",
+                    "Poppy",
+                    "Xin Zhao",
+                    "Brand"
+                ],
+                "jungle": [
+                    "Twisted Fate",
+                    "Azir",
+                    "Ryze",
+                    "Leblanc"
+                ],
+                "mid": [
+                    "Xayah",
+                    "Sivir",
+                    "Ashe",
+                    "Senna"
+                ],
+                "adc": [
+                    "Rakan",
+                    "Janna",
+                    "Galio",
+                    "Braum"
+                ],
+                "support": []
+            },
+            "pro_games_info": "Pro games playing this comp"
+        },
+        {
+            "name": "Mid game TFs",
+            "description": "How does the comp work ?",
+            "notes": "",
+            "examples": "Don't be afraid to let them get first drake and even herald. Play around ult timers, don't force plays that you don't need.",
+            "typical_comp": {
+                "top": "Xin Zhao",
+                "jungle": "Azir",
+                "mid": "Varus",
+                "adc": "Ashe",
+                "support": ""
+            },
+            "champion_pool": {
+                "top": [
+                    "Rell",
+                    "Nocturne",
+                    "Jarvan",
+                    "Xin Zhao"
+                ],
+                "jungle": [
+                    "Neeko",
+                    "Orianna",
+                    "Sylas",
+                    "Lissandra"
+                ],
+                "mid": [
+                    "Lucian",
+                    "Kaisa",
+                    "Tristana",
+                    "Ornn"
+                ],
+                "adc": [
+                    "Nami / Milio",
+                    "Alistar",
+                    "Leona",
+                    "Senna"
+                ],
+                "support": []
+            },
+            "pro_games_info": "Pro games playing this comp"
+        },
+        {
+            "name": "Scaling TFs",
+            "description": "How does the comp work ?",
+            "notes": "",
+            "examples": "Focus on having a good cs and not feeding. If the game isn't a mega stomp your team will be at a good point at around soul (which is your win con).",
+            "typical_comp": {
+                "top": "Rell",
+                "jungle": "Azir",
+                "mid": "Aphelios",
+                "adc": "Milio",
+                "support": ""
+            },
+            "champion_pool": {
+                "top": [
+                    "Maokai",
+                    "Karthus",
+                    "Fiddlesticks"
+                ],
+                "jungle": [
+                    "Corki",
+                    "Yone",
+                    "Orianna"
+                ],
+                "mid": [
+                    "Zeri",
+                    "Seraphine",
+                    "Aphelios",
+                    "Smolder*"
+                ],
+                "adc": [
+                    "Yuumi / Karma",
+                    "Senna",
+                    "Nautilus"
+                ],
+                "support": []
+            },
+            "pro_games_info": ""
+        }
+    ]
+}
