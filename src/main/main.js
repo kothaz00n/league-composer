@@ -20,6 +20,7 @@ const { loadChampionData, getIdToNameMap, getNameToIdMap, getChampionTags,
     getAllChampions,
 } = require('../data/champions');
 const { loadWinRates, getChampionStats, getAllWinRates, getImportedChampions, getAvailableQueues } = require('../data/winRateProvider');
+const { scrapeUGGChampions } = require('./scrapers/ugg');
 
 // ─── State ──────────────────────────────────────────────────────────────
 let mainWindow = null;
@@ -168,6 +169,7 @@ function setupIPC() {
         }
     });
 
+
     ipcMain.on('roster:save', (event, data) => {
         try {
             console.log(`[Main] Saving roster config to ${ROSTER_PATH}`);
@@ -179,6 +181,82 @@ function setupIPC() {
         } catch (err) {
             console.error('[Main] Failed to save roster:', err);
             event.reply('roster:save-error', { message: err.message });
+        }
+    });
+
+    // ─── Scraper ────────────────────────────────────────────────────────
+    ipcMain.on('scraper:run-ugg', async (event, force = false, queueType = 'soloq') => {
+        console.log(`[Main] Request to run U.GG scrape (${queueType})...`);
+        try {
+            // Check last updated time
+            let existing = {};
+            if (fs.existsSync(WINRATES_PATH)) {
+                try {
+                    existing = JSON.parse(fs.readFileSync(WINRATES_PATH, 'utf8'));
+                } catch (e) { /* ignore */ }
+            }
+
+            // Check specific queue timestamp if it exists, otherwise check root
+            // We'll store metadata per queue now
+            const queueData = existing[queueType] || {};
+
+            if (!force && existing.lastUpdated && existing.lastUpdatedQueue === queueType) {
+                const now = Date.now();
+                const diff = now - existing.lastUpdated;
+                const hours = diff / (1000 * 60 * 60);
+
+                if (hours < 24) {
+                    const remaining = Math.ceil(24 - hours);
+                    console.log(`[Main] Scrape skipped: Data is fresh (${hours.toFixed(1)}h old).`);
+                    event.reply('scraper:complete', {
+                        success: false,
+                        message: `Data for ${queueType} is recent (updated ${hours.toFixed(1)}h ago). Wait ${remaining}h or use Force Update.`
+                    });
+                    return;
+                }
+            }
+
+            console.log(`[Main] Starting U.GG scrape for ${queueType}...`);
+
+            const onProgress = (msg) => event.reply('scraper:progress', msg);
+            const rawData = await scrapeUGGChampions(onProgress, queueType);
+
+            if (!rawData || !rawData[queueType]) {
+                throw new Error('Scraper returned invalid data structure');
+            }
+
+            // Merge with existing data
+            const merged = {
+                ...existing,
+                [queueType]: rawData[queueType], // overwrite specific queue
+                lastUpdated: Date.now(),
+                lastUpdatedQueue: queueType // track which one was last updated for simple global cooldown
+            };
+
+            fs.writeFileSync(WINRATES_PATH, JSON.stringify(merged, null, 2));
+            console.log('[Main] Scrape complete and saved.');
+
+            // Reload in memory
+            winRateProvider.loadWinRates();
+
+            // Create summary stats
+            const totalChamps = Object.values(rawData[queueType]).reduce((acc, roleObj) => acc + Object.keys(roleObj).length, 0);
+
+            event.reply('scraper:complete', {
+                success: true,
+                message: `Scrape complete! Updated ${totalChamps} champion entries for ${queueType}.`,
+                count: totalChamps
+            });
+
+            // Trigger engine update
+            if (currentSession) handleChampSelectUpdate(currentSession);
+
+        } catch (error) {
+            console.error('[Main] Scraper failed:', error);
+            event.reply('scraper:complete', {
+                success: false,
+                message: `Scraping failed: ${error.message}`
+            });
         }
     });
 }

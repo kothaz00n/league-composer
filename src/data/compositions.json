@@ -251,38 +251,40 @@
             "notes": "",
             "examples": "Chinese smurf duoQs use mostly those kind of method with like Kog/Lulu, Taric/Yi etc",
             "typical_comp": {
-                "top": "Xin zhao",
-                "jungle": "Tristana",
-                "mid": "Seraphine",
-                "adc": "Sona / Senna / Lux",
-                "support": ""
+                "top": "Ksante",
+                "jungle": "Xin zhao",
+                "mid": "Tristana",
+                "adc": "Seraphine",
+                "support": "Sona / Senna / Lux"
             },
             "champion_pool": {
                 "top": [
+                    "Ksante"
+                ],
+                "jungle": [
                     "Maokai",
                     "Jarvan",
                     "Poppy",
                     "Sejuani"
                 ],
-                "jungle": [
+                "mid": [
                     "Seraphine / Zilean",
                     "Galio",
                     "Azir",
                     "Karma"
                 ],
-                "mid": [
+                "adc": [
                     "Aphelios",
                     "Sivir",
                     "Ashe",
                     "Zeri"
                 ],
-                "adc": [
+                "support": [
                     "Milio",
                     "Janna",
                     "Braum",
                     "Taric"
-                ],
-                "support": []
+                ]
             },
             "pro_games_info": "Pro games playing this comp"
         },
@@ -292,38 +294,40 @@
             "notes": "",
             "examples": "Picks that hate their lives against this comp are the likes of Darius, Olaf, Renekton, Lee sin, Nocturne, Rell, Kha'zix",
             "typical_comp": {
-                "top": "Poppy*",
-                "jungle": "Viktor / Hwei",
-                "mid": "Xayah",
-                "adc": "Maokai*",
-                "support": ""
+                "top": "Poppy",
+                "jungle": "Poppy*",
+                "mid": "Viktor / Hwei",
+                "adc": "Xayah",
+                "support": "Maokai*"
             },
             "champion_pool": {
                 "top": [
+                    "Poppy"
+                ],
+                "jungle": [
                     "Xin zhao",
                     "Kindred",
                     "Maokai",
                     "Lee sin"
                 ],
-                "jungle": [
+                "mid": [
                     "Azir",
                     "Swain",
                     "Cassiopeia / Vex",
                     "Veigar"
                 ],
-                "mid": [
+                "adc": [
                     "Swain",
                     "Ashe",
                     "Sivir",
                     "Vayne"
                 ],
-                "adc": [
+                "support": [
                     "Senna",
                     "Heimerdinger",
                     "Taric",
                     "Renata"
-                ],
-                "support": []
+                ]
             },
             "pro_games_info": ""
         },
@@ -333,38 +337,40 @@
             "notes": "",
             "examples": "Be creative and be aggressive, the more aggressive you are the more ground you will gain just by exerting pressure and being feared. Don't get predictable and use Fog of war to your advantage: Fake recalls, fake roams.",
             "typical_comp": {
-                "top": "Vi / Pantheon",
-                "jungle": "Leblanc",
-                "mid": "Jhin",
-                "adc": "Ashe",
-                "support": ""
+                "top": "Ornn",
+                "jungle": "Vi / Pantheon",
+                "mid": "Leblanc",
+                "adc": "Jhin",
+                "support": "Ashe"
             },
             "champion_pool": {
                 "top": [
+                    "Ornn"
+                ],
+                "jungle": [
                     "Nocturne / Sej",
                     "Lilia",
                     "Xin zhao / Viego",
                     "Kha'zix"
                 ],
-                "jungle": [
+                "mid": [
                     "Ahri / Akali",
                     "TF AD",
                     "Malzahar",
                     "Taliyah"
                 ],
-                "mid": [
+                "adc": [
                     "Varus",
                     "Jinx",
                     "Sivir",
                     "Seraphine"
                 ],
-                "adc": [
+                "support": [
                     "Blitzcrank",
                     "Bard",
                     "Thresh",
                     "Pyke"
-                ],
-                "support": []
+                ]
             },
             "pro_games_info": "Pro games playing this comp"
         },
@@ -374,37 +380,39 @@
             "notes": "",
             "examples": "Baron/Dragon dances where you engage the drake to bait the ennemies in and then use range to poke.",
             "typical_comp": {
-                "top": "Sejuani",
-                "jungle": "Corki",
-                "mid": "Ezreal",
-                "adc": "Karma",
-                "support": ""
+                "top": "Ksante",
+                "jungle": "Sejuani",
+                "mid": "Corki",
+                "adc": "Ezreal",
+                "support": "Karma"
             },
             "champion_pool": {
                 "top": [
+                    "Ksante"
+                ],
+                "jungle": [
                     "Maokai",
                     "Trundle",
                     "Nidalee"
                 ],
-                "jungle": [
+                "mid": [
                     "Azir",
                     "Xerath",
                     "Jayce",
                     "Zoe"
                 ],
-                "mid": [
+                "adc": [
                     "Varus",
                     "Caitlynn",
                     "Ziggs",
                     "Miss Fortune"
                 ],
-                "adc": [
+                "support": [
                     "Ashe",
                     "Lux",
                     "Alistar",
                     "Janna"
-                ],
-                "support": []
+                ]
             },
             "pro_games_info": "Pro games playing this comp"
         },
@@ -414,38 +422,40 @@
             "notes": "",
             "examples": "Push lane → scuttle and early skirmish → 3-4-men dives → invade enemy jungle → Play for Grubs and Herald",
             "typical_comp": {
-                "top": "Elise",
-                "jungle": "Tristana",
-                "mid": "Kalista",
-                "adc": "Renata",
-                "support": ""
+                "top": "Renekton",
+                "jungle": "Elise",
+                "mid": "Tristana",
+                "adc": "Kalista",
+                "support": "Renata"
             },
             "champion_pool": {
                 "top": [
+                    "Renekton"
+                ],
+                "jungle": [
                     "Xin zhao / Bel Veth",
                     "Graves",
                     "Lee sin",
                     "Jarvan"
                 ],
-                "jungle": [
+                "mid": [
                     "Leblanc / Neeko",
                     "Ryze",
                     "Twisted fate",
                     "Syndra / Hwei"
                 ],
-                "mid": [
+                "adc": [
                     "Caitlynn",
                     "Lucian",
                     "Draven",
                     "Miss Fortune"
                 ],
-                "adc": [
+                "support": [
                     "Lux",
                     "Nami",
                     "Nautilus / Leona / Pyke",
                     "Amumu"
-                ],
-                "support": []
+                ]
             },
             "pro_games_info": "Pro games playing this comp"
         },
@@ -455,38 +465,40 @@
             "notes": "",
             "examples": "Communication and Vision are the most important. Using both threats of ending the game if not answered and engage/tp if answered is key.",
             "typical_comp": {
-                "top": "Lilia",
-                "jungle": "Galio",
-                "mid": "Kalista",
-                "adc": "Thresh",
-                "support": ""
+                "top": "Camille",
+                "jungle": "Lilia",
+                "mid": "Galio",
+                "adc": "Kalista",
+                "support": "Thresh"
             },
             "champion_pool": {
                 "top": [
+                    "Camille"
+                ],
+                "jungle": [
                     "Jarvan",
                     "Poppy",
                     "Xin Zhao",
                     "Brand"
                 ],
-                "jungle": [
+                "mid": [
                     "Twisted Fate",
                     "Azir",
                     "Ryze",
                     "Leblanc"
                 ],
-                "mid": [
+                "adc": [
                     "Xayah",
                     "Sivir",
                     "Ashe",
                     "Senna"
                 ],
-                "adc": [
+                "support": [
                     "Rakan",
                     "Janna",
                     "Galio",
                     "Braum"
-                ],
-                "support": []
+                ]
             },
             "pro_games_info": "Pro games playing this comp"
         },
@@ -496,38 +508,40 @@
             "notes": "",
             "examples": "Don't be afraid to let them get first drake and even herald. Play around ult timers, don't force plays that you don't need.",
             "typical_comp": {
-                "top": "Xin Zhao",
-                "jungle": "Azir",
-                "mid": "Varus",
-                "adc": "Ashe",
-                "support": ""
+                "top": "Rumble",
+                "jungle": "Xin Zhao",
+                "mid": "Azir",
+                "adc": "Varus",
+                "support": "Ashe"
             },
             "champion_pool": {
                 "top": [
+                    "Rumble"
+                ],
+                "jungle": [
                     "Rell",
                     "Nocturne",
                     "Jarvan",
                     "Xin Zhao"
                 ],
-                "jungle": [
+                "mid": [
                     "Neeko",
                     "Orianna",
                     "Sylas",
                     "Lissandra"
                 ],
-                "mid": [
+                "adc": [
                     "Lucian",
                     "Kaisa",
                     "Tristana",
                     "Ornn"
                 ],
-                "adc": [
+                "support": [
                     "Nami / Milio",
                     "Alistar",
                     "Leona",
                     "Senna"
-                ],
-                "support": []
+                ]
             },
             "pro_games_info": "Pro games playing this comp"
         },
@@ -537,35 +551,37 @@
             "notes": "",
             "examples": "Focus on having a good cs and not feeding. If the game isn't a mega stomp your team will be at a good point at around soul (which is your win con).",
             "typical_comp": {
-                "top": "Rell",
-                "jungle": "Azir",
-                "mid": "Aphelios",
-                "adc": "Milio",
-                "support": ""
+                "top": "Ksante",
+                "jungle": "Rell",
+                "mid": "Azir",
+                "adc": "Aphelios",
+                "support": "Milio"
             },
             "champion_pool": {
                 "top": [
+                    "Ksante"
+                ],
+                "jungle": [
                     "Maokai",
                     "Karthus",
                     "Fiddlesticks"
                 ],
-                "jungle": [
+                "mid": [
                     "Corki",
                     "Yone",
                     "Orianna"
                 ],
-                "mid": [
+                "adc": [
                     "Zeri",
                     "Seraphine",
                     "Aphelios",
                     "Smolder*"
                 ],
-                "adc": [
+                "support": [
                     "Yuumi / Karma",
                     "Senna",
                     "Nautilus"
-                ],
-                "support": []
+                ]
             },
             "pro_games_info": ""
         }

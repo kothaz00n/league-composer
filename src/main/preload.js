@@ -46,4 +46,9 @@ contextBridge.exposeInMainWorld('electronAPI', {
     getChampionStats: (name, role, queue) => ipcRenderer.invoke('champion:get-stats', name, role, queue),
     getImportedChampions: (queue, role) => ipcRenderer.invoke('champion:get-imported-list', queue, role),
     getAvailableQueues: () => ipcRenderer.invoke('champion:get-available-queues'),
+
+    // ─── Scraper ──────────────────────────────────────────────
+    runUggScrape: (force = false, queueType = 'soloq') => ipcRenderer.send('scraper:run-ugg', force, queueType),
+    onScraperProgress: (callback) => ipcRenderer.on('scraper:progress', (_event, msg) => callback(msg)),
+    onScraperComplete: (callback) => ipcRenderer.on('scraper:complete', (_event, result) => callback(result)),
 });

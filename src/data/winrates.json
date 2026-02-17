@@ -1,1755 +1,3386 @@
 {
-  "top": {
-    "Anivia": {
-      "winRate": 0.5289,
-      "pickRate": 0.006,
-      "banRate": 0.027000000000000003,
-      "matches": 0,
-      "tier": "A"
+  "soloq": {
+    "top": {
+      "Anivia": {
+        "winRate": 0.5307,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 13602,
+        "tier": "A",
+        "slug": "anivia"
+      },
+      "Singed": {
+        "winRate": 0.5285,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 60323,
+        "tier": "S",
+        "slug": "singed"
+      },
+      "Kayle": {
+        "winRate": 0.526,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 101081,
+        "tier": "S+",
+        "slug": "kayle"
+      },
+      "Ornn": {
+        "winRate": 0.5226,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 116787,
+        "tier": "S+",
+        "slug": "ornn"
+      },
+      "Kled": {
+        "winRate": 0.5194,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 39757,
+        "tier": "S",
+        "slug": "kled"
+      },
+      "Shen": {
+        "winRate": 0.5186,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 78645,
+        "tier": "S",
+        "slug": "shen"
+      },
+      "Zac": {
+        "winRate": 0.517,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 15694,
+        "tier": "A",
+        "slug": "zac"
+      },
+      "Cassiopeia": {
+        "winRate": 0.5167,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 15673,
+        "tier": "A",
+        "slug": "cassiopeia"
+      },
+      "Gwen": {
+        "winRate": 0.5165,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 85716,
+        "tier": "S+",
+        "slug": "gwen"
+      },
+      "Kennen": {
+        "winRate": 0.5158,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 74027,
+        "tier": "S+",
+        "slug": "kennen"
+      },
+      "Urgot": {
+        "winRate": 0.5136,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 58268,
+        "tier": "S",
+        "slug": "urgot"
+      },
+      "Olaf": {
+        "winRate": 0.5105,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 47836,
+        "tier": "S",
+        "slug": "olaf"
+      },
+      "Nasus": {
+        "winRate": 0.5102,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 77673,
+        "tier": "S",
+        "slug": "nasus"
+      },
+      "Heimerdinger": {
+        "winRate": 0.509,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 19092,
+        "tier": "A",
+        "slug": "heimerdinger"
+      },
+      "Naafiri": {
+        "winRate": 0.5085000000000001,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 14774,
+        "tier": "A",
+        "slug": "naafiri"
+      },
+      "Pantheon": {
+        "winRate": 0.5078,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 39338,
+        "tier": "A",
+        "slug": "pantheon"
+      },
+      "Malphite": {
+        "winRate": 0.5077,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 134133,
+        "tier": "S+",
+        "slug": "malphite"
+      },
+      "Swain": {
+        "winRate": 0.5071,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 24809,
+        "tier": "A",
+        "slug": "swain"
+      },
+      "Poppy": {
+        "winRate": 0.5056,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 29542,
+        "tier": "A",
+        "slug": "poppy"
+      },
+      "Gangplank": {
+        "winRate": 0.5051,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 117772,
+        "tier": "S",
+        "slug": "gangplank"
+      },
+      "Quinn": {
+        "winRate": 0.5047999999999999,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 20911,
+        "tier": "A",
+        "slug": "quinn"
+      },
+      "Zaahen": {
+        "winRate": 0.5042,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 146549,
+        "tier": "S+",
+        "slug": "zaahen"
+      },
+      "Sion": {
+        "winRate": 0.504,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 103459,
+        "tier": "A",
+        "slug": "sion"
+      },
+      "Teemo": {
+        "winRate": 0.5036,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 48806,
+        "tier": "A",
+        "slug": "teemo"
+      },
+      "Maokai": {
+        "winRate": 0.5034000000000001,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 11576,
+        "tier": "B",
+        "slug": "maokai"
+      },
+      "Zed": {
+        "winRate": 0.503,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 13707,
+        "tier": "A",
+        "slug": "zed"
+      },
+      "Wukong": {
+        "winRate": 0.503,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 17630,
+        "tier": "B",
+        "slug": "wukong"
+      },
+      "Vayne": {
+        "winRate": 0.5025999999999999,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 54971,
+        "tier": "A",
+        "slug": "vayne"
+      },
+      "Irelia": {
+        "winRate": 0.5025999999999999,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 100160,
+        "tier": "S+",
+        "slug": "irelia"
+      },
+      "Sett": {
+        "winRate": 0.5018,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 106671,
+        "tier": "A",
+        "slug": "sett"
+      },
+      "Riven": {
+        "winRate": 0.5017,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 87168,
+        "tier": "S",
+        "slug": "riven"
+      },
+      "Mordekaiser": {
+        "winRate": 0.5006,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 110593,
+        "tier": "S",
+        "slug": "mordekaiser"
+      },
+      "Warwick": {
+        "winRate": 0.4999,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 24088,
+        "tier": "B",
+        "slug": "warwick"
+      },
+      "Rumble": {
+        "winRate": 0.4997,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 70952,
+        "tier": "B",
+        "slug": "rumble"
+      },
+      "Fiora": {
+        "winRate": 0.49920000000000003,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 84385,
+        "tier": "A",
+        "slug": "fiora"
+      },
+      "Aatrox": {
+        "winRate": 0.4987,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 159529,
+        "tier": "B",
+        "slug": "aatrox"
+      },
+      "Camille": {
+        "winRate": 0.4984,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 48605,
+        "tier": "B",
+        "slug": "camille"
+      },
+      "Renekton": {
+        "winRate": 0.49810000000000004,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 126511,
+        "tier": "B",
+        "slug": "renekton"
+      },
+      "Gnar": {
+        "winRate": 0.498,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 91104,
+        "tier": "B",
+        "slug": "gnar"
+      },
+      "Chogath": {
+        "winRate": 0.4979,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 53729,
+        "tier": "B",
+        "slug": "chogath"
+      },
+      "Garen": {
+        "winRate": 0.49770000000000003,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 112258,
+        "tier": "B",
+        "slug": "garen"
+      },
+      "Gragas": {
+        "winRate": 0.4971,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 44293,
+        "tier": "B",
+        "slug": "gragas"
+      },
+      "Jax": {
+        "winRate": 0.49579999999999996,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 152458,
+        "tier": "C",
+        "slug": "jax"
+      },
+      "Drmundo": {
+        "winRate": 0.4953,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 87821,
+        "tier": "C",
+        "slug": "drmundo"
+      },
+      "Yone": {
+        "winRate": 0.49520000000000003,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 104462,
+        "tier": "C",
+        "slug": "yone"
+      },
+      "Tryndamere": {
+        "winRate": 0.4943,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 49866,
+        "tier": "B",
+        "slug": "tryndamere"
+      },
+      "Aurora": {
+        "winRate": 0.4941,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 16478,
+        "tier": "B",
+        "slug": "aurora"
+      },
+      "Yasuo": {
+        "winRate": 0.4939,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 68654,
+        "tier": "C",
+        "slug": "yasuo"
+      },
+      "Sylas": {
+        "winRate": 0.4935,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 23206,
+        "tier": "B",
+        "slug": "sylas"
+      },
+      "Akali": {
+        "winRate": 0.49310000000000004,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 63664,
+        "tier": "C",
+        "slug": "akali"
+      },
+      "Varus": {
+        "winRate": 0.493,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 57993,
+        "tier": "C",
+        "slug": "varus"
+      },
+      "Illaoi": {
+        "winRate": 0.49229999999999996,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 37105,
+        "tier": "B",
+        "slug": "illaoi"
+      },
+      "Darius": {
+        "winRate": 0.49,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 127516,
+        "tier": "D",
+        "slug": "darius"
+      },
+      "Vladimir": {
+        "winRate": 0.4899,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 44764,
+        "tier": "C",
+        "slug": "vladimir"
+      },
+      "Volibear": {
+        "winRate": 0.4886,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 71727,
+        "tier": "D",
+        "slug": "volibear"
+      },
+      "Jayce": {
+        "winRate": 0.4885,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 75031,
+        "tier": "D",
+        "slug": "jayce"
+      },
+      "Yorick": {
+        "winRate": 0.4858,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 67515,
+        "tier": "D",
+        "slug": "yorick"
+      },
+      "Ambessa": {
+        "winRate": 0.485,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 103160,
+        "tier": "D",
+        "slug": "ambessa"
+      },
+      "Tahmkench": {
+        "winRate": 0.4844,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 46770,
+        "tier": "D",
+        "slug": "tahmkench"
+      },
+      "Ryze": {
+        "winRate": 0.4805,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 30618,
+        "tier": "C",
+        "slug": "ryze"
+      },
+      "Trundle": {
+        "winRate": 0.4803,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 27394,
+        "tier": "C",
+        "slug": "trundle"
+      },
+      "Ksante": {
+        "winRate": 0.47119999999999995,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 91200,
+        "tier": "D",
+        "slug": "ksante"
+      },
+      "Masteryi": {
+        "winRate": 0.4569,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 15283,
+        "tier": "D",
+        "slug": "masteryi"
+      }
     },
-    "Singed": {
-      "winRate": 0.528,
-      "pickRate": 0.027000000000000003,
-      "banRate": 0.008,
-      "matches": 0,
-      "tier": "S"
+    "jungle": {
+      "Reksai": {
+        "winRate": 0.5226,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 62611,
+        "tier": "S",
+        "slug": "reksai"
+      },
+      "Ivern": {
+        "winRate": 0.5221,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 29612,
+        "tier": "A",
+        "slug": "ivern"
+      },
+      "Rammus": {
+        "winRate": 0.522,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 38244,
+        "tier": "S",
+        "slug": "rammus"
+      },
+      "Nunu": {
+        "winRate": 0.5178,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 58109,
+        "tier": "S",
+        "slug": "nunu"
+      },
+      "Nasus": {
+        "winRate": 0.5174,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 14081,
+        "tier": "A",
+        "slug": "nasus"
+      },
+      "Fiddlesticks": {
+        "winRate": 0.5165,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 61721,
+        "tier": "S",
+        "slug": "fiddlesticks"
+      },
+      "Zyra": {
+        "winRate": 0.516,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 25495,
+        "tier": "A",
+        "slug": "zyra"
+      },
+      "Gwen": {
+        "winRate": 0.5156000000000001,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 66992,
+        "tier": "S+",
+        "slug": "gwen"
+      },
+      "Briar": {
+        "winRate": 0.5144,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 103304,
+        "tier": "S+",
+        "slug": "briar"
+      },
+      "Zac": {
+        "winRate": 0.5131,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 84655,
+        "tier": "S",
+        "slug": "zac"
+      },
+      "Elise": {
+        "winRate": 0.5117,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 58277,
+        "tier": "S",
+        "slug": "elise"
+      },
+      "Shaco": {
+        "winRate": 0.5109,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 92438,
+        "tier": "S+",
+        "slug": "shaco"
+      },
+      "Belveth": {
+        "winRate": 0.5103,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 41020,
+        "tier": "S",
+        "slug": "belveth"
+      },
+      "Khazix": {
+        "winRate": 0.5103,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 253423,
+        "tier": "S+",
+        "slug": "khazix"
+      },
+      "Xinzhao": {
+        "winRate": 0.5097999999999999,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 159051,
+        "tier": "S",
+        "slug": "xinzhao"
+      },
+      "Evelynn": {
+        "winRate": 0.5089,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 54375,
+        "tier": "S",
+        "slug": "evelynn"
+      },
+      "Zaahen": {
+        "winRate": 0.5073,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 90047,
+        "tier": "S",
+        "slug": "zaahen"
+      },
+      "Naafiri": {
+        "winRate": 0.5071,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 75224,
+        "tier": "S+",
+        "slug": "naafiri"
+      },
+      "Taliyah": {
+        "winRate": 0.5062,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 28383,
+        "tier": "A",
+        "slug": "taliyah"
+      },
+      "Drmundo": {
+        "winRate": 0.5058,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 75164,
+        "tier": "S",
+        "slug": "drmundo"
+      },
+      "Amumu": {
+        "winRate": 0.5055,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 48725,
+        "tier": "A",
+        "slug": "amumu"
+      },
+      "Trundle": {
+        "winRate": 0.5047999999999999,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 22387,
+        "tier": "B",
+        "slug": "trundle"
+      },
+      "Masteryi": {
+        "winRate": 0.5047999999999999,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 103378,
+        "tier": "S+",
+        "slug": "masteryi"
+      },
+      "Kindred": {
+        "winRate": 0.504,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 44075,
+        "tier": "A",
+        "slug": "kindred"
+      },
+      "Sejuani": {
+        "winRate": 0.5039,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 40561,
+        "tier": "B",
+        "slug": "sejuani"
+      },
+      "Talon": {
+        "winRate": 0.5036999999999999,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 80207,
+        "tier": "S",
+        "slug": "talon"
+      },
+      "Volibear": {
+        "winRate": 0.5025,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 69982,
+        "tier": "S",
+        "slug": "volibear"
+      },
+      "Jarvaniv": {
+        "winRate": 0.5021,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 144129,
+        "tier": "A",
+        "slug": "jarvaniv"
+      },
+      "Udyr": {
+        "winRate": 0.502,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 32611,
+        "tier": "A",
+        "slug": "udyr"
+      },
+      "Jax": {
+        "winRate": 0.5015999999999999,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 60056,
+        "tier": "S",
+        "slug": "jax"
+      },
+      "Diana": {
+        "winRate": 0.5006,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 134683,
+        "tier": "S+",
+        "slug": "diana"
+      },
+      "Aatrox": {
+        "winRate": 0.5002,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 25392,
+        "tier": "A",
+        "slug": "aatrox"
+      },
+      "Hecarim": {
+        "winRate": 0.4997,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 99202,
+        "tier": "B",
+        "slug": "hecarim"
+      },
+      "Wukong": {
+        "winRate": 0.4997,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 55987,
+        "tier": "B",
+        "slug": "wukong"
+      },
+      "Warwick": {
+        "winRate": 0.49920000000000003,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 41784,
+        "tier": "B",
+        "slug": "warwick"
+      },
+      "Vi": {
+        "winRate": 0.4988,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 134709,
+        "tier": "B",
+        "slug": "vi"
+      },
+      "Nocturne": {
+        "winRate": 0.4987,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 81436,
+        "tier": "B",
+        "slug": "nocturne"
+      },
+      "Kayn": {
+        "winRate": 0.4985,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 113742,
+        "tier": "B",
+        "slug": "kayn"
+      },
+      "Nidalee": {
+        "winRate": 0.4985,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 48723,
+        "tier": "B",
+        "slug": "nidalee"
+      },
+      "Lillia": {
+        "winRate": 0.4984,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 51871,
+        "tier": "B",
+        "slug": "lillia"
+      },
+      "Karthus": {
+        "winRate": 0.498,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 35364,
+        "tier": "B",
+        "slug": "karthus"
+      },
+      "Ekko": {
+        "winRate": 0.4972,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 115429,
+        "tier": "B",
+        "slug": "ekko"
+      },
+      "Gragas": {
+        "winRate": 0.4963,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 13245,
+        "tier": "B",
+        "slug": "gragas"
+      },
+      "Rengar": {
+        "winRate": 0.4947,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 101460,
+        "tier": "C",
+        "slug": "rengar"
+      },
+      "Skarner": {
+        "winRate": 0.49439999999999995,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 11975,
+        "tier": "B",
+        "slug": "skarner"
+      },
+      "Leesin": {
+        "winRate": 0.49369999999999997,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 248190,
+        "tier": "D",
+        "slug": "leesin"
+      },
+      "Graves": {
+        "winRate": 0.493,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 89661,
+        "tier": "C",
+        "slug": "graves"
+      },
+      "Sylas": {
+        "winRate": 0.49119999999999997,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 94298,
+        "tier": "D",
+        "slug": "sylas"
+      },
+      "Shyvana": {
+        "winRate": 0.48869999999999997,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 20150,
+        "tier": "B",
+        "slug": "shyvana"
+      },
+      "Viego": {
+        "winRate": 0.4861,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 320376,
+        "tier": "D",
+        "slug": "viego"
+      },
+      "Pantheon": {
+        "winRate": 0.48369999999999996,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 20557,
+        "tier": "B",
+        "slug": "pantheon"
+      },
+      "Ambessa": {
+        "winRate": 0.4779,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 92944,
+        "tier": "D",
+        "slug": "ambessa"
+      },
+      "Jayce": {
+        "winRate": 0.4718,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 68017,
+        "tier": "D",
+        "slug": "jayce"
+      },
+      "Qiyana": {
+        "winRate": 0.4704,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 51161,
+        "tier": "D",
+        "slug": "qiyana"
+      },
+      "Zed": {
+        "winRate": 0.47009999999999996,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 48304,
+        "tier": "D",
+        "slug": "zed"
+      },
+      "Malphite": {
+        "winRate": 0.46880000000000005,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 46994,
+        "tier": "D",
+        "slug": "malphite"
+      }
     },
-    "Kayle": {
-      "winRate": 0.5261,
-      "pickRate": 0.046,
-      "banRate": 0.065,
-      "matches": 0,
-      "tier": "S+"
+    "mid": {
+      "Kayle": {
+        "winRate": 0.5266,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 22394,
+        "tier": "S",
+        "slug": "kayle"
+      },
+      "Sion": {
+        "winRate": 0.5207999999999999,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 16704,
+        "tier": "A",
+        "slug": "sion"
+      },
+      "Pantheon": {
+        "winRate": 0.5197999999999999,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 16496,
+        "tier": "A",
+        "slug": "pantheon"
+      },
+      "Brand": {
+        "winRate": 0.5185,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 18971,
+        "tier": "A",
+        "slug": "brand"
+      },
+      "Kennen": {
+        "winRate": 0.5179,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 12907,
+        "tier": "A",
+        "slug": "kennen"
+      },
+      "Ahri": {
+        "winRate": 0.5179,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 280558,
+        "tier": "S+",
+        "slug": "ahri"
+      },
+      "Vex": {
+        "winRate": 0.5178,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 63528,
+        "tier": "S",
+        "slug": "vex"
+      },
+      "Talon": {
+        "winRate": 0.5174,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 43286,
+        "tier": "S",
+        "slug": "talon"
+      },
+      "Xerath": {
+        "winRate": 0.5171,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 96937,
+        "tier": "S+",
+        "slug": "xerath"
+      },
+      "Naafiri": {
+        "winRate": 0.516,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 78179,
+        "tier": "S+",
+        "slug": "naafiri"
+      },
+      "Swain": {
+        "winRate": 0.5156000000000001,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 33419,
+        "tier": "A",
+        "slug": "swain"
+      },
+      "Aurelionsol": {
+        "winRate": 0.5154,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 59801,
+        "tier": "S",
+        "slug": "aurelionsol"
+      },
+      "Kassadin": {
+        "winRate": 0.5153,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 116755,
+        "tier": "S+",
+        "slug": "kassadin"
+      },
+      "Anivia": {
+        "winRate": 0.5138,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 76315,
+        "tier": "S",
+        "slug": "anivia"
+      },
+      "Qiyana": {
+        "winRate": 0.5131,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 61294,
+        "tier": "S",
+        "slug": "qiyana"
+      },
+      "Twistedfate": {
+        "winRate": 0.5122,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 108960,
+        "tier": "S",
+        "slug": "twistedfate"
+      },
+      "Velkoz": {
+        "winRate": 0.5109,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 26729,
+        "tier": "A",
+        "slug": "velkoz"
+      },
+      "Veigar": {
+        "winRate": 0.5093,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 87718,
+        "tier": "A",
+        "slug": "veigar"
+      },
+      "Chogath": {
+        "winRate": 0.5091,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 13346,
+        "tier": "B",
+        "slug": "chogath"
+      },
+      "Fizz": {
+        "winRate": 0.5089,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 83291,
+        "tier": "S",
+        "slug": "fizz"
+      },
+      "Akshan": {
+        "winRate": 0.5086999999999999,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 66267,
+        "tier": "S",
+        "slug": "akshan"
+      },
+      "Malphite": {
+        "winRate": 0.5085999999999999,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 19215,
+        "tier": "S",
+        "slug": "malphite"
+      },
+      "Zoe": {
+        "winRate": 0.5077,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 84662,
+        "tier": "S+",
+        "slug": "zoe"
+      },
+      "Malzahar": {
+        "winRate": 0.5049,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 120101,
+        "tier": "S+",
+        "slug": "malzahar"
+      },
+      "Katarina": {
+        "winRate": 0.5043,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 156118,
+        "tier": "S+",
+        "slug": "katarina"
+      },
+      "Diana": {
+        "winRate": 0.504,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 71938,
+        "tier": "S",
+        "slug": "diana"
+      },
+      "Syndra": {
+        "winRate": 0.5039,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 150761,
+        "tier": "S",
+        "slug": "syndra"
+      },
+      "Jayce": {
+        "winRate": 0.5034000000000001,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 16221,
+        "tier": "A",
+        "slug": "jayce"
+      },
+      "Viktor": {
+        "winRate": 0.503,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 138282,
+        "tier": "S",
+        "slug": "viktor"
+      },
+      "Annie": {
+        "winRate": 0.5011,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 24555,
+        "tier": "B",
+        "slug": "annie"
+      },
+      "Lux": {
+        "winRate": 0.5006,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 72934,
+        "tier": "A",
+        "slug": "lux"
+      },
+      "Lissandra": {
+        "winRate": 0.5001,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 67842,
+        "tier": "A",
+        "slug": "lissandra"
+      },
+      "Leblanc": {
+        "winRate": 0.4993,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 91819,
+        "tier": "A",
+        "slug": "leblanc"
+      },
+      "Vladimir": {
+        "winRate": 0.499,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 62695,
+        "tier": "B",
+        "slug": "vladimir"
+      },
+      "Hwei": {
+        "winRate": 0.4982,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 65655,
+        "tier": "B",
+        "slug": "hwei"
+      },
+      "Zed": {
+        "winRate": 0.498,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 160641,
+        "tier": "A",
+        "slug": "zed"
+      },
+      "Yasuo": {
+        "winRate": 0.4959,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 192181,
+        "tier": "C",
+        "slug": "yasuo"
+      },
+      "Akali": {
+        "winRate": 0.4954,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 157912,
+        "tier": "C",
+        "slug": "akali"
+      },
+      "Irelia": {
+        "winRate": 0.49479999999999996,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 58355,
+        "tier": "B",
+        "slug": "irelia"
+      },
+      "Ekko": {
+        "winRate": 0.49479999999999996,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 72543,
+        "tier": "B",
+        "slug": "ekko"
+      },
+      "Galio": {
+        "winRate": 0.4947,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 99333,
+        "tier": "C",
+        "slug": "galio"
+      },
+      "Taliyah": {
+        "winRate": 0.49420000000000003,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 53973,
+        "tier": "B",
+        "slug": "taliyah"
+      },
+      "Cassiopeia": {
+        "winRate": 0.494,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 28651,
+        "tier": "B",
+        "slug": "cassiopeia"
+      },
+      "Aurora": {
+        "winRate": 0.4935,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 60865,
+        "tier": "B",
+        "slug": "aurora"
+      },
+      "Ziggs": {
+        "winRate": 0.4904,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 16941,
+        "tier": "B",
+        "slug": "ziggs"
+      },
+      "Sylas": {
+        "winRate": 0.4889,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 149325,
+        "tier": "D",
+        "slug": "sylas"
+      },
+      "Yone": {
+        "winRate": 0.48100000000000004,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 118611,
+        "tier": "D",
+        "slug": "yone"
+      },
+      "Orianna": {
+        "winRate": 0.4808,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 126345,
+        "tier": "D",
+        "slug": "orianna"
+      },
+      "Varus": {
+        "winRate": 0.4794,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 12750,
+        "tier": "C",
+        "slug": "varus"
+      },
+      "Ryze": {
+        "winRate": 0.46490000000000004,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 132703,
+        "tier": "D",
+        "slug": "ryze"
+      },
+      "Mel": {
+        "winRate": 0.4597,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 64412,
+        "tier": "D",
+        "slug": "mel"
+      },
+      "Smolder": {
+        "winRate": 0.4542,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 21647,
+        "tier": "D",
+        "slug": "smolder"
+      },
+      "Azir": {
+        "winRate": 0.4496,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 57401,
+        "tier": "D",
+        "slug": "azir"
+      }
     },
-    "Ornn": {
-      "winRate": 0.5228,
-      "pickRate": 0.052000000000000005,
-      "banRate": 0.008,
-      "matches": 0,
-      "tier": "S+"
+    "adc": {
+      "Veigar": {
+        "winRate": 0.5378000000000001,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 29328,
+        "tier": "S",
+        "slug": "veigar"
+      },
+      "Brand": {
+        "winRate": 0.5371,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 20838,
+        "tier": "A",
+        "slug": "brand"
+      },
+      "Swain": {
+        "winRate": 0.5343,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 47569,
+        "tier": "S",
+        "slug": "swain"
+      },
+      "Kogmaw": {
+        "winRate": 0.5295000000000001,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 33416,
+        "tier": "S",
+        "slug": "kogmaw"
+      },
+      "Yasuo": {
+        "winRate": 0.5236999999999999,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 23294,
+        "tier": "S",
+        "slug": "yasuo"
+      },
+      "Nilah": {
+        "winRate": 0.5229,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 39122,
+        "tier": "S+",
+        "slug": "nilah"
+      },
+      "Ziggs": {
+        "winRate": 0.5192,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 37001,
+        "tier": "A",
+        "slug": "ziggs"
+      },
+      "Jinx": {
+        "winRate": 0.5181,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 340051,
+        "tier": "S+",
+        "slug": "jinx"
+      },
+      "Seraphine": {
+        "winRate": 0.5181,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 13819,
+        "tier": "A",
+        "slug": "seraphine"
+      },
+      "Twitch": {
+        "winRate": 0.5152,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 151381,
+        "tier": "S+",
+        "slug": "twitch"
+      },
+      "Lux": {
+        "winRate": 0.5152,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 13227,
+        "tier": "A",
+        "slug": "lux"
+      },
+      "Ashe": {
+        "winRate": 0.5081,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 131758,
+        "tier": "S",
+        "slug": "ashe"
+      },
+      "Sivir": {
+        "winRate": 0.5056,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 144753,
+        "tier": "S+",
+        "slug": "sivir"
+      },
+      "Missfortune": {
+        "winRate": 0.5054,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 167583,
+        "tier": "S",
+        "slug": "missfortune"
+      },
+      "Vayne": {
+        "winRate": 0.5046,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 129096,
+        "tier": "S",
+        "slug": "vayne"
+      },
+      "Tristana": {
+        "winRate": 0.5046,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 86234,
+        "tier": "A",
+        "slug": "tristana"
+      },
+      "Draven": {
+        "winRate": 0.5039,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 89180,
+        "tier": "S+",
+        "slug": "draven"
+      },
+      "Smolder": {
+        "winRate": 0.5038,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 181943,
+        "tier": "S",
+        "slug": "smolder"
+      },
+      "Samira": {
+        "winRate": 0.5031,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 91257,
+        "tier": "S",
+        "slug": "samira"
+      },
+      "Xayah": {
+        "winRate": 0.5023,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 60582,
+        "tier": "A",
+        "slug": "xayah"
+      },
+      "Senna": {
+        "winRate": 0.5015999999999999,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 16193,
+        "tier": "B",
+        "slug": "senna"
+      },
+      "Zeri": {
+        "winRate": 0.5001,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 47182,
+        "tier": "B",
+        "slug": "zeri"
+      },
+      "Aphelios": {
+        "winRate": 0.4986,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 229079,
+        "tier": "A",
+        "slug": "aphelios"
+      },
+      "Jhin": {
+        "winRate": 0.4971,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 291709,
+        "tier": "C",
+        "slug": "jhin"
+      },
+      "Lucian": {
+        "winRate": 0.4953,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 196659,
+        "tier": "D",
+        "slug": "lucian"
+      },
+      "Caitlyn": {
+        "winRate": 0.4951,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 395324,
+        "tier": "D",
+        "slug": "caitlyn"
+      },
+      "Kaisa": {
+        "winRate": 0.4918,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 422847,
+        "tier": "D",
+        "slug": "kaisa"
+      },
+      "Corki": {
+        "winRate": 0.4913,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 87893,
+        "tier": "C",
+        "slug": "corki"
+      },
+      "Mel": {
+        "winRate": 0.4901,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 15060,
+        "tier": "B",
+        "slug": "mel"
+      },
+      "Varus": {
+        "winRate": 0.4829,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 123089,
+        "tier": "D",
+        "slug": "varus"
+      },
+      "Ezreal": {
+        "winRate": 0.4819,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 382735,
+        "tier": "D",
+        "slug": "ezreal"
+      },
+      "Yunara": {
+        "winRate": 0.48100000000000004,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 217665,
+        "tier": "D",
+        "slug": "yunara"
+      },
+      "Kalista": {
+        "winRate": 0.4757,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 18961,
+        "tier": "B",
+        "slug": "kalista"
+      }
     },
-    "Kled": {
-      "winRate": 0.5176,
-      "pickRate": 0.018000000000000002,
-      "banRate": 0.006,
-      "matches": 0,
-      "tier": "A"
+    "support": {
+      "Braum": {
+        "winRate": 0.52,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 216603,
+        "tier": "S+",
+        "slug": "braum"
+      },
+      "Zilean": {
+        "winRate": 0.5173,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 65776,
+        "tier": "S",
+        "slug": "zilean"
+      },
+      "Maokai": {
+        "winRate": 0.5169,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 42591,
+        "tier": "A",
+        "slug": "maokai"
+      },
+      "Sona": {
+        "winRate": 0.5164,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 120924,
+        "tier": "S",
+        "slug": "sona"
+      },
+      "Taric": {
+        "winRate": 0.5147999999999999,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 30158,
+        "tier": "A",
+        "slug": "taric"
+      },
+      "Nami": {
+        "winRate": 0.5145000000000001,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 338216,
+        "tier": "S+",
+        "slug": "nami"
+      },
+      "Janna": {
+        "winRate": 0.5143,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 100944,
+        "tier": "S",
+        "slug": "janna"
+      },
+      "Soraka": {
+        "winRate": 0.5092,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 110399,
+        "tier": "S",
+        "slug": "soraka"
+      },
+      "Elise": {
+        "winRate": 0.5085999999999999,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 22777,
+        "tier": "A",
+        "slug": "elise"
+      },
+      "Thresh": {
+        "winRate": 0.5084000000000001,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 310177,
+        "tier": "S+",
+        "slug": "thresh"
+      },
+      "Leona": {
+        "winRate": 0.5072,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 161240,
+        "tier": "S",
+        "slug": "leona"
+      },
+      "Seraphine": {
+        "winRate": 0.5065,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 90957,
+        "tier": "A",
+        "slug": "seraphine"
+      },
+      "Milio": {
+        "winRate": 0.5062,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 168709,
+        "tier": "S+",
+        "slug": "milio"
+      },
+      "Velkoz": {
+        "winRate": 0.5059,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 55491,
+        "tier": "A",
+        "slug": "velkoz"
+      },
+      "Blitzcrank": {
+        "winRate": 0.505,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 123382,
+        "tier": "S+",
+        "slug": "blitzcrank"
+      },
+      "Brand": {
+        "winRate": 0.5032,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 51604,
+        "tier": "A",
+        "slug": "brand"
+      },
+      "Senna": {
+        "winRate": 0.5024000000000001,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 99817,
+        "tier": "A",
+        "slug": "senna"
+      },
+      "Neeko": {
+        "winRate": 0.5022,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 74155,
+        "tier": "A",
+        "slug": "neeko"
+      },
+      "Pyke": {
+        "winRate": 0.4999,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 126531,
+        "tier": "A",
+        "slug": "pyke"
+      },
+      "Bard": {
+        "winRate": 0.49939999999999996,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 157653,
+        "tier": "B",
+        "slug": "bard"
+      },
+      "Renata": {
+        "winRate": 0.49939999999999996,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 25775,
+        "tier": "B",
+        "slug": "renata"
+      },
+      "Zyra": {
+        "winRate": 0.49939999999999996,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 53167,
+        "tier": "B",
+        "slug": "zyra"
+      },
+      "Lulu": {
+        "winRate": 0.49920000000000003,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 245297,
+        "tier": "A",
+        "slug": "lulu"
+      },
+      "Rakan": {
+        "winRate": 0.499,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 91981,
+        "tier": "B",
+        "slug": "rakan"
+      },
+      "Poppy": {
+        "winRate": 0.49810000000000004,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 38265,
+        "tier": "B",
+        "slug": "poppy"
+      },
+      "Rell": {
+        "winRate": 0.4972,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 62517,
+        "tier": "B",
+        "slug": "rell"
+      },
+      "Karma": {
+        "winRate": 0.4963,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 225028,
+        "tier": "C",
+        "slug": "karma"
+      },
+      "Fiddlesticks": {
+        "winRate": 0.4955,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 12687,
+        "tier": "B",
+        "slug": "fiddlesticks"
+      },
+      "Morgana": {
+        "winRate": 0.4949,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 95172,
+        "tier": "B",
+        "slug": "morgana"
+      },
+      "Nautilus": {
+        "winRate": 0.494,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 236786,
+        "tier": "D",
+        "slug": "nautilus"
+      },
+      "Alistar": {
+        "winRate": 0.4927,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 106615,
+        "tier": "C",
+        "slug": "alistar"
+      },
+      "Tahmkench": {
+        "winRate": 0.4917,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 42428,
+        "tier": "B",
+        "slug": "tahmkench"
+      },
+      "Shaco": {
+        "winRate": 0.4867,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 22446,
+        "tier": "B",
+        "slug": "shaco"
+      },
+      "Xerath": {
+        "winRate": 0.4861,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 55166,
+        "tier": "C",
+        "slug": "xerath"
+      },
+      "Swain": {
+        "winRate": 0.4858,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 59787,
+        "tier": "C",
+        "slug": "swain"
+      },
+      "Zoe": {
+        "winRate": 0.48119999999999996,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 14481,
+        "tier": "B",
+        "slug": "zoe"
+      },
+      "Yuumi": {
+        "winRate": 0.4796,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 108957,
+        "tier": "D",
+        "slug": "yuumi"
+      },
+      "Lux": {
+        "winRate": 0.47859999999999997,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 88393,
+        "tier": "D",
+        "slug": "lux"
+      },
+      "Leblanc": {
+        "winRate": 0.4781,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 12785,
+        "tier": "B",
+        "slug": "leblanc"
+      },
+      "Pantheon": {
+        "winRate": 0.4778,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 54796,
+        "tier": "D",
+        "slug": "pantheon"
+      },
+      "Sylas": {
+        "winRate": 0.4678,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 17624,
+        "tier": "C",
+        "slug": "sylas"
+      },
+      "Ashe": {
+        "winRate": 0.4465,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 14255,
+        "tier": "C",
+        "slug": "ashe"
+      },
+      "Mel": {
+        "winRate": 0.428,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 31693,
+        "tier": "D",
+        "slug": "mel"
+      }
     },
-    "Shen": {
-      "winRate": 0.5171,
-      "pickRate": 0.035,
-      "banRate": 0.005,
-      "matches": 0,
-      "tier": "S"
-    },
-    "Cassiopeia": {
-      "winRate": 0.516,
-      "pickRate": 0.006999999999999999,
-      "banRate": 0.013000000000000001,
-      "matches": 0,
-      "tier": "A"
-    },
-    "Kennen": {
-      "winRate": 0.515,
-      "pickRate": 0.034,
-      "banRate": 0.033,
-      "matches": 0,
-      "tier": "S+"
-    },
-    "Gwen": {
-      "winRate": 0.5146999999999999,
-      "pickRate": 0.039,
-      "banRate": 0.13,
-      "matches": 0,
-      "tier": "S+"
-    },
-    "Zac": {
-      "winRate": 0.5128,
-      "pickRate": 0.006999999999999999,
-      "banRate": 0.023,
-      "matches": 0,
-      "tier": "A"
-    },
-    "Urgot": {
-      "winRate": 0.5125,
-      "pickRate": 0.026000000000000002,
-      "banRate": 0.008,
-      "matches": 0,
-      "tier": "S"
-    },
-    "Heimerdinger": {
-      "winRate": 0.512,
-      "pickRate": 0.009000000000000001,
-      "banRate": 0.01,
-      "matches": 0,
-      "tier": "A"
-    },
-    "Nasus": {
-      "winRate": 0.5115999999999999,
-      "pickRate": 0.035,
-      "banRate": 0.034,
-      "matches": 0,
-      "tier": "S"
-    },
-    "Olaf": {
-      "winRate": 0.5112,
-      "pickRate": 0.022000000000000002,
-      "banRate": 0.016,
-      "matches": 0,
-      "tier": "S"
-    },
-    "Pantheon": {
-      "winRate": 0.5081,
-      "pickRate": 0.018000000000000002,
-      "banRate": 0.013000000000000001,
-      "matches": 0,
-      "tier": "A"
-    },
-    "Malphite": {
-      "winRate": 0.5073,
-      "pickRate": 0.061,
-      "banRate": 0.293,
-      "matches": 0,
-      "tier": "S+"
-    },
-    "Zed": {
-      "winRate": 0.5072,
-      "pickRate": 0.005,
-      "banRate": 0.28600000000000003,
-      "matches": 0,
-      "tier": "A"
-    },
-    "Poppy": {
-      "winRate": 0.5068,
-      "pickRate": 0.013000000000000001,
-      "banRate": 0.034,
-      "matches": 0,
-      "tier": "A"
-    },
-    "Zaahen": {
-      "winRate": 0.5059,
-      "pickRate": 0.068,
-      "banRate": 0.09699999999999999,
-      "matches": 0,
-      "tier": "S+"
-    },
-    "Swain": {
-      "winRate": 0.5053,
-      "pickRate": 0.012,
-      "banRate": 0.045,
-      "matches": 0,
-      "tier": "A"
-    },
-    "Naafiri": {
-      "winRate": 0.5046,
-      "pickRate": 0.006999999999999999,
-      "banRate": 0.133,
-      "matches": 0,
-      "tier": "A"
-    },
-    "Irelia": {
-      "winRate": 0.5044,
-      "pickRate": 0.045,
-      "banRate": 0.132,
-      "matches": 0,
-      "tier": "S+"
-    },
-    "Teemo": {
-      "winRate": 0.5043,
-      "pickRate": 0.022000000000000002,
-      "banRate": 0.028999999999999998,
-      "matches": 0,
-      "tier": "S"
-    },
-    "Gangplank": {
-      "winRate": 0.5041,
-      "pickRate": 0.054000000000000006,
-      "banRate": 0.049,
-      "matches": 0,
-      "tier": "S"
-    },
-    "Quinn": {
-      "winRate": 0.5036999999999999,
-      "pickRate": 0.009000000000000001,
-      "banRate": 0.008,
-      "matches": 0,
-      "tier": "A"
-    },
-    "Warwick": {
-      "winRate": 0.5035000000000001,
-      "pickRate": 0.011000000000000001,
-      "banRate": 0.01,
-      "matches": 0,
-      "tier": "A"
-    },
-    "Riven": {
-      "winRate": 0.5033,
-      "pickRate": 0.039,
-      "banRate": 0.040999999999999995,
-      "matches": 0,
-      "tier": "S"
-    },
-    "MonkeyKing": {
-      "winRate": 0.5033,
-      "pickRate": 0.008,
-      "banRate": 0.006999999999999999,
-      "matches": 0,
-      "tier": "B"
-    },
-    "Sett": {
-      "winRate": 0.5022,
-      "pickRate": 0.047,
-      "banRate": 0.02,
-      "matches": 0,
-      "tier": "A"
-    },
-    "Rumble": {
-      "winRate": 0.5017,
-      "pickRate": 0.033,
-      "banRate": 0.031,
-      "matches": 0,
-      "tier": "S"
-    },
-    "Sion": {
-      "winRate": 0.5015999999999999,
-      "pickRate": 0.046,
-      "banRate": 0.01,
-      "matches": 0,
-      "tier": "A"
-    },
-    "Vayne": {
-      "winRate": 0.5015,
-      "pickRate": 0.025,
-      "banRate": 0.077,
-      "matches": 0,
-      "tier": "A"
-    },
-    "Chogath": {
-      "winRate": 0.501,
-      "pickRate": 0.024,
-      "banRate": 0.006999999999999999,
-      "matches": 0,
-      "tier": "A"
-    },
-    "Maokai": {
-      "winRate": 0.5001,
-      "pickRate": 0.005,
-      "banRate": 0.001,
-      "matches": 0,
-      "tier": "B"
-    },
-    "Aatrox": {
-      "winRate": 0.4999,
-      "pickRate": 0.073,
-      "banRate": 0.08199999999999999,
-      "matches": 0,
-      "tier": "A"
-    },
-    "Mordekaiser": {
-      "winRate": 0.49920000000000003,
-      "pickRate": 0.05,
-      "banRate": 0.054000000000000006,
-      "matches": 0,
-      "tier": "B"
-    },
-    "Gnar": {
-      "winRate": 0.4991,
-      "pickRate": 0.040999999999999995,
-      "banRate": 0.011000000000000001,
-      "matches": 0,
-      "tier": "B"
-    },
-    "Renekton": {
-      "winRate": 0.4985,
-      "pickRate": 0.057999999999999996,
-      "banRate": 0.044000000000000004,
-      "matches": 0,
-      "tier": "B"
-    },
-    "Camille": {
-      "winRate": 0.49829999999999997,
-      "pickRate": 0.022000000000000002,
-      "banRate": 0.006999999999999999,
-      "matches": 0,
-      "tier": "B"
-    },
-    "Fiora": {
-      "winRate": 0.4979,
-      "pickRate": 0.038,
-      "banRate": 0.06,
-      "matches": 0,
-      "tier": "B"
-    },
-    "Garen": {
-      "winRate": 0.4972,
-      "pickRate": 0.051,
-      "banRate": 0.028999999999999998,
-      "matches": 0,
-      "tier": "B"
-    },
-    "Yone": {
-      "winRate": 0.4963,
-      "pickRate": 0.047,
-      "banRate": 0.036000000000000004,
-      "matches": 0,
-      "tier": "B"
-    },
-    "Sylas": {
-      "winRate": 0.4962,
-      "pickRate": 0.011000000000000001,
-      "banRate": 0.129,
-      "matches": 0,
-      "tier": "B"
-    },
-    "Tryndamere": {
-      "winRate": 0.49579999999999996,
-      "pickRate": 0.023,
-      "banRate": 0.016,
-      "matches": 0,
-      "tier": "B"
-    },
-    "DrMundo": {
-      "winRate": 0.49560000000000004,
-      "pickRate": 0.04,
-      "banRate": 0.078,
-      "matches": 0,
-      "tier": "B"
-    },
-    "Jax": {
-      "winRate": 0.4947,
-      "pickRate": 0.069,
-      "banRate": 0.153,
-      "matches": 0,
-      "tier": "D"
-    },
-    "Yasuo": {
-      "winRate": 0.4935,
-      "pickRate": 0.032,
-      "banRate": 0.177,
-      "matches": 0,
-      "tier": "C"
-    },
-    "Aurora": {
-      "winRate": 0.49340000000000006,
-      "pickRate": 0.006999999999999999,
-      "banRate": 0.018000000000000002,
-      "matches": 0,
-      "tier": "B"
-    },
-    "Varus": {
-      "winRate": 0.49310000000000004,
-      "pickRate": 0.028999999999999998,
-      "banRate": 0.289,
-      "matches": 0,
-      "tier": "C"
-    },
-    "Illaoi": {
-      "winRate": 0.493,
-      "pickRate": 0.017,
-      "banRate": 0.023,
-      "matches": 0,
-      "tier": "B"
-    },
-    "Akali": {
-      "winRate": 0.49200000000000005,
-      "pickRate": 0.03,
-      "banRate": 0.252,
-      "matches": 0,
-      "tier": "D"
-    },
-    "Gragas": {
-      "winRate": 0.4918,
-      "pickRate": 0.02,
-      "banRate": 0.006,
-      "matches": 0,
-      "tier": "B"
-    },
-    "Darius": {
-      "winRate": 0.4915,
-      "pickRate": 0.057999999999999996,
-      "banRate": 0.12,
-      "matches": 0,
-      "tier": "D"
-    },
-    "Vladimir": {
-      "winRate": 0.48969999999999997,
-      "pickRate": 0.021,
-      "banRate": 0.057,
-      "matches": 0,
-      "tier": "C"
-    },
-    "Volibear": {
-      "winRate": 0.4893,
-      "pickRate": 0.033,
-      "banRate": 0.07400000000000001,
-      "matches": 0,
-      "tier": "D"
-    },
-    "TahmKench": {
-      "winRate": 0.4875,
-      "pickRate": 0.022000000000000002,
-      "banRate": 0.013000000000000001,
-      "matches": 0,
-      "tier": "C"
-    },
-    "Jayce": {
-      "winRate": 0.4867,
-      "pickRate": 0.034,
-      "banRate": 0.081,
-      "matches": 0,
-      "tier": "D"
-    },
-    "Yorick": {
-      "winRate": 0.486,
-      "pickRate": 0.031,
-      "banRate": 0.049,
-      "matches": 0,
-      "tier": "D"
-    },
-    "Ambessa": {
-      "winRate": 0.4849,
-      "pickRate": 0.048,
-      "banRate": 0.095,
-      "matches": 0,
-      "tier": "D"
-    },
-    "Ryze": {
-      "winRate": 0.4808,
-      "pickRate": 0.015,
-      "banRate": 0.032,
-      "matches": 0,
-      "tier": "D"
-    },
-    "Trundle": {
-      "winRate": 0.47869999999999996,
-      "pickRate": 0.013000000000000001,
-      "banRate": 0.005,
-      "matches": 0,
-      "tier": "C"
-    },
-    "KSante": {
-      "winRate": 0.4736,
-      "pickRate": 0.042,
-      "banRate": 0.022000000000000002,
-      "matches": 0,
-      "tier": "D"
-    },
-    "MasterYi": {
-      "winRate": 0.452,
-      "pickRate": 0.006999999999999999,
-      "banRate": 0.10099999999999999,
-      "matches": 0,
-      "tier": "D"
+    "all": {
+      "Veigar": {
+        "winRate": 0.5093,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 87718,
+        "tier": "A",
+        "slug": "veigar"
+      },
+      "Brand": {
+        "winRate": 0.5032,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 51604,
+        "tier": "A",
+        "slug": "brand"
+      },
+      "Swain": {
+        "winRate": 0.4858,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 59787,
+        "tier": "C",
+        "slug": "swain"
+      },
+      "Anivia": {
+        "winRate": 0.5138,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 76315,
+        "tier": "S",
+        "slug": "anivia"
+      },
+      "Kogmaw": {
+        "winRate": 0.5295000000000001,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 33416,
+        "tier": "S",
+        "slug": "kogmaw"
+      },
+      "Singed": {
+        "winRate": 0.5285,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 60323,
+        "tier": "S",
+        "slug": "singed"
+      },
+      "Kayle": {
+        "winRate": 0.526,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 101081,
+        "tier": "S+",
+        "slug": "kayle"
+      },
+      "Yasuo": {
+        "winRate": 0.4939,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 68654,
+        "tier": "C",
+        "slug": "yasuo"
+      },
+      "Nilah": {
+        "winRate": 0.5229,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 39122,
+        "tier": "S+",
+        "slug": "nilah"
+      },
+      "Ornn": {
+        "winRate": 0.5226,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 116787,
+        "tier": "S+",
+        "slug": "ornn"
+      },
+      "Reksai": {
+        "winRate": 0.5226,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 62611,
+        "tier": "S",
+        "slug": "reksai"
+      },
+      "Ivern": {
+        "winRate": 0.5221,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 29612,
+        "tier": "A",
+        "slug": "ivern"
+      },
+      "Rammus": {
+        "winRate": 0.522,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 38244,
+        "tier": "S",
+        "slug": "rammus"
+      },
+      "Sion": {
+        "winRate": 0.504,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 103459,
+        "tier": "A",
+        "slug": "sion"
+      },
+      "Braum": {
+        "winRate": 0.52,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 216603,
+        "tier": "S+",
+        "slug": "braum"
+      },
+      "Pantheon": {
+        "winRate": 0.4778,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 54796,
+        "tier": "D",
+        "slug": "pantheon"
+      },
+      "Kled": {
+        "winRate": 0.5194,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 39757,
+        "tier": "S",
+        "slug": "kled"
+      },
+      "Ziggs": {
+        "winRate": 0.4904,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 16941,
+        "tier": "B",
+        "slug": "ziggs"
+      },
+      "Shen": {
+        "winRate": 0.5186,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 78645,
+        "tier": "S",
+        "slug": "shen"
+      },
+      "Jinx": {
+        "winRate": 0.5181,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 340051,
+        "tier": "S+",
+        "slug": "jinx"
+      },
+      "Seraphine": {
+        "winRate": 0.5065,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 90957,
+        "tier": "A",
+        "slug": "seraphine"
+      },
+      "Kennen": {
+        "winRate": 0.5158,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 74027,
+        "tier": "S+",
+        "slug": "kennen"
+      },
+      "Ahri": {
+        "winRate": 0.5179,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 280558,
+        "tier": "S+",
+        "slug": "ahri"
+      },
+      "Vex": {
+        "winRate": 0.5178,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 63528,
+        "tier": "S",
+        "slug": "vex"
+      },
+      "Nunu": {
+        "winRate": 0.5178,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 58109,
+        "tier": "S",
+        "slug": "nunu"
+      },
+      "Talon": {
+        "winRate": 0.5036999999999999,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 80207,
+        "tier": "S",
+        "slug": "talon"
+      },
+      "Nasus": {
+        "winRate": 0.5102,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 77673,
+        "tier": "S",
+        "slug": "nasus"
+      },
+      "Zilean": {
+        "winRate": 0.5173,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 65776,
+        "tier": "S",
+        "slug": "zilean"
+      },
+      "Xerath": {
+        "winRate": 0.4861,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 55166,
+        "tier": "C",
+        "slug": "xerath"
+      },
+      "Zac": {
+        "winRate": 0.5131,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 84655,
+        "tier": "S",
+        "slug": "zac"
+      },
+      "Maokai": {
+        "winRate": 0.5034000000000001,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 11576,
+        "tier": "B",
+        "slug": "maokai"
+      },
+      "Cassiopeia": {
+        "winRate": 0.494,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 28651,
+        "tier": "B",
+        "slug": "cassiopeia"
+      },
+      "Gwen": {
+        "winRate": 0.5156000000000001,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 66992,
+        "tier": "S+",
+        "slug": "gwen"
+      },
+      "Fiddlesticks": {
+        "winRate": 0.4955,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 12687,
+        "tier": "B",
+        "slug": "fiddlesticks"
+      },
+      "Sona": {
+        "winRate": 0.5164,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 120924,
+        "tier": "S",
+        "slug": "sona"
+      },
+      "Zyra": {
+        "winRate": 0.49939999999999996,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 53167,
+        "tier": "B",
+        "slug": "zyra"
+      },
+      "Naafiri": {
+        "winRate": 0.5071,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 75224,
+        "tier": "S+",
+        "slug": "naafiri"
+      },
+      "Aurelionsol": {
+        "winRate": 0.5154,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 59801,
+        "tier": "S",
+        "slug": "aurelionsol"
+      },
+      "Kassadin": {
+        "winRate": 0.5153,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 116755,
+        "tier": "S+",
+        "slug": "kassadin"
+      },
+      "Twitch": {
+        "winRate": 0.5152,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 151381,
+        "tier": "S+",
+        "slug": "twitch"
+      },
+      "Lux": {
+        "winRate": 0.47859999999999997,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 88393,
+        "tier": "D",
+        "slug": "lux"
+      },
+      "Taric": {
+        "winRate": 0.5147999999999999,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 30158,
+        "tier": "A",
+        "slug": "taric"
+      },
+      "Nami": {
+        "winRate": 0.5145000000000001,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 338216,
+        "tier": "S+",
+        "slug": "nami"
+      },
+      "Briar": {
+        "winRate": 0.5144,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 103304,
+        "tier": "S+",
+        "slug": "briar"
+      },
+      "Janna": {
+        "winRate": 0.5143,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 100944,
+        "tier": "S",
+        "slug": "janna"
+      },
+      "Urgot": {
+        "winRate": 0.5136,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 58268,
+        "tier": "S",
+        "slug": "urgot"
+      },
+      "Qiyana": {
+        "winRate": 0.4704,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 51161,
+        "tier": "D",
+        "slug": "qiyana"
+      },
+      "Twistedfate": {
+        "winRate": 0.5122,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 108960,
+        "tier": "S",
+        "slug": "twistedfate"
+      },
+      "Elise": {
+        "winRate": 0.5085999999999999,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 22777,
+        "tier": "A",
+        "slug": "elise"
+      },
+      "Shaco": {
+        "winRate": 0.4867,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 22446,
+        "tier": "B",
+        "slug": "shaco"
+      },
+      "Velkoz": {
+        "winRate": 0.5059,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 55491,
+        "tier": "A",
+        "slug": "velkoz"
+      },
+      "Olaf": {
+        "winRate": 0.5105,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 47836,
+        "tier": "S",
+        "slug": "olaf"
+      },
+      "Belveth": {
+        "winRate": 0.5103,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 41020,
+        "tier": "S",
+        "slug": "belveth"
+      },
+      "Khazix": {
+        "winRate": 0.5103,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 253423,
+        "tier": "S+",
+        "slug": "khazix"
+      },
+      "Xinzhao": {
+        "winRate": 0.5097999999999999,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 159051,
+        "tier": "S",
+        "slug": "xinzhao"
+      },
+      "Soraka": {
+        "winRate": 0.5092,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 110399,
+        "tier": "S",
+        "slug": "soraka"
+      },
+      "Chogath": {
+        "winRate": 0.4979,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 53729,
+        "tier": "B",
+        "slug": "chogath"
+      },
+      "Heimerdinger": {
+        "winRate": 0.509,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 19092,
+        "tier": "A",
+        "slug": "heimerdinger"
+      },
+      "Evelynn": {
+        "winRate": 0.5089,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 54375,
+        "tier": "S",
+        "slug": "evelynn"
+      },
+      "Fizz": {
+        "winRate": 0.5089,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 83291,
+        "tier": "S",
+        "slug": "fizz"
+      },
+      "Akshan": {
+        "winRate": 0.5086999999999999,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 66267,
+        "tier": "S",
+        "slug": "akshan"
+      },
+      "Malphite": {
+        "winRate": 0.46880000000000005,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 46994,
+        "tier": "D",
+        "slug": "malphite"
+      },
+      "Thresh": {
+        "winRate": 0.5084000000000001,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 310177,
+        "tier": "S+",
+        "slug": "thresh"
+      },
+      "Ashe": {
+        "winRate": 0.4465,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 14255,
+        "tier": "C",
+        "slug": "ashe"
+      },
+      "Zoe": {
+        "winRate": 0.48119999999999996,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 14481,
+        "tier": "B",
+        "slug": "zoe"
+      },
+      "Zaahen": {
+        "winRate": 0.5042,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 146549,
+        "tier": "S+",
+        "slug": "zaahen"
+      },
+      "Leona": {
+        "winRate": 0.5072,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 161240,
+        "tier": "S",
+        "slug": "leona"
+      },
+      "Taliyah": {
+        "winRate": 0.49420000000000003,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 53973,
+        "tier": "B",
+        "slug": "taliyah"
+      },
+      "Milio": {
+        "winRate": 0.5062,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 168709,
+        "tier": "S+",
+        "slug": "milio"
+      },
+      "Drmundo": {
+        "winRate": 0.4953,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 87821,
+        "tier": "C",
+        "slug": "drmundo"
+      },
+      "Sivir": {
+        "winRate": 0.5056,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 144753,
+        "tier": "S+",
+        "slug": "sivir"
+      },
+      "Poppy": {
+        "winRate": 0.49810000000000004,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 38265,
+        "tier": "B",
+        "slug": "poppy"
+      },
+      "Amumu": {
+        "winRate": 0.5055,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 48725,
+        "tier": "A",
+        "slug": "amumu"
+      },
+      "Missfortune": {
+        "winRate": 0.5054,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 167583,
+        "tier": "S",
+        "slug": "missfortune"
+      },
+      "Gangplank": {
+        "winRate": 0.5051,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 117772,
+        "tier": "S",
+        "slug": "gangplank"
+      },
+      "Blitzcrank": {
+        "winRate": 0.505,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 123382,
+        "tier": "S+",
+        "slug": "blitzcrank"
+      },
+      "Malzahar": {
+        "winRate": 0.5049,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 120101,
+        "tier": "S+",
+        "slug": "malzahar"
+      },
+      "Trundle": {
+        "winRate": 0.4803,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 27394,
+        "tier": "C",
+        "slug": "trundle"
+      },
+      "Quinn": {
+        "winRate": 0.5047999999999999,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 20911,
+        "tier": "A",
+        "slug": "quinn"
+      },
+      "Masteryi": {
+        "winRate": 0.4569,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 15283,
+        "tier": "D",
+        "slug": "masteryi"
+      },
+      "Vayne": {
+        "winRate": 0.5025999999999999,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 54971,
+        "tier": "A",
+        "slug": "vayne"
+      },
+      "Tristana": {
+        "winRate": 0.5046,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 86234,
+        "tier": "A",
+        "slug": "tristana"
+      },
+      "Katarina": {
+        "winRate": 0.5043,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 156118,
+        "tier": "S+",
+        "slug": "katarina"
+      },
+      "Kindred": {
+        "winRate": 0.504,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 44075,
+        "tier": "A",
+        "slug": "kindred"
+      },
+      "Diana": {
+        "winRate": 0.5006,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 134683,
+        "tier": "S+",
+        "slug": "diana"
+      },
+      "Draven": {
+        "winRate": 0.5039,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 89180,
+        "tier": "S+",
+        "slug": "draven"
+      },
+      "Syndra": {
+        "winRate": 0.5039,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 150761,
+        "tier": "S",
+        "slug": "syndra"
+      },
+      "Sejuani": {
+        "winRate": 0.5039,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 40561,
+        "tier": "B",
+        "slug": "sejuani"
+      },
+      "Smolder": {
+        "winRate": 0.4542,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 21647,
+        "tier": "D",
+        "slug": "smolder"
+      },
+      "Teemo": {
+        "winRate": 0.5036,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 48806,
+        "tier": "A",
+        "slug": "teemo"
+      },
+      "Jayce": {
+        "winRate": 0.4718,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 68017,
+        "tier": "D",
+        "slug": "jayce"
+      },
+      "Samira": {
+        "winRate": 0.5031,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 91257,
+        "tier": "S",
+        "slug": "samira"
+      },
+      "Viktor": {
+        "winRate": 0.503,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 138282,
+        "tier": "S",
+        "slug": "viktor"
+      },
+      "Zed": {
+        "winRate": 0.47009999999999996,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 48304,
+        "tier": "D",
+        "slug": "zed"
+      },
+      "Wukong": {
+        "winRate": 0.4997,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 55987,
+        "tier": "B",
+        "slug": "wukong"
+      },
+      "Irelia": {
+        "winRate": 0.49479999999999996,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 58355,
+        "tier": "B",
+        "slug": "irelia"
+      },
+      "Volibear": {
+        "winRate": 0.4886,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 71727,
+        "tier": "D",
+        "slug": "volibear"
+      },
+      "Senna": {
+        "winRate": 0.5015999999999999,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 16193,
+        "tier": "B",
+        "slug": "senna"
+      },
+      "Xayah": {
+        "winRate": 0.5023,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 60582,
+        "tier": "A",
+        "slug": "xayah"
+      },
+      "Neeko": {
+        "winRate": 0.5022,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 74155,
+        "tier": "A",
+        "slug": "neeko"
+      },
+      "Jarvaniv": {
+        "winRate": 0.5021,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 144129,
+        "tier": "A",
+        "slug": "jarvaniv"
+      },
+      "Udyr": {
+        "winRate": 0.502,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 32611,
+        "tier": "A",
+        "slug": "udyr"
+      },
+      "Sett": {
+        "winRate": 0.5018,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 106671,
+        "tier": "A",
+        "slug": "sett"
+      },
+      "Riven": {
+        "winRate": 0.5017,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 87168,
+        "tier": "S",
+        "slug": "riven"
+      },
+      "Jax": {
+        "winRate": 0.49579999999999996,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 152458,
+        "tier": "C",
+        "slug": "jax"
+      },
+      "Annie": {
+        "winRate": 0.5011,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 24555,
+        "tier": "B",
+        "slug": "annie"
+      },
+      "Mordekaiser": {
+        "winRate": 0.5006,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 110593,
+        "tier": "S",
+        "slug": "mordekaiser"
+      },
+      "Aatrox": {
+        "winRate": 0.4987,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 159529,
+        "tier": "B",
+        "slug": "aatrox"
+      },
+      "Zeri": {
+        "winRate": 0.5001,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 47182,
+        "tier": "B",
+        "slug": "zeri"
+      },
+      "Lissandra": {
+        "winRate": 0.5001,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 67842,
+        "tier": "A",
+        "slug": "lissandra"
+      },
+      "Pyke": {
+        "winRate": 0.4999,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 126531,
+        "tier": "A",
+        "slug": "pyke"
+      },
+      "Warwick": {
+        "winRate": 0.49920000000000003,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 41784,
+        "tier": "B",
+        "slug": "warwick"
+      },
+      "Hecarim": {
+        "winRate": 0.4997,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 99202,
+        "tier": "B",
+        "slug": "hecarim"
+      },
+      "Rumble": {
+        "winRate": 0.4997,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 70952,
+        "tier": "B",
+        "slug": "rumble"
+      },
+      "Bard": {
+        "winRate": 0.49939999999999996,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 157653,
+        "tier": "B",
+        "slug": "bard"
+      },
+      "Renata": {
+        "winRate": 0.49939999999999996,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 25775,
+        "tier": "B",
+        "slug": "renata"
+      },
+      "Leblanc": {
+        "winRate": 0.4781,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 12785,
+        "tier": "B",
+        "slug": "leblanc"
+      },
+      "Lulu": {
+        "winRate": 0.49920000000000003,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 245297,
+        "tier": "A",
+        "slug": "lulu"
+      },
+      "Fiora": {
+        "winRate": 0.49920000000000003,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 84385,
+        "tier": "A",
+        "slug": "fiora"
+      },
+      "Vladimir": {
+        "winRate": 0.4899,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 44764,
+        "tier": "C",
+        "slug": "vladimir"
+      },
+      "Rakan": {
+        "winRate": 0.499,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 91981,
+        "tier": "B",
+        "slug": "rakan"
+      },
+      "Vi": {
+        "winRate": 0.4988,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 134709,
+        "tier": "B",
+        "slug": "vi"
+      },
+      "Nocturne": {
+        "winRate": 0.4987,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 81436,
+        "tier": "B",
+        "slug": "nocturne"
+      },
+      "Aphelios": {
+        "winRate": 0.4986,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 229079,
+        "tier": "A",
+        "slug": "aphelios"
+      },
+      "Kayn": {
+        "winRate": 0.4985,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 113742,
+        "tier": "B",
+        "slug": "kayn"
+      },
+      "Nidalee": {
+        "winRate": 0.4985,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 48723,
+        "tier": "B",
+        "slug": "nidalee"
+      },
+      "Lillia": {
+        "winRate": 0.4984,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 51871,
+        "tier": "B",
+        "slug": "lillia"
+      },
+      "Camille": {
+        "winRate": 0.4984,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 48605,
+        "tier": "B",
+        "slug": "camille"
+      },
+      "Hwei": {
+        "winRate": 0.4982,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 65655,
+        "tier": "B",
+        "slug": "hwei"
+      },
+      "Renekton": {
+        "winRate": 0.49810000000000004,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 126511,
+        "tier": "B",
+        "slug": "renekton"
+      },
+      "Gnar": {
+        "winRate": 0.498,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 91104,
+        "tier": "B",
+        "slug": "gnar"
+      },
+      "Karthus": {
+        "winRate": 0.498,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 35364,
+        "tier": "B",
+        "slug": "karthus"
+      },
+      "Garen": {
+        "winRate": 0.49770000000000003,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 112258,
+        "tier": "B",
+        "slug": "garen"
+      },
+      "Rell": {
+        "winRate": 0.4972,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 62517,
+        "tier": "B",
+        "slug": "rell"
+      },
+      "Ekko": {
+        "winRate": 0.49479999999999996,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 72543,
+        "tier": "B",
+        "slug": "ekko"
+      },
+      "Jhin": {
+        "winRate": 0.4971,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 291709,
+        "tier": "C",
+        "slug": "jhin"
+      },
+      "Gragas": {
+        "winRate": 0.4963,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 13245,
+        "tier": "B",
+        "slug": "gragas"
+      },
+      "Karma": {
+        "winRate": 0.4963,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 225028,
+        "tier": "C",
+        "slug": "karma"
+      },
+      "Akali": {
+        "winRate": 0.49310000000000004,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 63664,
+        "tier": "C",
+        "slug": "akali"
+      },
+      "Lucian": {
+        "winRate": 0.4953,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 196659,
+        "tier": "D",
+        "slug": "lucian"
+      },
+      "Yone": {
+        "winRate": 0.48100000000000004,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 118611,
+        "tier": "D",
+        "slug": "yone"
+      },
+      "Caitlyn": {
+        "winRate": 0.4951,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 395324,
+        "tier": "D",
+        "slug": "caitlyn"
+      },
+      "Morgana": {
+        "winRate": 0.4949,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 95172,
+        "tier": "B",
+        "slug": "morgana"
+      },
+      "Galio": {
+        "winRate": 0.4947,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 99333,
+        "tier": "C",
+        "slug": "galio"
+      },
+      "Rengar": {
+        "winRate": 0.4947,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 101460,
+        "tier": "C",
+        "slug": "rengar"
+      },
+      "Skarner": {
+        "winRate": 0.49439999999999995,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 11975,
+        "tier": "B",
+        "slug": "skarner"
+      },
+      "Tryndamere": {
+        "winRate": 0.4943,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 49866,
+        "tier": "B",
+        "slug": "tryndamere"
+      },
+      "Aurora": {
+        "winRate": 0.4935,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 60865,
+        "tier": "B",
+        "slug": "aurora"
+      },
+      "Nautilus": {
+        "winRate": 0.494,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 236786,
+        "tier": "D",
+        "slug": "nautilus"
+      },
+      "Leesin": {
+        "winRate": 0.49369999999999997,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 248190,
+        "tier": "D",
+        "slug": "leesin"
+      },
+      "Sylas": {
+        "winRate": 0.4678,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 17624,
+        "tier": "C",
+        "slug": "sylas"
+      },
+      "Varus": {
+        "winRate": 0.4794,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 12750,
+        "tier": "C",
+        "slug": "varus"
+      },
+      "Graves": {
+        "winRate": 0.493,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 89661,
+        "tier": "C",
+        "slug": "graves"
+      },
+      "Alistar": {
+        "winRate": 0.4927,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 106615,
+        "tier": "C",
+        "slug": "alistar"
+      },
+      "Illaoi": {
+        "winRate": 0.49229999999999996,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 37105,
+        "tier": "B",
+        "slug": "illaoi"
+      },
+      "Kaisa": {
+        "winRate": 0.4918,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 422847,
+        "tier": "D",
+        "slug": "kaisa"
+      },
+      "Tahmkench": {
+        "winRate": 0.4844,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 46770,
+        "tier": "D",
+        "slug": "tahmkench"
+      },
+      "Corki": {
+        "winRate": 0.4913,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 87893,
+        "tier": "C",
+        "slug": "corki"
+      },
+      "Mel": {
+        "winRate": 0.428,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 31693,
+        "tier": "D",
+        "slug": "mel"
+      },
+      "Darius": {
+        "winRate": 0.49,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 127516,
+        "tier": "D",
+        "slug": "darius"
+      },
+      "Shyvana": {
+        "winRate": 0.48869999999999997,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 20150,
+        "tier": "B",
+        "slug": "shyvana"
+      },
+      "Viego": {
+        "winRate": 0.4861,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 320376,
+        "tier": "D",
+        "slug": "viego"
+      },
+      "Yorick": {
+        "winRate": 0.4858,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 67515,
+        "tier": "D",
+        "slug": "yorick"
+      },
+      "Ambessa": {
+        "winRate": 0.4779,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 92944,
+        "tier": "D",
+        "slug": "ambessa"
+      },
+      "Ezreal": {
+        "winRate": 0.4819,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 382735,
+        "tier": "D",
+        "slug": "ezreal"
+      },
+      "Yunara": {
+        "winRate": 0.48100000000000004,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 217665,
+        "tier": "D",
+        "slug": "yunara"
+      },
+      "Orianna": {
+        "winRate": 0.4808,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 126345,
+        "tier": "D",
+        "slug": "orianna"
+      },
+      "Ryze": {
+        "winRate": 0.46490000000000004,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 132703,
+        "tier": "D",
+        "slug": "ryze"
+      },
+      "Yuumi": {
+        "winRate": 0.4796,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 108957,
+        "tier": "D",
+        "slug": "yuumi"
+      },
+      "Kalista": {
+        "winRate": 0.4757,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 18961,
+        "tier": "B",
+        "slug": "kalista"
+      },
+      "Ksante": {
+        "winRate": 0.47119999999999995,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 91200,
+        "tier": "D",
+        "slug": "ksante"
+      },
+      "Azir": {
+        "winRate": 0.4496,
+        "pickRate": 0,
+        "banRate": 0,
+        "matches": 57401,
+        "tier": "D",
+        "slug": "azir"
+      }
     }
   },
-  "jungle": {
-    "Rammus": {
-      "winRate": 0.5244,
-      "pickRate": 0.017,
-      "banRate": 0.03,
-      "matches": 0,
-      "tier": "S"
-    },
-    "RekSai": {
-      "winRate": 0.5225,
-      "pickRate": 0.027999999999999997,
-      "banRate": 0.026000000000000002,
-      "matches": 0,
-      "tier": "S"
-    },
-    "Nunu": {
-      "winRate": 0.5206000000000001,
-      "pickRate": 0.026000000000000002,
-      "banRate": 0.013000000000000001,
-      "matches": 0,
-      "tier": "S"
-    },
-    "Ivern": {
-      "winRate": 0.5199,
-      "pickRate": 0.013000000000000001,
-      "banRate": 0.006,
-      "matches": 0,
-      "tier": "A"
-    },
-    "Fiddlesticks": {
-      "winRate": 0.5191,
-      "pickRate": 0.027999999999999997,
-      "banRate": 0.021,
-      "matches": 0,
-      "tier": "S"
-    },
-    "Briar": {
-      "winRate": 0.5169,
-      "pickRate": 0.046,
-      "banRate": 0.07200000000000001,
-      "matches": 0,
-      "tier": "S+"
-    },
-    "Gwen": {
-      "winRate": 0.5154,
-      "pickRate": 0.03,
-      "banRate": 0.13,
-      "matches": 0,
-      "tier": "S+"
-    },
-    "Zyra": {
-      "winRate": 0.5143,
-      "pickRate": 0.011000000000000001,
-      "banRate": 0.02,
-      "matches": 0,
-      "tier": "A"
-    },
-    "Nasus": {
-      "winRate": 0.513,
-      "pickRate": 0.006,
-      "banRate": 0.034,
-      "matches": 0,
-      "tier": "A"
-    },
-    "Zac": {
-      "winRate": 0.5124,
-      "pickRate": 0.038,
-      "banRate": 0.023,
-      "matches": 0,
-      "tier": "S"
-    },
-    "Elise": {
-      "winRate": 0.512,
-      "pickRate": 0.026000000000000002,
-      "banRate": 0.021,
-      "matches": 0,
-      "tier": "S"
-    },
-    "XinZhao": {
-      "winRate": 0.5114,
-      "pickRate": 0.07200000000000001,
-      "banRate": 0.028999999999999998,
-      "matches": 0,
-      "tier": "S+"
-    },
-    "Shaco": {
-      "winRate": 0.5112,
-      "pickRate": 0.042,
-      "banRate": 0.156,
-      "matches": 0,
-      "tier": "S+"
-    },
-    "Khazix": {
-      "winRate": 0.5108,
-      "pickRate": 0.111,
-      "banRate": 0.133,
-      "matches": 0,
-      "tier": "S+"
-    },
-    "Evelynn": {
-      "winRate": 0.5093,
-      "pickRate": 0.025,
-      "banRate": 0.027000000000000003,
-      "matches": 0,
-      "tier": "S"
-    },
-    "Belveth": {
-      "winRate": 0.509,
-      "pickRate": 0.019,
-      "banRate": 0.036000000000000004,
-      "matches": 0,
-      "tier": "S"
-    },
-    "Amumu": {
-      "winRate": 0.5085999999999999,
-      "pickRate": 0.022000000000000002,
-      "banRate": 0.011000000000000001,
-      "matches": 0,
-      "tier": "A"
-    },
-    "DrMundo": {
-      "winRate": 0.5061,
-      "pickRate": 0.033,
-      "banRate": 0.078,
-      "matches": 0,
-      "tier": "S"
-    },
-    "Sejuani": {
-      "winRate": 0.5049,
-      "pickRate": 0.018000000000000002,
-      "banRate": 0.002,
-      "matches": 0,
-      "tier": "A"
-    },
-    "MasterYi": {
-      "winRate": 0.5049,
-      "pickRate": 0.047,
-      "banRate": 0.10099999999999999,
-      "matches": 0,
-      "tier": "S+"
-    },
-    "Kindred": {
-      "winRate": 0.5045000000000001,
-      "pickRate": 0.02,
-      "banRate": 0.018000000000000002,
-      "matches": 0,
-      "tier": "A"
-    },
-    "Zaahen": {
-      "winRate": 0.5043,
-      "pickRate": 0.045,
-      "banRate": 0.09699999999999999,
-      "matches": 0,
-      "tier": "S"
-    },
-    "Trundle": {
-      "winRate": 0.504,
-      "pickRate": 0.011000000000000001,
-      "banRate": 0.005,
-      "matches": 0,
-      "tier": "B"
-    },
-    "Taliyah": {
-      "winRate": 0.504,
-      "pickRate": 0.013999999999999999,
-      "banRate": 0.008,
-      "matches": 0,
-      "tier": "A"
-    },
-    "Volibear": {
-      "winRate": 0.5032,
-      "pickRate": 0.033,
-      "banRate": 0.07400000000000001,
-      "matches": 0,
-      "tier": "S"
-    },
-    "JarvanIV": {
-      "winRate": 0.5024000000000001,
-      "pickRate": 0.066,
-      "banRate": 0.016,
-      "matches": 0,
-      "tier": "A"
-    },
-    "Jax": {
-      "winRate": 0.5024000000000001,
-      "pickRate": 0.027000000000000003,
-      "banRate": 0.153,
-      "matches": 0,
-      "tier": "S"
-    },
-    "Naafiri": {
-      "winRate": 0.5017,
-      "pickRate": 0.036000000000000004,
-      "banRate": 0.133,
-      "matches": 0,
-      "tier": "S"
-    },
-    "Vi": {
-      "winRate": 0.5012,
-      "pickRate": 0.061,
-      "banRate": 0.019,
-      "matches": 0,
-      "tier": "A"
-    },
-    "Talon": {
-      "winRate": 0.5005,
-      "pickRate": 0.036000000000000004,
-      "banRate": 0.057999999999999996,
-      "matches": 0,
-      "tier": "S"
-    },
-    "Aatrox": {
-      "winRate": 0.4999,
-      "pickRate": 0.012,
-      "banRate": 0.08199999999999999,
-      "matches": 0,
-      "tier": "B"
-    },
-    "Nocturne": {
-      "winRate": 0.49979999999999997,
-      "pickRate": 0.037000000000000005,
-      "banRate": 0.033,
-      "matches": 0,
-      "tier": "B"
-    },
-    "Karthus": {
-      "winRate": 0.49979999999999997,
-      "pickRate": 0.016,
-      "banRate": 0.017,
-      "matches": 0,
-      "tier": "B"
-    },
-    "Diana": {
-      "winRate": 0.49979999999999997,
-      "pickRate": 0.063,
-      "banRate": 0.174,
-      "matches": 0,
-      "tier": "A"
-    },
-    "Kayn": {
-      "winRate": 0.49950000000000006,
-      "pickRate": 0.052000000000000005,
-      "banRate": 0.032,
-      "matches": 0,
-      "tier": "B"
-    },
-    "Warwick": {
-      "winRate": 0.49950000000000006,
-      "pickRate": 0.018000000000000002,
-      "banRate": 0.01,
-      "matches": 0,
-      "tier": "B"
-    },
-    "Hecarim": {
-      "winRate": 0.49939999999999996,
-      "pickRate": 0.047,
-      "banRate": 0.039,
-      "matches": 0,
-      "tier": "B"
-    },
-    "Udyr": {
-      "winRate": 0.499,
-      "pickRate": 0.015,
-      "banRate": 0.008,
-      "matches": 0,
-      "tier": "B"
-    },
-    "Nidalee": {
-      "winRate": 0.499,
-      "pickRate": 0.022000000000000002,
-      "banRate": 0.01,
-      "matches": 0,
-      "tier": "B"
-    },
-    "MonkeyKing": {
-      "winRate": 0.4985,
-      "pickRate": 0.025,
-      "banRate": 0.006999999999999999,
-      "matches": 0,
-      "tier": "B"
-    },
-    "Lillia": {
-      "winRate": 0.49810000000000004,
-      "pickRate": 0.024,
-      "banRate": 0.015,
-      "matches": 0,
-      "tier": "B"
-    },
-    "Ekko": {
-      "winRate": 0.4976,
-      "pickRate": 0.055,
-      "banRate": 0.113,
-      "matches": 0,
-      "tier": "B"
-    },
-    "Rengar": {
-      "winRate": 0.4949,
-      "pickRate": 0.046,
-      "banRate": 0.111,
-      "matches": 0,
-      "tier": "C"
-    },
-    "Gragas": {
-      "winRate": 0.49479999999999996,
-      "pickRate": 0.006,
-      "banRate": 0.006,
-      "matches": 0,
-      "tier": "B"
-    },
-    "LeeSin": {
-      "winRate": 0.4936,
-      "pickRate": 0.11199999999999999,
-      "banRate": 0.11900000000000001,
-      "matches": 0,
-      "tier": "D"
-    },
-    "Graves": {
-      "winRate": 0.49219999999999997,
-      "pickRate": 0.040999999999999995,
-      "banRate": 0.025,
-      "matches": 0,
-      "tier": "C"
-    },
-    "Sylas": {
-      "winRate": 0.4921,
-      "pickRate": 0.043,
-      "banRate": 0.129,
-      "matches": 0,
-      "tier": "D"
-    },
-    "Pantheon": {
-      "winRate": 0.4899,
-      "pickRate": 0.009000000000000001,
-      "banRate": 0.013000000000000001,
-      "matches": 0,
-      "tier": "B"
-    },
-    "Viego": {
-      "winRate": 0.488,
-      "pickRate": 0.15,
-      "banRate": 0.165,
-      "matches": 0,
-      "tier": "D"
-    },
-    "Skarner": {
-      "winRate": 0.48200000000000004,
-      "pickRate": 0.005,
-      "banRate": 0.001,
-      "matches": 0,
-      "tier": "B"
-    },
-    "Shyvana": {
-      "winRate": 0.4816,
-      "pickRate": 0.009000000000000001,
-      "banRate": 0.001,
-      "matches": 0,
-      "tier": "B"
-    },
-    "Ambessa": {
-      "winRate": 0.47759999999999997,
-      "pickRate": 0.04,
-      "banRate": 0.095,
-      "matches": 0,
-      "tier": "D"
-    },
-    "Malphite": {
-      "winRate": 0.4705,
-      "pickRate": 0.022000000000000002,
-      "banRate": 0.293,
-      "matches": 0,
-      "tier": "D"
-    },
-    "Jayce": {
-      "winRate": 0.47,
-      "pickRate": 0.033,
-      "banRate": 0.081,
-      "matches": 0,
-      "tier": "D"
-    },
-    "Qiyana": {
-      "winRate": 0.46909999999999996,
-      "pickRate": 0.023,
-      "banRate": 0.055,
-      "matches": 0,
-      "tier": "D"
-    },
-    "Zed": {
-      "winRate": 0.45909999999999995,
-      "pickRate": 0.022000000000000002,
-      "banRate": 0.28600000000000003,
-      "matches": 0,
-      "tier": "D"
-    }
+  "flex": {
+    "top": {},
+    "jungle": {},
+    "mid": {},
+    "adc": {},
+    "support": {},
+    "all": {}
   },
-  "mid": {
-    "Neeko": {
-      "winRate": 0.5325,
-      "pickRate": 0.005,
-      "banRate": 0.024,
-      "matches": 0,
-      "tier": "A"
-    },
-    "Kayle": {
-      "winRate": 0.5266,
-      "pickRate": 0.01,
-      "banRate": 0.065,
-      "matches": 0,
-      "tier": "S"
-    },
-    "Sion": {
-      "winRate": 0.5239,
-      "pickRate": 0.008,
-      "banRate": 0.01,
-      "matches": 0,
-      "tier": "A"
-    },
-    "Swain": {
-      "winRate": 0.5209,
-      "pickRate": 0.016,
-      "banRate": 0.045,
-      "matches": 0,
-      "tier": "S"
-    },
-    "Vex": {
-      "winRate": 0.5195000000000001,
-      "pickRate": 0.027999999999999997,
-      "banRate": 0.031,
-      "matches": 0,
-      "tier": "S"
-    },
-    "Brand": {
-      "winRate": 0.5193,
-      "pickRate": 0.009000000000000001,
-      "banRate": 0.018000000000000002,
-      "matches": 0,
-      "tier": "A"
-    },
-    "Ahri": {
-      "winRate": 0.5182,
-      "pickRate": 0.12300000000000001,
-      "banRate": 0.039,
-      "matches": 0,
-      "tier": "S+"
-    },
-    "Kennen": {
-      "winRate": 0.518,
-      "pickRate": 0.006,
-      "banRate": 0.033,
-      "matches": 0,
-      "tier": "A"
-    },
-    "Naafiri": {
-      "winRate": 0.518,
-      "pickRate": 0.036000000000000004,
-      "banRate": 0.133,
-      "matches": 0,
-      "tier": "S+"
-    },
-    "AurelionSol": {
-      "winRate": 0.5175,
-      "pickRate": 0.027000000000000003,
-      "banRate": 0.008,
-      "matches": 0,
-      "tier": "S"
-    },
-    "Xerath": {
-      "winRate": 0.517,
-      "pickRate": 0.043,
-      "banRate": 0.045,
-      "matches": 0,
-      "tier": "S+"
-    },
-    "Talon": {
-      "winRate": 0.5165,
-      "pickRate": 0.019,
-      "banRate": 0.057999999999999996,
-      "matches": 0,
-      "tier": "S"
-    },
-    "Pantheon": {
-      "winRate": 0.5154,
-      "pickRate": 0.006999999999999999,
-      "banRate": 0.013000000000000001,
-      "matches": 0,
-      "tier": "A"
-    },
-    "Velkoz": {
-      "winRate": 0.5149,
-      "pickRate": 0.012,
-      "banRate": 0.009000000000000001,
-      "matches": 0,
-      "tier": "A"
-    },
-    "Qiyana": {
-      "winRate": 0.5143,
-      "pickRate": 0.027999999999999997,
-      "banRate": 0.055,
-      "matches": 0,
-      "tier": "S"
-    },
-    "Anivia": {
-      "winRate": 0.5141,
-      "pickRate": 0.035,
-      "banRate": 0.027000000000000003,
-      "matches": 0,
-      "tier": "S"
-    },
-    "TwistedFate": {
-      "winRate": 0.5127,
-      "pickRate": 0.05,
-      "banRate": 0.013999999999999999,
-      "matches": 0,
-      "tier": "S"
-    },
-    "Kassadin": {
-      "winRate": 0.5124,
-      "pickRate": 0.052000000000000005,
-      "banRate": 0.081,
-      "matches": 0,
-      "tier": "S+"
-    },
-    "Akshan": {
-      "winRate": 0.5111,
-      "pickRate": 0.03,
-      "banRate": 0.035,
-      "matches": 0,
-      "tier": "S"
-    },
-    "Zoe": {
-      "winRate": 0.5107,
-      "pickRate": 0.039,
-      "banRate": 0.069,
-      "matches": 0,
-      "tier": "S+"
-    },
-    "Chogath": {
-      "winRate": 0.5101,
-      "pickRate": 0.006,
-      "banRate": 0.006999999999999999,
-      "matches": 0,
-      "tier": "B"
-    },
-    "Fizz": {
-      "winRate": 0.5093,
-      "pickRate": 0.037000000000000005,
-      "banRate": 0.042,
-      "matches": 0,
-      "tier": "S"
-    },
-    "Veigar": {
-      "winRate": 0.5075,
-      "pickRate": 0.039,
-      "banRate": 0.01,
-      "matches": 0,
-      "tier": "A"
-    },
-    "Jayce": {
-      "winRate": 0.5075,
-      "pickRate": 0.006999999999999999,
-      "banRate": 0.081,
-      "matches": 0,
-      "tier": "A"
-    },
-    "Malphite": {
-      "winRate": 0.5051,
-      "pickRate": 0.009000000000000001,
-      "banRate": 0.293,
-      "matches": 0,
-      "tier": "A"
-    },
-    "Diana": {
-      "winRate": 0.5039,
-      "pickRate": 0.033,
-      "banRate": 0.174,
-      "matches": 0,
-      "tier": "S"
-    },
-    "Viktor": {
-      "winRate": 0.5036999999999999,
-      "pickRate": 0.062,
-      "banRate": 0.03,
-      "matches": 0,
-      "tier": "S"
-    },
-    "Katarina": {
-      "winRate": 0.5036,
-      "pickRate": 0.07200000000000001,
-      "banRate": 0.109,
-      "matches": 0,
-      "tier": "S+"
-    },
-    "Syndra": {
-      "winRate": 0.5034000000000001,
-      "pickRate": 0.07,
-      "banRate": 0.048,
-      "matches": 0,
-      "tier": "S"
-    },
-    "Lissandra": {
-      "winRate": 0.5027,
-      "pickRate": 0.031,
-      "banRate": 0.013999999999999999,
-      "matches": 0,
-      "tier": "A"
-    },
-    "Malzahar": {
-      "winRate": 0.5027,
-      "pickRate": 0.054000000000000006,
-      "banRate": 0.07400000000000001,
-      "matches": 0,
-      "tier": "S"
-    },
-    "Lux": {
-      "winRate": 0.5007,
-      "pickRate": 0.033,
-      "banRate": 0.022000000000000002,
-      "matches": 0,
-      "tier": "A"
-    },
-    "Vladimir": {
-      "winRate": 0.5007,
-      "pickRate": 0.027999999999999997,
-      "banRate": 0.057,
-      "matches": 0,
-      "tier": "A"
-    },
-    "Hwei": {
-      "winRate": 0.498,
-      "pickRate": 0.03,
-      "banRate": 0.015,
-      "matches": 0,
-      "tier": "B"
-    },
-    "Leblanc": {
-      "winRate": 0.49729999999999996,
-      "pickRate": 0.042,
-      "banRate": 0.16399999999999998,
-      "matches": 0,
-      "tier": "B"
-    },
-    "Ziggs": {
-      "winRate": 0.4972,
-      "pickRate": 0.008,
-      "banRate": 0.005,
-      "matches": 0,
-      "tier": "B"
-    },
-    "Zed": {
-      "winRate": 0.4968,
-      "pickRate": 0.07400000000000001,
-      "banRate": 0.28600000000000003,
-      "matches": 0,
-      "tier": "B"
-    },
-    "Akali": {
-      "winRate": 0.4963,
-      "pickRate": 0.073,
-      "banRate": 0.252,
-      "matches": 0,
-      "tier": "B"
-    },
-    "Yasuo": {
-      "winRate": 0.496,
-      "pickRate": 0.08800000000000001,
-      "banRate": 0.177,
-      "matches": 0,
-      "tier": "C"
-    },
-    "Annie": {
-      "winRate": 0.49520000000000003,
-      "pickRate": 0.011000000000000001,
-      "banRate": 0.003,
-      "matches": 0,
-      "tier": "B"
-    },
-    "Galio": {
-      "winRate": 0.49479999999999996,
-      "pickRate": 0.046,
-      "banRate": 0.018000000000000002,
-      "matches": 0,
-      "tier": "C"
-    },
-    "Irelia": {
-      "winRate": 0.49479999999999996,
-      "pickRate": 0.027000000000000003,
-      "banRate": 0.132,
-      "matches": 0,
-      "tier": "B"
-    },
-    "Ekko": {
-      "winRate": 0.4947,
-      "pickRate": 0.034,
-      "banRate": 0.113,
-      "matches": 0,
-      "tier": "B"
-    },
-    "Taliyah": {
-      "winRate": 0.49369999999999997,
-      "pickRate": 0.025,
-      "banRate": 0.008,
-      "matches": 0,
-      "tier": "B"
-    },
-    "Aurora": {
-      "winRate": 0.4925,
-      "pickRate": 0.027000000000000003,
-      "banRate": 0.018000000000000002,
-      "matches": 0,
-      "tier": "B"
-    },
-    "Cassiopeia": {
-      "winRate": 0.4905,
-      "pickRate": 0.013000000000000001,
-      "banRate": 0.013000000000000001,
-      "matches": 0,
-      "tier": "B"
-    },
-    "Sylas": {
-      "winRate": 0.4894,
-      "pickRate": 0.068,
-      "banRate": 0.129,
-      "matches": 0,
-      "tier": "D"
-    },
-    "Yone": {
-      "winRate": 0.4832,
-      "pickRate": 0.053,
-      "banRate": 0.036000000000000004,
-      "matches": 0,
-      "tier": "D"
-    },
-    "Orianna": {
-      "winRate": 0.4815,
-      "pickRate": 0.057999999999999996,
-      "banRate": 0.016,
-      "matches": 0,
-      "tier": "D"
-    },
-    "Varus": {
-      "winRate": 0.48100000000000004,
-      "pickRate": 0.006,
-      "banRate": 0.289,
-      "matches": 0,
-      "tier": "C"
-    },
-    "Ryze": {
-      "winRate": 0.4635,
-      "pickRate": 0.065,
-      "banRate": 0.032,
-      "matches": 0,
-      "tier": "D"
-    },
-    "Mel": {
-      "winRate": 0.45880000000000004,
-      "pickRate": 0.027999999999999997,
-      "banRate": 0.17600000000000002,
-      "matches": 0,
-      "tier": "D"
-    },
-    "Smolder": {
-      "winRate": 0.4522,
-      "pickRate": 0.01,
-      "banRate": 0.057,
-      "matches": 0,
-      "tier": "D"
-    },
-    "Azir": {
-      "winRate": 0.4497,
-      "pickRate": 0.027000000000000003,
-      "banRate": 0.004,
-      "matches": 0,
-      "tier": "D"
-    }
-  },
-  "adc": {
-    "Brand": {
-      "winRate": 0.5418,
-      "pickRate": 0.009000000000000001,
-      "banRate": 0.018000000000000002,
-      "matches": 0,
-      "tier": "A"
-    },
-    "Veigar": {
-      "winRate": 0.54,
-      "pickRate": 0.012,
-      "banRate": 0.01,
-      "matches": 0,
-      "tier": "S"
-    },
-    "Swain": {
-      "winRate": 0.5343,
-      "pickRate": 0.022000000000000002,
-      "banRate": 0.045,
-      "matches": 0,
-      "tier": "S"
-    },
-    "KogMaw": {
-      "winRate": 0.5278,
-      "pickRate": 0.015,
-      "banRate": 0.003,
-      "matches": 0,
-      "tier": "A"
-    },
-    "Yasuo": {
-      "winRate": 0.5249,
-      "pickRate": 0.01,
-      "banRate": 0.177,
-      "matches": 0,
-      "tier": "S"
-    },
-    "Ziggs": {
-      "winRate": 0.5233,
-      "pickRate": 0.017,
-      "banRate": 0.005,
-      "matches": 0,
-      "tier": "A"
-    },
-    "Nilah": {
-      "winRate": 0.523,
-      "pickRate": 0.018000000000000002,
-      "banRate": 0.04,
-      "matches": 0,
-      "tier": "S+"
-    },
-    "Jinx": {
-      "winRate": 0.5186999999999999,
-      "pickRate": 0.153,
-      "banRate": 0.05,
-      "matches": 0,
-      "tier": "S+"
-    },
-    "Seraphine": {
-      "winRate": 0.5183,
-      "pickRate": 0.006999999999999999,
-      "banRate": 0.006,
-      "matches": 0,
-      "tier": "A"
-    },
-    "Lux": {
-      "winRate": 0.516,
-      "pickRate": 0.006,
-      "banRate": 0.022000000000000002,
-      "matches": 0,
-      "tier": "A"
-    },
-    "Twitch": {
-      "winRate": 0.5141,
-      "pickRate": 0.068,
-      "banRate": 0.075,
-      "matches": 0,
-      "tier": "S+"
-    },
-    "Ashe": {
-      "winRate": 0.5077,
-      "pickRate": 0.059000000000000004,
-      "banRate": 0.012,
-      "matches": 0,
-      "tier": "S"
-    },
-    "Senna": {
-      "winRate": 0.5073,
-      "pickRate": 0.006,
-      "banRate": 0.006,
-      "matches": 0,
-      "tier": "A"
-    },
-    "Tristana": {
-      "winRate": 0.5065,
-      "pickRate": 0.039,
-      "banRate": 0.012,
-      "matches": 0,
-      "tier": "A"
-    },
-    "MissFortune": {
-      "winRate": 0.506,
-      "pickRate": 0.077,
-      "banRate": 0.024,
-      "matches": 0,
-      "tier": "S"
-    },
-    "Vayne": {
-      "winRate": 0.5057,
-      "pickRate": 0.057,
-      "banRate": 0.077,
-      "matches": 0,
-      "tier": "S"
-    },
-    "Smolder": {
-      "winRate": 0.5053,
-      "pickRate": 0.08,
-      "banRate": 0.057,
-      "matches": 0,
-      "tier": "S+"
-    },
-    "Sivir": {
-      "winRate": 0.5047,
-      "pickRate": 0.068,
-      "banRate": 0.059000000000000004,
-      "matches": 0,
-      "tier": "S+"
-    },
-    "Samira": {
-      "winRate": 0.5036999999999999,
-      "pickRate": 0.040999999999999995,
-      "banRate": 0.042,
-      "matches": 0,
-      "tier": "S"
-    },
-    "Xayah": {
-      "winRate": 0.501,
-      "pickRate": 0.027000000000000003,
-      "banRate": 0.004,
-      "matches": 0,
-      "tier": "A"
-    },
-    "Draven": {
-      "winRate": 0.5009,
-      "pickRate": 0.040999999999999995,
-      "banRate": 0.15,
-      "matches": 0,
-      "tier": "S+"
-    },
-    "Zeri": {
-      "winRate": 0.4985,
-      "pickRate": 0.022000000000000002,
-      "banRate": 0.002,
-      "matches": 0,
-      "tier": "B"
-    },
-    "Jhin": {
-      "winRate": 0.49670000000000003,
-      "pickRate": 0.131,
-      "banRate": 0.01,
-      "matches": 0,
-      "tier": "D"
-    },
-    "Aphelios": {
-      "winRate": 0.4966,
-      "pickRate": 0.106,
-      "banRate": 0.135,
-      "matches": 0,
-      "tier": "C"
-    },
-    "Caitlyn": {
-      "winRate": 0.49579999999999996,
-      "pickRate": 0.185,
-      "banRate": 0.263,
-      "matches": 0,
-      "tier": "D"
-    },
-    "Lucian": {
-      "winRate": 0.4953,
-      "pickRate": 0.09,
-      "banRate": 0.037000000000000005,
-      "matches": 0,
-      "tier": "D"
-    },
-    "Corki": {
-      "winRate": 0.4921,
-      "pickRate": 0.04,
-      "banRate": 0.008,
-      "matches": 0,
-      "tier": "C"
-    },
-    "Kaisa": {
-      "winRate": 0.4917,
-      "pickRate": 0.193,
-      "banRate": 0.027999999999999997,
-      "matches": 0,
-      "tier": "D"
-    },
-    "Mel": {
-      "winRate": 0.4903,
-      "pickRate": 0.006,
-      "banRate": 0.17600000000000002,
-      "matches": 0,
-      "tier": "B"
-    },
-    "Ezreal": {
-      "winRate": 0.4827,
-      "pickRate": 0.175,
-      "banRate": 0.040999999999999995,
-      "matches": 0,
-      "tier": "D"
-    },
-    "Varus": {
-      "winRate": 0.4814,
-      "pickRate": 0.057999999999999996,
-      "banRate": 0.289,
-      "matches": 0,
-      "tier": "D"
-    },
-    "Yunara": {
-      "winRate": 0.4808,
-      "pickRate": 0.1,
-      "banRate": 0.036000000000000004,
-      "matches": 0,
-      "tier": "D"
-    },
-    "Kalista": {
-      "winRate": 0.4765,
-      "pickRate": 0.008,
-      "banRate": 0.001,
-      "matches": 0,
-      "tier": "B"
-    }
-  },
-  "support": {
-    "Braum": {
-      "winRate": 0.519,
-      "pickRate": 0.10099999999999999,
-      "banRate": 0.23399999999999999,
-      "matches": 0,
-      "tier": "S+"
-    },
-    "Maokai": {
-      "winRate": 0.5181,
-      "pickRate": 0.018000000000000002,
-      "banRate": 0.001,
-      "matches": 0,
-      "tier": "A"
-    },
-    "Zilean": {
-      "winRate": 0.5167,
-      "pickRate": 0.03,
-      "banRate": 0.013999999999999999,
-      "matches": 0,
-      "tier": "S"
-    },
-    "Janna": {
-      "winRate": 0.5154,
-      "pickRate": 0.046,
-      "banRate": 0.012,
-      "matches": 0,
-      "tier": "S"
-    },
-    "Sona": {
-      "winRate": 0.5149,
-      "pickRate": 0.055999999999999994,
-      "banRate": 0.018000000000000002,
-      "matches": 0,
-      "tier": "S"
-    },
-    "Taric": {
-      "winRate": 0.5147999999999999,
-      "pickRate": 0.013999999999999999,
-      "banRate": 0.002,
-      "matches": 0,
-      "tier": "A"
-    },
-    "Nami": {
-      "winRate": 0.514,
-      "pickRate": 0.154,
-      "banRate": 0.036000000000000004,
-      "matches": 0,
-      "tier": "S+"
-    },
-    "Soraka": {
-      "winRate": 0.51,
-      "pickRate": 0.05,
-      "banRate": 0.025,
-      "matches": 0,
-      "tier": "S"
-    },
-    "Thresh": {
-      "winRate": 0.5089,
-      "pickRate": 0.141,
-      "banRate": 0.062,
-      "matches": 0,
-      "tier": "S+"
-    },
-    "Elise": {
-      "winRate": 0.5082,
-      "pickRate": 0.01,
-      "banRate": 0.021,
-      "matches": 0,
-      "tier": "A"
-    },
-    "Velkoz": {
-      "winRate": 0.508,
-      "pickRate": 0.025,
-      "banRate": 0.009000000000000001,
-      "matches": 0,
-      "tier": "A"
-    },
-    "Leona": {
-      "winRate": 0.5077,
-      "pickRate": 0.07400000000000001,
-      "banRate": 0.054000000000000006,
-      "matches": 0,
-      "tier": "S"
-    },
-    "Milio": {
-      "winRate": 0.5068,
-      "pickRate": 0.077,
-      "banRate": 0.069,
-      "matches": 0,
-      "tier": "S+"
-    },
-    "Blitzcrank": {
-      "winRate": 0.5061,
-      "pickRate": 0.055999999999999994,
-      "banRate": 0.11900000000000001,
-      "matches": 0,
-      "tier": "S+"
-    },
-    "Brand": {
-      "winRate": 0.5058,
-      "pickRate": 0.023,
-      "banRate": 0.018000000000000002,
-      "matches": 0,
-      "tier": "A"
-    },
-    "Seraphine": {
-      "winRate": 0.5057,
-      "pickRate": 0.042,
-      "banRate": 0.006,
-      "matches": 0,
-      "tier": "A"
-    },
-    "Senna": {
-      "winRate": 0.503,
-      "pickRate": 0.044000000000000004,
-      "banRate": 0.006,
-      "matches": 0,
-      "tier": "A"
-    },
-    "Renata": {
-      "winRate": 0.5024000000000001,
-      "pickRate": 0.012,
-      "banRate": 0.001,
-      "matches": 0,
-      "tier": "B"
-    },
-    "Neeko": {
-      "winRate": 0.5014,
-      "pickRate": 0.034,
-      "banRate": 0.024,
-      "matches": 0,
-      "tier": "A"
-    },
-    "Lulu": {
-      "winRate": 0.5009,
-      "pickRate": 0.11199999999999999,
-      "banRate": 0.102,
-      "matches": 0,
-      "tier": "S"
-    },
-    "Pyke": {
-      "winRate": 0.5003,
-      "pickRate": 0.057999999999999996,
-      "banRate": 0.243,
-      "matches": 0,
-      "tier": "S+"
-    },
-    "Rakan": {
-      "winRate": 0.49950000000000006,
-      "pickRate": 0.040999999999999995,
-      "banRate": 0.003,
-      "matches": 0,
-      "tier": "B"
-    },
-    "Bard": {
-      "winRate": 0.4989,
-      "pickRate": 0.07200000000000001,
-      "banRate": 0.031,
-      "matches": 0,
-      "tier": "B"
-    },
-    "Zyra": {
-      "winRate": 0.4972,
-      "pickRate": 0.024,
-      "banRate": 0.02,
-      "matches": 0,
-      "tier": "B"
-    },
-    "Karma": {
-      "winRate": 0.4963,
-      "pickRate": 0.10300000000000001,
-      "banRate": 0.054000000000000006,
-      "matches": 0,
-      "tier": "C"
-    },
-    "Rell": {
-      "winRate": 0.49579999999999996,
-      "pickRate": 0.028999999999999998,
-      "banRate": 0.008,
-      "matches": 0,
-      "tier": "B"
-    },
-    "Poppy": {
-      "winRate": 0.4949,
-      "pickRate": 0.017,
-      "banRate": 0.034,
-      "matches": 0,
-      "tier": "B"
-    },
-    "Morgana": {
-      "winRate": 0.49439999999999995,
-      "pickRate": 0.043,
-      "banRate": 0.136,
-      "matches": 0,
-      "tier": "B"
-    },
-    "Fiddlesticks": {
-      "winRate": 0.4941,
-      "pickRate": 0.006,
-      "banRate": 0.021,
-      "matches": 0,
-      "tier": "B"
-    },
-    "Nautilus": {
-      "winRate": 0.4932,
-      "pickRate": 0.109,
-      "banRate": 0.122,
-      "matches": 0,
-      "tier": "D"
-    },
-    "Alistar": {
-      "winRate": 0.4919,
-      "pickRate": 0.049,
-      "banRate": 0.016,
-      "matches": 0,
-      "tier": "C"
-    },
-    "TahmKench": {
-      "winRate": 0.4902,
-      "pickRate": 0.019,
-      "banRate": 0.013000000000000001,
-      "matches": 0,
-      "tier": "B"
-    },
-    "Xerath": {
-      "winRate": 0.48869999999999997,
-      "pickRate": 0.025,
-      "banRate": 0.045,
-      "matches": 0,
-      "tier": "C"
-    },
-    "Swain": {
-      "winRate": 0.48560000000000003,
-      "pickRate": 0.027000000000000003,
-      "banRate": 0.045,
-      "matches": 0,
-      "tier": "C"
-    },
-    "Shaco": {
-      "winRate": 0.4849,
-      "pickRate": 0.01,
-      "banRate": 0.156,
-      "matches": 0,
-      "tier": "B"
-    },
-    "Yuumi": {
-      "winRate": 0.4807,
-      "pickRate": 0.05,
-      "banRate": 0.066,
-      "matches": 0,
-      "tier": "D"
-    },
-    "Zoe": {
-      "winRate": 0.4799,
-      "pickRate": 0.006999999999999999,
-      "banRate": 0.069,
-      "matches": 0,
-      "tier": "B"
-    },
-    "Pantheon": {
-      "winRate": 0.47759999999999997,
-      "pickRate": 0.024,
-      "banRate": 0.013000000000000001,
-      "matches": 0,
-      "tier": "D"
-    },
-    "Lux": {
-      "winRate": 0.4772,
-      "pickRate": 0.04,
-      "banRate": 0.022000000000000002,
-      "matches": 0,
-      "tier": "D"
-    },
-    "Leblanc": {
-      "winRate": 0.4733,
-      "pickRate": 0.006,
-      "banRate": 0.16399999999999998,
-      "matches": 0,
-      "tier": "C"
-    },
-    "Sylas": {
-      "winRate": 0.46509999999999996,
-      "pickRate": 0.008,
-      "banRate": 0.129,
-      "matches": 0,
-      "tier": "C"
-    },
-    "Ashe": {
-      "winRate": 0.44420000000000004,
-      "pickRate": 0.006999999999999999,
-      "banRate": 0.012,
-      "matches": 0,
-      "tier": "C"
-    },
-    "Mel": {
-      "winRate": 0.4249,
-      "pickRate": 0.015,
-      "banRate": 0.17600000000000002,
-      "matches": 0,
-      "tier": "D"
-    }
-  }
+  "lastUpdated": 1771371820642,
+  "lastUpdatedQueue": "flex"
 }

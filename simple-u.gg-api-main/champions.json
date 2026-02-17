@@ -1,0 +1,3093 @@
+{
+  "top": [
+    {
+      "name": "quinn",
+      "winrate": "53.76%",
+      "counters": [
+        "poppy",
+        "chogath",
+        "ryze",
+        "irelia",
+        "olaf",
+        "yorick",
+        "pantheon"
+      ]
+    },
+    {
+      "name": "warwick",
+      "winrate": "53.59%",
+      "counters": [
+        "ryze",
+        "heimerdinger",
+        "vayne",
+        "kayle",
+        "quinn",
+        "riven",
+        "pantheon"
+      ]
+    },
+    {
+      "name": "cassiopeia",
+      "winrate": "53.39%",
+      "counters": [
+        "rumble",
+        "singed",
+        "urgot",
+        "chogath",
+        "viktor",
+        "vayne",
+        "yasuo"
+      ]
+    },
+    {
+      "name": "olaf",
+      "winrate": "52.35%",
+      "counters": [
+        "kled",
+        "tahmkench",
+        "aurora",
+        "singed",
+        "poppy",
+        "heimerdinger",
+        "gragas"
+      ]
+    },
+    {
+      "name": "malphite",
+      "winrate": "52.06%",
+      "counters": [
+        "sylas",
+        "vladimir",
+        "chogath",
+        "nasus",
+        "ornn",
+        "camille",
+        "shen"
+      ]
+    },
+    {
+      "name": "kennen",
+      "winrate": "51.99%",
+      "counters": [
+        "olaf",
+        "kled",
+        "drmundo",
+        "galio",
+        "irelia",
+        "gragas",
+        "quinn"
+      ]
+    },
+    {
+      "name": "kled",
+      "winrate": "51.92%",
+      "counters": [
+        "fiora",
+        "teemo",
+        "quinn",
+        "vladimir",
+        "kayle",
+        "tryndamere",
+        "singed"
+      ]
+    },
+    {
+      "name": "poppy",
+      "winrate": "51.81%",
+      "counters": [
+        "warwick",
+        "yorick",
+        "kennen",
+        "malphite",
+        "teemo",
+        "kled",
+        "singed"
+      ]
+    },
+    {
+      "name": "kayle",
+      "winrate": "51.78%",
+      "counters": [
+        "quinn",
+        "tryndamere",
+        "gragas",
+        "akali",
+        "chogath",
+        "aurora",
+        "riven"
+      ]
+    },
+    {
+      "name": "zac",
+      "winrate": "51.75%",
+      "counters": [
+        "quinn",
+        "kennen",
+        "aurora",
+        "volibear",
+        "gnar",
+        "fiora",
+        "darius"
+      ]
+    },
+    {
+      "name": "gragas",
+      "winrate": "51.18%",
+      "counters": [
+        "nasus",
+        "ambessa",
+        "illaoi",
+        "kled",
+        "quinn",
+        "yorick",
+        "warwick"
+      ]
+    },
+    {
+      "name": "singed",
+      "winrate": "51.13%",
+      "counters": [
+        "riven",
+        "jayce",
+        "fiora",
+        "rumble",
+        "kayle",
+        "ambessa",
+        "camille"
+      ]
+    },
+    {
+      "name": "camille",
+      "winrate": "51.10%",
+      "counters": [
+        "kennen",
+        "gragas",
+        "vayne",
+        "mordekaiser",
+        "akali",
+        "quinn",
+        "vladimir"
+      ]
+    },
+    {
+      "name": "urgot",
+      "winrate": "51.09%",
+      "counters": [
+        "kennen",
+        "quinn",
+        "drmundo",
+        "mordekaiser",
+        "rumble",
+        "olaf",
+        "gragas"
+      ]
+    },
+    {
+      "name": "fiora",
+      "winrate": "51.06%",
+      "counters": [
+        "poppy",
+        "warwick",
+        "kennen",
+        "vayne",
+        "malphite",
+        "urgot",
+        "irelia"
+      ]
+    },
+    {
+      "name": "chogath",
+      "winrate": "51.05%",
+      "counters": [
+        "warwick",
+        "kled",
+        "drmundo",
+        "ksante",
+        "camille",
+        "sett",
+        "poppy"
+      ]
+    },
+    {
+      "name": "vayne",
+      "winrate": "50.76%",
+      "counters": [
+        "malphite",
+        "varus",
+        "quinn",
+        "trundle",
+        "pantheon",
+        "yorick",
+        "akali"
+      ]
+    },
+    {
+      "name": "irelia",
+      "winrate": "50.75%",
+      "counters": [
+        "olaf",
+        "singed",
+        "malphite",
+        "tryndamere",
+        "kled",
+        "nasus",
+        "sett"
+      ]
+    },
+    {
+      "name": "ornn",
+      "winrate": "50.68%",
+      "counters": [
+        "singed",
+        "kled",
+        "warwick",
+        "akali",
+        "yone",
+        "trundle",
+        "olaf"
+      ]
+    },
+    {
+      "name": "mordekaiser",
+      "winrate": "50.54%",
+      "counters": [
+        "warwick",
+        "zac",
+        "kled",
+        "yorick",
+        "gragas",
+        "akali",
+        "singed"
+      ]
+    },
+    {
+      "name": "ryze",
+      "winrate": "50.46%",
+      "counters": [
+        "aurora",
+        "galio",
+        "urgot",
+        "kled",
+        "mordekaiser",
+        "gragas",
+        "akali"
+      ]
+    },
+    {
+      "name": "shen",
+      "winrate": "50.44%",
+      "counters": [
+        "quinn",
+        "aurora",
+        "kled",
+        "kennen",
+        "mordekaiser",
+        "yasuo",
+        "tryndamere"
+      ]
+    },
+    {
+      "name": "nasus",
+      "winrate": "50.34%",
+      "counters": [
+        "quinn",
+        "olaf",
+        "varus",
+        "kled",
+        "shen",
+        "sion",
+        "urgot"
+      ]
+    },
+    {
+      "name": "jax",
+      "winrate": "50.33%",
+      "counters": [
+        "urgot",
+        "teemo",
+        "quinn",
+        "singed",
+        "shen",
+        "darius",
+        "drmundo"
+      ]
+    },
+    {
+      "name": "sett",
+      "winrate": "50.30%",
+      "counters": [
+        "quinn",
+        "kennen",
+        "aurora",
+        "kayle",
+        "warwick",
+        "jax",
+        "aatrox"
+      ]
+    },
+    {
+      "name": "gangplank",
+      "winrate": "50.25%",
+      "counters": [
+        "zac",
+        "kayle",
+        "warwick",
+        "quinn",
+        "chogath",
+        "pantheon",
+        "volibear"
+      ]
+    },
+    {
+      "name": "vladimir",
+      "winrate": "50.19%",
+      "counters": [
+        "galio",
+        "cassiopeia",
+        "sylas",
+        "drmundo",
+        "malzahar",
+        "irelia",
+        "olaf"
+      ]
+    },
+    {
+      "name": "wukong",
+      "winrate": "50.12%",
+      "counters": [
+        "quinn",
+        "vladimir",
+        "pantheon",
+        "kennen",
+        "kled",
+        "jax",
+        "gwen"
+      ]
+    },
+    {
+      "name": "ambessa",
+      "winrate": "50.11%",
+      "counters": [
+        "warwick",
+        "kennen",
+        "zac",
+        "quinn",
+        "ryze",
+        "irelia",
+        "camille"
+      ]
+    },
+    {
+      "name": "heimerdinger",
+      "winrate": "50.11%",
+      "counters": [
+        "kled",
+        "kennen",
+        "vayne",
+        "aurora",
+        "garen",
+        "jayce",
+        "chogath"
+      ]
+    },
+    {
+      "name": "teemo",
+      "winrate": "50.10%",
+      "counters": [
+        "trundle",
+        "pantheon",
+        "urgot",
+        "zac",
+        "ryze",
+        "illaoi",
+        "malphite"
+      ]
+    },
+    {
+      "name": "riven",
+      "winrate": "50.10%",
+      "counters": [
+        "vayne",
+        "kennen",
+        "urgot",
+        "poppy",
+        "quinn",
+        "renekton",
+        "tryndamere"
+      ]
+    },
+    {
+      "name": "pantheon",
+      "winrate": "50.04%",
+      "counters": [
+        "rumble",
+        "malphite",
+        "trundle",
+        "vladimir",
+        "fiora",
+        "irelia",
+        "tryndamere"
+      ]
+    },
+    {
+      "name": "aatrox",
+      "winrate": "50.00%",
+      "counters": [
+        "warwick",
+        "vayne",
+        "singed",
+        "olaf",
+        "quinn",
+        "poppy",
+        "irelia"
+      ]
+    },
+    {
+      "name": "darius",
+      "winrate": "49.95%",
+      "counters": [
+        "aurora",
+        "kennen",
+        "olaf",
+        "quinn",
+        "ornn",
+        "riven",
+        "vayne"
+      ]
+    },
+    {
+      "name": "sylas",
+      "winrate": "49.84%",
+      "counters": [
+        "ryze",
+        "wukong",
+        "chogath",
+        "tryndamere",
+        "aatrox",
+        "garen",
+        "kled"
+      ]
+    },
+    {
+      "name": "renekton",
+      "winrate": "49.78%",
+      "counters": [
+        "kayle",
+        "vayne",
+        "poppy",
+        "chogath",
+        "quinn",
+        "drmundo",
+        "teemo"
+      ]
+    },
+    {
+      "name": "akali",
+      "winrate": "49.66%",
+      "counters": [
+        "chogath",
+        "poppy",
+        "sylas",
+        "jayce",
+        "kled",
+        "tryndamere",
+        "fiora"
+      ]
+    },
+    {
+      "name": "gwen",
+      "winrate": "49.65%",
+      "counters": [
+        "akali",
+        "singed",
+        "riven",
+        "tryndamere",
+        "poppy",
+        "warwick",
+        "jayce"
+      ]
+    },
+    {
+      "name": "drmundo",
+      "winrate": "49.48%",
+      "counters": [
+        "gwen",
+        "garen",
+        "ambessa",
+        "irelia",
+        "yorick",
+        "aatrox",
+        "poppy"
+      ]
+    },
+    {
+      "name": "tryndamere",
+      "winrate": "49.47%",
+      "counters": [
+        "quinn",
+        "warwick",
+        "malphite",
+        "teemo",
+        "camille",
+        "illaoi",
+        "aatrox"
+      ]
+    },
+    {
+      "name": "yorick",
+      "winrate": "49.35%",
+      "counters": [
+        "olaf",
+        "volibear",
+        "singed",
+        "yone",
+        "malphite",
+        "ambessa",
+        "ryze"
+      ]
+    },
+    {
+      "name": "volibear",
+      "winrate": "49.25%",
+      "counters": [
+        "vayne",
+        "malphite",
+        "jax",
+        "vladimir",
+        "poppy",
+        "warwick",
+        "quinn"
+      ]
+    },
+    {
+      "name": "aurora",
+      "winrate": "49.24%",
+      "counters": [
+        "cassiopeia",
+        "pantheon",
+        "camille",
+        "irelia",
+        "jax",
+        "gragas",
+        "gnar"
+      ]
+    },
+    {
+      "name": "gnar",
+      "winrate": "49.23%",
+      "counters": [
+        "olaf",
+        "nasus",
+        "teemo",
+        "poppy",
+        "malphite",
+        "irelia",
+        "wukong"
+      ]
+    },
+    {
+      "name": "sion",
+      "winrate": "49.14%",
+      "counters": [
+        "ryze",
+        "tryndamere",
+        "quinn",
+        "riven",
+        "camille",
+        "kled",
+        "kayle"
+      ]
+    },
+    {
+      "name": "udyr",
+      "winrate": "49.00%",
+      "counters": [
+        "gnar",
+        "quinn",
+        "drmundo",
+        "aurora",
+        "chogath",
+        "teemo",
+        "fiora"
+      ]
+    },
+    {
+      "name": "trundle",
+      "winrate": "48.94%",
+      "counters": [
+        "akali",
+        "yasuo",
+        "riven",
+        "kayle",
+        "jayce",
+        "tryndamere",
+        "warwick"
+      ]
+    },
+    {
+      "name": "garen",
+      "winrate": "48.94%",
+      "counters": [
+        "camille",
+        "darius",
+        "teemo",
+        "mordekaiser",
+        "warwick",
+        "vayne",
+        "gnar"
+      ]
+    },
+    {
+      "name": "varus",
+      "winrate": "48.83%",
+      "counters": [
+        "heimerdinger",
+        "teemo",
+        "jayce",
+        "gwen",
+        "viktor",
+        "olaf",
+        "pantheon"
+      ]
+    },
+    {
+      "name": "yasuo",
+      "winrate": "48.82%",
+      "counters": [
+        "poppy",
+        "kled",
+        "tryndamere",
+        "vladimir",
+        "nasus",
+        "kennen",
+        "warwick"
+      ]
+    },
+    {
+      "name": "tahmkench",
+      "winrate": "48.05%",
+      "counters": [
+        "urgot",
+        "shen",
+        "irelia",
+        "kayle",
+        "trundle",
+        "ksante",
+        "jayce"
+      ]
+    },
+    {
+      "name": "jayce",
+      "winrate": "48.04%",
+      "counters": [
+        "quinn",
+        "irelia",
+        "urgot",
+        "olaf",
+        "malphite",
+        "drmundo",
+        "kennen"
+      ]
+    },
+    {
+      "name": "illaoi",
+      "winrate": "47.74%",
+      "counters": [
+        "kayle",
+        "singed",
+        "wukong",
+        "olaf",
+        "poppy",
+        "vayne",
+        "riven"
+      ]
+    },
+    {
+      "name": "rumble",
+      "winrate": "47.67%",
+      "counters": [
+        "sylas",
+        "kayle",
+        "ryze",
+        "illaoi",
+        "yorick",
+        "yasuo",
+        "renekton"
+      ]
+    },
+    {
+      "name": "ksante",
+      "winrate": "47.65%",
+      "counters": [
+        "kayle",
+        "singed",
+        "vladimir",
+        "yorick",
+        "poppy",
+        "vayne",
+        "kennen"
+      ]
+    },
+    {
+      "name": "yone",
+      "winrate": "47.52%",
+      "counters": [
+        "poppy",
+        "trundle",
+        "zac",
+        "urgot",
+        "kennen",
+        "warwick",
+        "ambessa"
+      ]
+    },
+    {
+      "name": "smolder",
+      "winrate": "44.72%",
+      "counters": [
+        "quinn",
+        "aurora",
+        "varus",
+        "jax",
+        "camille",
+        "illaoi",
+        "ambessa"
+      ]
+    }
+  ],
+  "jungle": [
+    {
+      "name": "ivern",
+      "winrate": "52.83%",
+      "counters": [
+        "shyvana",
+        "belveth",
+        "nunu",
+        "nocturne",
+        "naafiri",
+        "masteryi",
+        "khazix"
+      ]
+    },
+    {
+      "name": "trundle",
+      "winrate": "52.52%",
+      "counters": [
+        "ekko",
+        "lillia",
+        "fiddlesticks",
+        "udyr",
+        "zac",
+        "talon",
+        "gwen"
+      ]
+    },
+    {
+      "name": "volibear",
+      "winrate": "52.09%",
+      "counters": [
+        "jax",
+        "jarvaniv",
+        "nocturne",
+        "ivern",
+        "briar",
+        "trundle",
+        "belveth"
+      ]
+    },
+    {
+      "name": "warwick",
+      "winrate": "51.92%",
+      "counters": [
+        "trundle",
+        "naafiri",
+        "volibear",
+        "lillia",
+        "ivern",
+        "sejuani",
+        "karthus"
+      ]
+    },
+    {
+      "name": "fiddlesticks",
+      "winrate": "51.70%",
+      "counters": [
+        "volibear",
+        "nidalee",
+        "shyvana",
+        "diana",
+        "gwen",
+        "ivern",
+        "kindred"
+      ]
+    },
+    {
+      "name": "belveth",
+      "winrate": "51.35%",
+      "counters": [
+        "nunu",
+        "poppy",
+        "amumu",
+        "ekko",
+        "jarvaniv",
+        "naafiri",
+        "hecarim"
+      ]
+    },
+    {
+      "name": "jarvaniv",
+      "winrate": "51.32%",
+      "counters": [
+        "masteryi",
+        "gragas",
+        "ivern",
+        "shyvana",
+        "trundle",
+        "poppy",
+        "nidalee"
+      ]
+    },
+    {
+      "name": "poppy",
+      "winrate": "51.30%",
+      "counters": [
+        "elise",
+        "karthus",
+        "fiddlesticks",
+        "jax",
+        "warwick",
+        "volibear",
+        "sejuani"
+      ]
+    },
+    {
+      "name": "qiyana",
+      "winrate": "51.20%",
+      "counters": [
+        "kindred",
+        "nunu",
+        "warwick",
+        "evelynn",
+        "briar",
+        "naafiri",
+        "zac"
+      ]
+    },
+    {
+      "name": "ekko",
+      "winrate": "51.14%",
+      "counters": [
+        "ivern",
+        "fiddlesticks",
+        "khazix",
+        "briar",
+        "hecarim",
+        "xinzhao",
+        "diana"
+      ]
+    },
+    {
+      "name": "briar",
+      "winrate": "51.12%",
+      "counters": [
+        "ivern",
+        "zac",
+        "gragas",
+        "reksai",
+        "elise",
+        "jarvaniv",
+        "gwen"
+      ]
+    },
+    {
+      "name": "gwen",
+      "winrate": "50.96%",
+      "counters": [
+        "ivern",
+        "jax",
+        "shaco",
+        "belveth",
+        "udyr",
+        "naafiri",
+        "graves"
+      ]
+    },
+    {
+      "name": "nocturne",
+      "winrate": "50.84%",
+      "counters": [
+        "masteryi",
+        "rammus",
+        "trundle",
+        "gwen",
+        "wukong",
+        "khazix",
+        "drmundo"
+      ]
+    },
+    {
+      "name": "kindred",
+      "winrate": "50.83%",
+      "counters": [
+        "elise",
+        "talon",
+        "warwick",
+        "trundle",
+        "ivern",
+        "reksai",
+        "udyr"
+      ]
+    },
+    {
+      "name": "nidalee",
+      "winrate": "50.80%",
+      "counters": [
+        "briar",
+        "diana",
+        "belveth",
+        "volibear",
+        "evelynn",
+        "warwick",
+        "naafiri"
+      ]
+    },
+    {
+      "name": "nunu",
+      "winrate": "50.78%",
+      "counters": [
+        "gragas",
+        "volibear",
+        "sejuani",
+        "masteryi",
+        "evelynn",
+        "elise",
+        "briar"
+      ]
+    },
+    {
+      "name": "shaco",
+      "winrate": "50.75%",
+      "counters": [
+        "zac",
+        "hecarim",
+        "graves",
+        "rengar",
+        "talon",
+        "nunu",
+        "trundle"
+      ]
+    },
+    {
+      "name": "udyr",
+      "winrate": "50.69%",
+      "counters": [
+        "belveth",
+        "ivern",
+        "volibear",
+        "amumu",
+        "warwick",
+        "zed",
+        "xinzhao"
+      ]
+    },
+    {
+      "name": "taliyah",
+      "winrate": "50.61%",
+      "counters": [
+        "zyra",
+        "poppy",
+        "drmundo",
+        "talon",
+        "shaco",
+        "kindred",
+        "briar"
+      ]
+    },
+    {
+      "name": "talon",
+      "winrate": "50.60%",
+      "counters": [
+        "fiddlesticks",
+        "gwen",
+        "poppy",
+        "warwick",
+        "shyvana",
+        "rengar",
+        "briar"
+      ]
+    },
+    {
+      "name": "hecarim",
+      "winrate": "50.59%",
+      "counters": [
+        "kindred",
+        "gwen",
+        "fiddlesticks",
+        "amumu",
+        "nunu",
+        "jarvaniv",
+        "ivern"
+      ]
+    },
+    {
+      "name": "xinzhao",
+      "winrate": "50.59%",
+      "counters": [
+        "ivern",
+        "volibear",
+        "briar",
+        "fiddlesticks",
+        "jax",
+        "trundle",
+        "zac"
+      ]
+    },
+    {
+      "name": "masteryi",
+      "winrate": "50.50%",
+      "counters": [
+        "naafiri",
+        "reksai",
+        "elise",
+        "gragas",
+        "belveth",
+        "talon",
+        "khazix"
+      ]
+    },
+    {
+      "name": "khazix",
+      "winrate": "50.36%",
+      "counters": [
+        "warwick",
+        "rengar",
+        "trundle",
+        "fiddlesticks",
+        "nidalee",
+        "elise",
+        "talon"
+      ]
+    },
+    {
+      "name": "drmundo",
+      "winrate": "50.31%",
+      "counters": [
+        "briar",
+        "zac",
+        "ivern",
+        "udyr",
+        "belveth",
+        "talon",
+        "jax"
+      ]
+    },
+    {
+      "name": "jax",
+      "winrate": "50.27%",
+      "counters": [
+        "nidalee",
+        "lillia",
+        "hecarim",
+        "warwick",
+        "shyvana",
+        "talon",
+        "ekko"
+      ]
+    },
+    {
+      "name": "elise",
+      "winrate": "50.22%",
+      "counters": [
+        "nocturne",
+        "karthus",
+        "warwick",
+        "udyr",
+        "trundle",
+        "evelynn",
+        "rammus"
+      ]
+    },
+    {
+      "name": "zac",
+      "winrate": "50.22%",
+      "counters": [
+        "jax",
+        "warwick",
+        "ivern",
+        "diana",
+        "ekko",
+        "rammus",
+        "lillia"
+      ]
+    },
+    {
+      "name": "wukong",
+      "winrate": "50.02%",
+      "counters": [
+        "gwen",
+        "nunu",
+        "karthus",
+        "udyr",
+        "evelynn",
+        "amumu",
+        "nidalee"
+      ]
+    },
+    {
+      "name": "diana",
+      "winrate": "50.01%",
+      "counters": [
+        "talon",
+        "poppy",
+        "masteryi",
+        "trundle",
+        "jax",
+        "volibear",
+        "kayn"
+      ]
+    },
+    {
+      "name": "evelynn",
+      "winrate": "49.93%",
+      "counters": [
+        "jarvaniv",
+        "belveth",
+        "rammus",
+        "trundle",
+        "leesin",
+        "volibear",
+        "xinzhao"
+      ]
+    },
+    {
+      "name": "rengar",
+      "winrate": "49.84%",
+      "counters": [
+        "nunu",
+        "belveth",
+        "drmundo",
+        "gragas",
+        "masteryi",
+        "warwick",
+        "volibear"
+      ]
+    },
+    {
+      "name": "zyra",
+      "winrate": "49.71%",
+      "counters": [
+        "belveth",
+        "sejuani",
+        "lillia",
+        "kindred",
+        "hecarim",
+        "shyvana",
+        "pantheon"
+      ]
+    },
+    {
+      "name": "gragas",
+      "winrate": "49.67%",
+      "counters": [
+        "rammus",
+        "jax",
+        "gwen",
+        "ivern",
+        "warwick",
+        "viego",
+        "vi"
+      ]
+    },
+    {
+      "name": "lillia",
+      "winrate": "49.60%",
+      "counters": [
+        "kayn",
+        "ivern",
+        "volibear",
+        "masteryi",
+        "shyvana",
+        "ekko",
+        "khazix"
+      ]
+    },
+    {
+      "name": "viego",
+      "winrate": "49.56%",
+      "counters": [
+        "ivern",
+        "gwen",
+        "trundle",
+        "fiddlesticks",
+        "kindred",
+        "elise",
+        "xinzhao"
+      ]
+    },
+    {
+      "name": "leesin",
+      "winrate": "49.51%",
+      "counters": [
+        "udyr",
+        "fiddlesticks",
+        "shaco",
+        "elise",
+        "belveth",
+        "jax",
+        "briar"
+      ]
+    },
+    {
+      "name": "kayn",
+      "winrate": "49.45%",
+      "counters": [
+        "gragas",
+        "ivern",
+        "fiddlesticks",
+        "trundle",
+        "talon",
+        "warwick",
+        "masteryi"
+      ]
+    },
+    {
+      "name": "naafiri",
+      "winrate": "49.41%",
+      "counters": [
+        "nunu",
+        "shaco",
+        "udyr",
+        "ekko",
+        "lillia",
+        "wukong",
+        "hecarim"
+      ]
+    },
+    {
+      "name": "rammus",
+      "winrate": "49.41%",
+      "counters": [
+        "amumu",
+        "kindred",
+        "trundle",
+        "nunu",
+        "wukong",
+        "diana",
+        "shaco"
+      ]
+    },
+    {
+      "name": "amumu",
+      "winrate": "49.36%",
+      "counters": [
+        "kindred",
+        "trundle",
+        "briar",
+        "karthus",
+        "khazix",
+        "zac",
+        "rengar"
+      ]
+    },
+    {
+      "name": "graves",
+      "winrate": "49.13%",
+      "counters": [
+        "belveth",
+        "evelynn",
+        "naafiri",
+        "diana",
+        "nunu",
+        "fiddlesticks",
+        "trundle"
+      ]
+    },
+    {
+      "name": "reksai",
+      "winrate": "49.01%",
+      "counters": [
+        "volibear",
+        "jarvaniv",
+        "ivern",
+        "trundle",
+        "zyra",
+        "graves",
+        "hecarim"
+      ]
+    },
+    {
+      "name": "karthus",
+      "winrate": "48.39%",
+      "counters": [
+        "ivern",
+        "masteryi",
+        "naafiri",
+        "udyr",
+        "ekko",
+        "nunu",
+        "volibear"
+      ]
+    },
+    {
+      "name": "shyvana",
+      "winrate": "48.27%",
+      "counters": [
+        "amumu",
+        "kindred",
+        "sejuani",
+        "trundle",
+        "gwen",
+        "volibear",
+        "leesin"
+      ]
+    },
+    {
+      "name": "pantheon",
+      "winrate": "48.11%",
+      "counters": [
+        "lillia",
+        "ivern",
+        "naafiri",
+        "volibear",
+        "gwen",
+        "nidalee",
+        "jarvaniv"
+      ]
+    },
+    {
+      "name": "zed",
+      "winrate": "47.35%",
+      "counters": [
+        "rammus",
+        "briar",
+        "warwick",
+        "gragas",
+        "kindred",
+        "volibear",
+        "trundle"
+      ]
+    },
+    {
+      "name": "sejuani",
+      "winrate": "47.22%",
+      "counters": [
+        "amumu",
+        "lillia",
+        "vi",
+        "xinzhao",
+        "gwen",
+        "kayn",
+        "volibear"
+      ]
+    },
+    {
+      "name": "vi",
+      "winrate": "47.09%",
+      "counters": [
+        "ivern",
+        "poppy",
+        "belveth",
+        "karthus",
+        "hecarim",
+        "graves",
+        "wukong"
+      ]
+    },
+    {
+      "name": "skarner",
+      "winrate": "45.58%",
+      "counters": [
+        "belveth",
+        "ivern",
+        "karthus",
+        "poppy",
+        "wukong",
+        "rammus",
+        "lillia"
+      ]
+    }
+  ],
+  "mid": [
+    {
+      "name": "neeko",
+      "winrate": "53.11%",
+      "counters": [
+        "kassadin",
+        "talon",
+        "irelia",
+        "naafiri",
+        "kayle",
+        "swain",
+        "fizz"
+      ]
+    },
+    {
+      "name": "anivia",
+      "winrate": "52.81%",
+      "counters": [
+        "swain",
+        "kayle",
+        "irelia",
+        "qiyana",
+        "leblanc",
+        "fizz",
+        "aurelionsol"
+      ]
+    },
+    {
+      "name": "kennen",
+      "winrate": "52.69%",
+      "counters": [
+        "corki",
+        "lissandra",
+        "cassiopeia",
+        "vladimir",
+        "azir",
+        "hwei",
+        "kayle"
+      ]
+    },
+    {
+      "name": "naafiri",
+      "winrate": "52.60%",
+      "counters": [
+        "galio",
+        "jayce",
+        "diana",
+        "fizz",
+        "katarina",
+        "talon",
+        "ekko"
+      ]
+    },
+    {
+      "name": "vex",
+      "winrate": "52.23%",
+      "counters": [
+        "velkoz",
+        "anivia",
+        "talon",
+        "galio",
+        "ekko",
+        "fizz",
+        "cassiopeia"
+      ]
+    },
+    {
+      "name": "kayle",
+      "winrate": "51.96%",
+      "counters": [
+        "zoe",
+        "galio",
+        "vladimir",
+        "syndra",
+        "viktor",
+        "leblanc",
+        "katarina"
+      ]
+    },
+    {
+      "name": "diana",
+      "winrate": "51.85%",
+      "counters": [
+        "zoe",
+        "vex",
+        "anivia",
+        "cassiopeia",
+        "galio",
+        "yasuo",
+        "twistedfate"
+      ]
+    },
+    {
+      "name": "swain",
+      "winrate": "51.41%",
+      "counters": [
+        "naafiri",
+        "velkoz",
+        "veigar",
+        "ahri",
+        "hwei",
+        "malzahar",
+        "leblanc"
+      ]
+    },
+    {
+      "name": "chogath",
+      "winrate": "51.39%",
+      "counters": [
+        "velkoz",
+        "akshan",
+        "sion",
+        "mel",
+        "irelia",
+        "anivia",
+        "veigar"
+      ]
+    },
+    {
+      "name": "velkoz",
+      "winrate": "51.37%",
+      "counters": [
+        "kayle",
+        "kassadin",
+        "irelia",
+        "diana",
+        "leblanc",
+        "aurelionsol",
+        "xerath"
+      ]
+    },
+    {
+      "name": "xerath",
+      "winrate": "51.23%",
+      "counters": [
+        "katarina",
+        "ekko",
+        "kassadin",
+        "kayle",
+        "vex",
+        "ziggs",
+        "twistedfate"
+      ]
+    },
+    {
+      "name": "zoe",
+      "winrate": "51.16%",
+      "counters": [
+        "naafiri",
+        "anivia",
+        "velkoz",
+        "irelia",
+        "vladimir",
+        "ryze",
+        "vex"
+      ]
+    },
+    {
+      "name": "pantheon",
+      "winrate": "51.11%",
+      "counters": [
+        "annie",
+        "syndra",
+        "xerath",
+        "lissandra",
+        "malphite",
+        "zoe",
+        "anivia"
+      ]
+    },
+    {
+      "name": "kassadin",
+      "winrate": "50.99%",
+      "counters": [
+        "talon",
+        "kayle",
+        "pantheon",
+        "tristana",
+        "swain",
+        "aurelionsol",
+        "akali"
+      ]
+    },
+    {
+      "name": "twistedfate",
+      "winrate": "50.90%",
+      "counters": [
+        "aurelionsol",
+        "zoe",
+        "anivia",
+        "fizz",
+        "annie",
+        "yasuo",
+        "irelia"
+      ]
+    },
+    {
+      "name": "irelia",
+      "winrate": "50.82%",
+      "counters": [
+        "ekko",
+        "talon",
+        "jax",
+        "lux",
+        "renekton",
+        "galio",
+        "vex"
+      ]
+    },
+    {
+      "name": "akshan",
+      "winrate": "50.82%",
+      "counters": [
+        "twistedfate",
+        "velkoz",
+        "anivia",
+        "vex",
+        "diana",
+        "cassiopeia",
+        "veigar"
+      ]
+    },
+    {
+      "name": "annie",
+      "winrate": "50.80%",
+      "counters": [
+        "fizz",
+        "zoe",
+        "qiyana",
+        "diana",
+        "cassiopeia",
+        "irelia",
+        "lissandra"
+      ]
+    },
+    {
+      "name": "taliyah",
+      "winrate": "50.75%",
+      "counters": [
+        "swain",
+        "kayle",
+        "katarina",
+        "annie",
+        "zed",
+        "fizz",
+        "xerath"
+      ]
+    },
+    {
+      "name": "katarina",
+      "winrate": "50.73%",
+      "counters": [
+        "cassiopeia",
+        "talon",
+        "ekko",
+        "galio",
+        "vex",
+        "qiyana",
+        "irelia"
+      ]
+    },
+    {
+      "name": "ekko",
+      "winrate": "50.64%",
+      "counters": [
+        "kayle",
+        "fizz",
+        "anivia",
+        "annie",
+        "zoe",
+        "galio",
+        "akali"
+      ]
+    },
+    {
+      "name": "malphite",
+      "winrate": "50.60%",
+      "counters": [
+        "vex",
+        "ryze",
+        "aurelionsol",
+        "annie",
+        "veigar",
+        "aurora",
+        "fizz"
+      ]
+    },
+    {
+      "name": "fizz",
+      "winrate": "50.60%",
+      "counters": [
+        "zoe",
+        "kayle",
+        "sylas",
+        "akali",
+        "talon",
+        "diana",
+        "galio"
+      ]
+    },
+    {
+      "name": "cassiopeia",
+      "winrate": "50.59%",
+      "counters": [
+        "qiyana",
+        "leblanc",
+        "kayle",
+        "galio",
+        "xerath",
+        "aurelionsol",
+        "orianna"
+      ]
+    },
+    {
+      "name": "qiyana",
+      "winrate": "50.55%",
+      "counters": [
+        "swain",
+        "zoe",
+        "lux",
+        "corki",
+        "aurelionsol",
+        "ekko",
+        "leblanc"
+      ]
+    },
+    {
+      "name": "talon",
+      "winrate": "50.54%",
+      "counters": [
+        "swain",
+        "lissandra",
+        "vladimir",
+        "akshan",
+        "diana",
+        "velkoz",
+        "anivia"
+      ]
+    },
+    {
+      "name": "leblanc",
+      "winrate": "50.54%",
+      "counters": [
+        "ziggs",
+        "vladimir",
+        "vex",
+        "akshan",
+        "lissandra",
+        "diana",
+        "twistedfate"
+      ]
+    },
+    {
+      "name": "akali",
+      "winrate": "50.46%",
+      "counters": [
+        "aurelionsol",
+        "anivia",
+        "vex",
+        "taliyah",
+        "qiyana",
+        "galio",
+        "zoe"
+      ]
+    },
+    {
+      "name": "galio",
+      "winrate": "50.43%",
+      "counters": [
+        "anivia",
+        "zed",
+        "hwei",
+        "syndra",
+        "ahri",
+        "yone",
+        "vladimir"
+      ]
+    },
+    {
+      "name": "aurelionsol",
+      "winrate": "50.36%",
+      "counters": [
+        "swain",
+        "lissandra",
+        "fizz",
+        "katarina",
+        "akshan",
+        "irelia",
+        "zoe"
+      ]
+    },
+    {
+      "name": "vladimir",
+      "winrate": "50.30%",
+      "counters": [
+        "aurelionsol",
+        "velkoz",
+        "twistedfate",
+        "akali",
+        "cassiopeia",
+        "vex",
+        "smolder"
+      ]
+    },
+    {
+      "name": "sylas",
+      "winrate": "50.29%",
+      "counters": [
+        "taliyah",
+        "vex",
+        "cassiopeia",
+        "anivia",
+        "akshan",
+        "yasuo",
+        "galio"
+      ]
+    },
+    {
+      "name": "syndra",
+      "winrate": "50.25%",
+      "counters": [
+        "swain",
+        "cassiopeia",
+        "anivia",
+        "katarina",
+        "velkoz",
+        "qiyana",
+        "twistedfate"
+      ]
+    },
+    {
+      "name": "lissandra",
+      "winrate": "50.23%",
+      "counters": [
+        "kayle",
+        "ziggs",
+        "velkoz",
+        "diana",
+        "sylas",
+        "zoe",
+        "orianna"
+      ]
+    },
+    {
+      "name": "lux",
+      "winrate": "49.99%",
+      "counters": [
+        "aurelionsol",
+        "kassadin",
+        "galio",
+        "akshan",
+        "talon",
+        "katarina",
+        "velkoz"
+      ]
+    },
+    {
+      "name": "hwei",
+      "winrate": "49.93%",
+      "counters": [
+        "velkoz",
+        "xerath",
+        "katarina",
+        "corki",
+        "aurelionsol",
+        "fizz",
+        "leblanc"
+      ]
+    },
+    {
+      "name": "ziggs",
+      "winrate": "49.86%",
+      "counters": [
+        "galio",
+        "kassadin",
+        "katarina",
+        "akali",
+        "annie",
+        "ekko",
+        "yasuo"
+      ]
+    },
+    {
+      "name": "malzahar",
+      "winrate": "49.84%",
+      "counters": [
+        "xerath",
+        "kayle",
+        "diana",
+        "vex",
+        "velkoz",
+        "katarina",
+        "annie"
+      ]
+    },
+    {
+      "name": "veigar",
+      "winrate": "49.82%",
+      "counters": [
+        "kayle",
+        "xerath",
+        "katarina",
+        "smolder",
+        "fizz",
+        "ziggs",
+        "vladimir"
+      ]
+    },
+    {
+      "name": "ryze",
+      "winrate": "49.79%",
+      "counters": [
+        "velkoz",
+        "veigar",
+        "lissandra",
+        "annie",
+        "qiyana",
+        "irelia",
+        "yasuo"
+      ]
+    },
+    {
+      "name": "sion",
+      "winrate": "49.72%",
+      "counters": [
+        "talon",
+        "anivia",
+        "ekko",
+        "fizz",
+        "aurora",
+        "ahri",
+        "akshan"
+      ]
+    },
+    {
+      "name": "viktor",
+      "winrate": "49.48%",
+      "counters": [
+        "anivia",
+        "akali",
+        "talon",
+        "ekko",
+        "diana",
+        "qiyana",
+        "taliyah"
+      ]
+    },
+    {
+      "name": "jayce",
+      "winrate": "49.42%",
+      "counters": [
+        "pantheon",
+        "tristana",
+        "swain",
+        "smolder",
+        "lissandra",
+        "vladimir",
+        "syndra"
+      ]
+    },
+    {
+      "name": "aurora",
+      "winrate": "49.35%",
+      "counters": [
+        "irelia",
+        "vex",
+        "swain",
+        "velkoz",
+        "diana",
+        "ryze",
+        "leblanc"
+      ]
+    },
+    {
+      "name": "ahri",
+      "winrate": "49.29%",
+      "counters": [
+        "qiyana",
+        "vex",
+        "akshan",
+        "zoe",
+        "fizz",
+        "talon",
+        "diana"
+      ]
+    },
+    {
+      "name": "orianna",
+      "winrate": "49.18%",
+      "counters": [
+        "ziggs",
+        "neeko",
+        "kayle",
+        "anivia",
+        "xerath",
+        "aurelionsol",
+        "qiyana"
+      ]
+    },
+    {
+      "name": "zed",
+      "winrate": "49.03%",
+      "counters": [
+        "ekko",
+        "cassiopeia",
+        "chogath",
+        "viktor",
+        "lux",
+        "irelia",
+        "diana"
+      ]
+    },
+    {
+      "name": "yasuo",
+      "winrate": "49.02%",
+      "counters": [
+        "renekton",
+        "malphite",
+        "taliyah",
+        "kayle",
+        "pantheon",
+        "lissandra",
+        "cassiopeia"
+      ]
+    },
+    {
+      "name": "azir",
+      "winrate": "47.97%",
+      "counters": [
+        "vex",
+        "leblanc",
+        "veigar",
+        "syndra",
+        "hwei",
+        "diana",
+        "anivia"
+      ]
+    },
+    {
+      "name": "smolder",
+      "winrate": "47.01%",
+      "counters": [
+        "irelia",
+        "ziggs",
+        "akshan",
+        "kassadin",
+        "viktor",
+        "annie",
+        "ryze"
+      ]
+    },
+    {
+      "name": "tristana",
+      "winrate": "47.01%",
+      "counters": [
+        "taliyah",
+        "vladimir",
+        "kayle",
+        "fizz",
+        "malphite",
+        "akali",
+        "irelia"
+      ]
+    },
+    {
+      "name": "mel",
+      "winrate": "46.99%",
+      "counters": [
+        "talon",
+        "taliyah",
+        "anivia",
+        "ziggs",
+        "akshan",
+        "velkoz",
+        "veigar"
+      ]
+    },
+    {
+      "name": "corki",
+      "winrate": "46.87%",
+      "counters": [
+        "velkoz",
+        "zoe",
+        "smolder",
+        "azir",
+        "akshan",
+        "xerath",
+        "anivia"
+      ]
+    },
+    {
+      "name": "yone",
+      "winrate": "46.68%",
+      "counters": [
+        "vex",
+        "irelia",
+        "cassiopeia",
+        "diana",
+        "anivia",
+        "zoe",
+        "syndra"
+      ]
+    }
+  ],
+  "adc": [
+    {
+      "name": "swain",
+      "winrate": "54.04%",
+      "counters": [
+        "nilah",
+        "missfortune",
+        "kalista",
+        "tristana",
+        "corki",
+        "zeri",
+        "senna"
+      ]
+    },
+    {
+      "name": "nilah",
+      "winrate": "53.24%",
+      "counters": [
+        "xayah",
+        "vayne",
+        "ashe",
+        "sivir",
+        "tristana",
+        "smolder",
+        "kogmaw"
+      ]
+    },
+    {
+      "name": "kogmaw",
+      "winrate": "52.92%",
+      "counters": [
+        "senna",
+        "ziggs",
+        "jinx",
+        "vayne",
+        "ashe",
+        "varus",
+        "nilah"
+      ]
+    },
+    {
+      "name": "hwei",
+      "winrate": "52.64%",
+      "counters": [
+        "yasuo",
+        "tristana",
+        "missfortune",
+        "lux",
+        "jhin",
+        "xayah",
+        "vayne"
+      ]
+    },
+    {
+      "name": "yasuo",
+      "winrate": "52.15%",
+      "counters": [
+        "kalista",
+        "seraphine",
+        "nilah",
+        "xayah",
+        "senna",
+        "vayne",
+        "samira"
+      ]
+    },
+    {
+      "name": "vayne",
+      "winrate": "51.74%",
+      "counters": [
+        "senna",
+        "aphelios",
+        "tristana",
+        "draven",
+        "samira",
+        "caitlyn",
+        "kaisa"
+      ]
+    },
+    {
+      "name": "tristana",
+      "winrate": "51.51%",
+      "counters": [
+        "sivir",
+        "draven",
+        "corki",
+        "aphelios",
+        "nilah",
+        "kogmaw",
+        "jinx"
+      ]
+    },
+    {
+      "name": "sivir",
+      "winrate": "51.17%",
+      "counters": [
+        "kogmaw",
+        "vayne",
+        "twitch",
+        "senna",
+        "draven",
+        "zeri",
+        "missfortune"
+      ]
+    },
+    {
+      "name": "jinx",
+      "winrate": "51.04%",
+      "counters": [
+        "nilah",
+        "vayne",
+        "sivir",
+        "ziggs",
+        "senna",
+        "smolder",
+        "twitch"
+      ]
+    },
+    {
+      "name": "zeri",
+      "winrate": "51.02%",
+      "counters": [
+        "ziggs",
+        "kogmaw",
+        "tristana",
+        "vayne",
+        "nilah",
+        "samira",
+        "twitch"
+      ]
+    },
+    {
+      "name": "smolder",
+      "winrate": "50.90%",
+      "counters": [
+        "ziggs",
+        "twitch",
+        "kogmaw",
+        "sivir",
+        "zeri",
+        "vayne",
+        "ashe"
+      ]
+    },
+    {
+      "name": "ziggs",
+      "winrate": "50.88%",
+      "counters": [
+        "nilah",
+        "twitch",
+        "sivir",
+        "kaisa",
+        "vayne",
+        "tristana",
+        "ashe"
+      ]
+    },
+    {
+      "name": "samira",
+      "winrate": "50.85%",
+      "counters": [
+        "nilah",
+        "corki",
+        "senna",
+        "smolder",
+        "jinx",
+        "tristana",
+        "sivir"
+      ]
+    },
+    {
+      "name": "twitch",
+      "winrate": "50.81%",
+      "counters": [
+        "kogmaw",
+        "nilah",
+        "tristana",
+        "corki",
+        "vayne",
+        "draven",
+        "kaisa"
+      ]
+    },
+    {
+      "name": "draven",
+      "winrate": "50.71%",
+      "counters": [
+        "kogmaw",
+        "lucian",
+        "corki",
+        "nilah",
+        "samira",
+        "smolder",
+        "ziggs"
+      ]
+    },
+    {
+      "name": "ashe",
+      "winrate": "50.56%",
+      "counters": [
+        "vayne",
+        "zeri",
+        "jinx",
+        "tristana",
+        "xayah",
+        "draven",
+        "yunara"
+      ]
+    },
+    {
+      "name": "lucian",
+      "winrate": "50.31%",
+      "counters": [
+        "nilah",
+        "twitch",
+        "kogmaw",
+        "samira",
+        "tristana",
+        "ashe",
+        "smolder"
+      ]
+    },
+    {
+      "name": "kaisa",
+      "winrate": "50.17%",
+      "counters": [
+        "kogmaw",
+        "jinx",
+        "nilah",
+        "samira",
+        "zeri",
+        "draven",
+        "aphelios"
+      ]
+    },
+    {
+      "name": "senna",
+      "winrate": "50.08%",
+      "counters": [
+        "missfortune",
+        "nilah",
+        "varus",
+        "tristana",
+        "ashe",
+        "lucian",
+        "smolder"
+      ]
+    },
+    {
+      "name": "mel",
+      "winrate": "50.02%",
+      "counters": [
+        "kogmaw",
+        "senna",
+        "hwei",
+        "twitch",
+        "swain",
+        "nilah",
+        "vayne"
+      ]
+    },
+    {
+      "name": "xayah",
+      "winrate": "49.76%",
+      "counters": [
+        "kogmaw",
+        "smolder",
+        "sivir",
+        "vayne",
+        "ziggs",
+        "lucian",
+        "tristana"
+      ]
+    },
+    {
+      "name": "missfortune",
+      "winrate": "49.68%",
+      "counters": [
+        "nilah",
+        "ashe",
+        "smolder",
+        "jinx",
+        "draven",
+        "tristana",
+        "lucian"
+      ]
+    },
+    {
+      "name": "corki",
+      "winrate": "49.33%",
+      "counters": [
+        "nilah",
+        "ziggs",
+        "kogmaw",
+        "senna",
+        "xayah",
+        "jhin",
+        "sivir"
+      ]
+    },
+    {
+      "name": "jhin",
+      "winrate": "49.15%",
+      "counters": [
+        "kogmaw",
+        "nilah",
+        "zeri",
+        "tristana",
+        "twitch",
+        "kaisa",
+        "vayne"
+      ]
+    },
+    {
+      "name": "aphelios",
+      "winrate": "49.12%",
+      "counters": [
+        "nilah",
+        "ziggs",
+        "kogmaw",
+        "zeri",
+        "varus",
+        "ashe",
+        "twitch"
+      ]
+    },
+    {
+      "name": "yunara",
+      "winrate": "48.97%",
+      "counters": [
+        "kogmaw",
+        "ziggs",
+        "smolder",
+        "twitch",
+        "nilah",
+        "corki",
+        "vayne"
+      ]
+    },
+    {
+      "name": "caitlyn",
+      "winrate": "48.58%",
+      "counters": [
+        "nilah",
+        "sivir",
+        "kogmaw",
+        "tristana",
+        "smolder",
+        "jinx",
+        "jhin"
+      ]
+    },
+    {
+      "name": "varus",
+      "winrate": "48.46%",
+      "counters": [
+        "ziggs",
+        "nilah",
+        "sivir",
+        "xayah",
+        "draven",
+        "ashe",
+        "samira"
+      ]
+    },
+    {
+      "name": "ezreal",
+      "winrate": "47.02%",
+      "counters": [
+        "vayne",
+        "sivir",
+        "kogmaw",
+        "nilah",
+        "tristana",
+        "zeri",
+        "kaisa"
+      ]
+    },
+    {
+      "name": "kalista",
+      "winrate": "46.52%",
+      "counters": [
+        "ziggs",
+        "corki",
+        "vayne",
+        "xayah",
+        "twitch",
+        "samira",
+        "tristana"
+      ]
+    }
+  ],
+  "support": [
+    {
+      "name": "taric",
+      "winrate": "52.80%",
+      "counters": [
+        "elise",
+        "soraka",
+        "swain",
+        "lux",
+        "janna",
+        "nami",
+        "bard"
+      ]
+    },
+    {
+      "name": "sona",
+      "winrate": "52.18%",
+      "counters": [
+        "taric",
+        "velkoz",
+        "braum",
+        "soraka",
+        "pyke",
+        "brand",
+        "zilean"
+      ]
+    },
+    {
+      "name": "elise",
+      "winrate": "52.00%",
+      "counters": [
+        "poppy",
+        "rell",
+        "tahmkench",
+        "morgana",
+        "bard",
+        "janna",
+        "sona"
+      ]
+    },
+    {
+      "name": "soraka",
+      "winrate": "51.54%",
+      "counters": [
+        "bard",
+        "elise",
+        "seraphine",
+        "thresh",
+        "sylas",
+        "maokai",
+        "zyra"
+      ]
+    },
+    {
+      "name": "nami",
+      "winrate": "51.47%",
+      "counters": [
+        "sona",
+        "leona",
+        "milio",
+        "braum",
+        "elise",
+        "thresh",
+        "renata"
+      ]
+    },
+    {
+      "name": "lulu",
+      "winrate": "51.44%",
+      "counters": [
+        "elise",
+        "taric",
+        "braum",
+        "velkoz",
+        "sona",
+        "leona",
+        "nami"
+      ]
+    },
+    {
+      "name": "bard",
+      "winrate": "51.40%",
+      "counters": [
+        "brand",
+        "sona",
+        "zyra",
+        "morgana",
+        "nautilus",
+        "thresh",
+        "seraphine"
+      ]
+    },
+    {
+      "name": "milio",
+      "winrate": "51.35%",
+      "counters": [
+        "elise",
+        "blitzcrank",
+        "soraka",
+        "taric",
+        "poppy",
+        "lulu",
+        "shaco"
+      ]
+    },
+    {
+      "name": "leona",
+      "winrate": "51.29%",
+      "counters": [
+        "neeko",
+        "rell",
+        "taric",
+        "renata",
+        "janna",
+        "alistar",
+        "karma"
+      ]
+    },
+    {
+      "name": "thresh",
+      "winrate": "51.05%",
+      "counters": [
+        "brand",
+        "swain",
+        "zilean",
+        "elise",
+        "seraphine",
+        "sona",
+        "neeko"
+      ]
+    },
+    {
+      "name": "rell",
+      "winrate": "50.88%",
+      "counters": [
+        "velkoz",
+        "soraka",
+        "taric",
+        "zilean",
+        "nami",
+        "poppy",
+        "shaco"
+      ]
+    },
+    {
+      "name": "janna",
+      "winrate": "50.82%",
+      "counters": [
+        "bard",
+        "lulu",
+        "swain",
+        "soraka",
+        "nami",
+        "tahmkench",
+        "milio"
+      ]
+    },
+    {
+      "name": "velkoz",
+      "winrate": "50.65%",
+      "counters": [
+        "poppy",
+        "sylas",
+        "elise",
+        "zilean",
+        "taric",
+        "blitzcrank",
+        "leona"
+      ]
+    },
+    {
+      "name": "zilean",
+      "winrate": "50.64%",
+      "counters": [
+        "tahmkench",
+        "taric",
+        "xerath",
+        "zyra",
+        "renata",
+        "shaco",
+        "morgana"
+      ]
+    },
+    {
+      "name": "poppy",
+      "winrate": "50.62%",
+      "counters": [
+        "taric",
+        "janna",
+        "tahmkench",
+        "morgana",
+        "sona",
+        "lulu",
+        "nami"
+      ]
+    },
+    {
+      "name": "braum",
+      "winrate": "50.51%",
+      "counters": [
+        "elise",
+        "zilean",
+        "soraka",
+        "poppy",
+        "leona",
+        "janna",
+        "neeko"
+      ]
+    },
+    {
+      "name": "seraphine",
+      "winrate": "50.39%",
+      "counters": [
+        "renata",
+        "swain",
+        "velkoz",
+        "zyra",
+        "leona",
+        "shaco",
+        "taric"
+      ]
+    },
+    {
+      "name": "maokai",
+      "winrate": "50.36%",
+      "counters": [
+        "xerath",
+        "taric",
+        "morgana",
+        "janna",
+        "seraphine",
+        "neeko",
+        "rell"
+      ]
+    },
+    {
+      "name": "renata",
+      "winrate": "50.07%",
+      "counters": [
+        "velkoz",
+        "taric",
+        "pantheon",
+        "yuumi",
+        "braum",
+        "bard",
+        "lulu"
+      ]
+    },
+    {
+      "name": "pyke",
+      "winrate": "49.99%",
+      "counters": [
+        "elise",
+        "renata",
+        "seraphine",
+        "soraka",
+        "maokai",
+        "milio",
+        "rell"
+      ]
+    },
+    {
+      "name": "blitzcrank",
+      "winrate": "49.93%",
+      "counters": [
+        "sona",
+        "zilean",
+        "renata",
+        "shaco",
+        "braum",
+        "elise",
+        "swain"
+      ]
+    },
+    {
+      "name": "fiddlesticks",
+      "winrate": "49.87%",
+      "counters": [
+        "elise",
+        "maokai",
+        "janna",
+        "shaco",
+        "renata",
+        "xerath",
+        "senna"
+      ]
+    },
+    {
+      "name": "neeko",
+      "winrate": "49.80%",
+      "counters": [
+        "renata",
+        "soraka",
+        "pantheon",
+        "lulu",
+        "taric",
+        "pyke",
+        "zyra"
+      ]
+    },
+    {
+      "name": "zoe",
+      "winrate": "49.77%",
+      "counters": [
+        "maokai",
+        "elise",
+        "rell",
+        "pantheon",
+        "milio",
+        "zilean",
+        "soraka"
+      ]
+    },
+    {
+      "name": "karma",
+      "winrate": "49.70%",
+      "counters": [
+        "sylas",
+        "maokai",
+        "elise",
+        "sona",
+        "bard",
+        "velkoz",
+        "lulu"
+      ]
+    },
+    {
+      "name": "rakan",
+      "winrate": "49.60%",
+      "counters": [
+        "pantheon",
+        "soraka",
+        "seraphine",
+        "lulu",
+        "janna",
+        "sona",
+        "zilean"
+      ]
+    },
+    {
+      "name": "galio",
+      "winrate": "49.49%",
+      "counters": [
+        "milio",
+        "fiddlesticks",
+        "elise",
+        "poppy",
+        "morgana",
+        "velkoz",
+        "nautilus"
+      ]
+    },
+    {
+      "name": "zyra",
+      "winrate": "49.37%",
+      "counters": [
+        "elise",
+        "milio",
+        "shaco",
+        "sona",
+        "renata",
+        "leona",
+        "alistar"
+      ]
+    },
+    {
+      "name": "nautilus",
+      "winrate": "49.24%",
+      "counters": [
+        "taric",
+        "rell",
+        "sona",
+        "shaco",
+        "thresh",
+        "neeko",
+        "leona"
+      ]
+    },
+    {
+      "name": "leblanc",
+      "winrate": "49.17%",
+      "counters": [
+        "sylas",
+        "sona",
+        "tahmkench",
+        "zyra",
+        "milio",
+        "renata",
+        "leona"
+      ]
+    },
+    {
+      "name": "pantheon",
+      "winrate": "49.06%",
+      "counters": [
+        "taric",
+        "elise",
+        "milio",
+        "janna",
+        "nami",
+        "sona",
+        "swain"
+      ]
+    },
+    {
+      "name": "shaco",
+      "winrate": "48.87%",
+      "counters": [
+        "sylas",
+        "sona",
+        "maokai",
+        "soraka",
+        "janna",
+        "nami",
+        "brand"
+      ]
+    },
+    {
+      "name": "alistar",
+      "winrate": "48.82%",
+      "counters": [
+        "seraphine",
+        "janna",
+        "milio",
+        "maokai",
+        "renata",
+        "morgana",
+        "poppy"
+      ]
+    },
+    {
+      "name": "yuumi",
+      "winrate": "48.72%",
+      "counters": [
+        "taric",
+        "nautilus",
+        "rakan",
+        "rell",
+        "thresh",
+        "nami",
+        "zilean"
+      ]
+    },
+    {
+      "name": "xerath",
+      "winrate": "48.51%",
+      "counters": [
+        "shaco",
+        "sona",
+        "tahmkench",
+        "yuumi",
+        "nautilus",
+        "nami",
+        "elise"
+      ]
+    },
+    {
+      "name": "morgana",
+      "winrate": "48.44%",
+      "counters": [
+        "renata",
+        "tahmkench",
+        "soraka",
+        "janna",
+        "zyra",
+        "taric",
+        "milio"
+      ]
+    },
+    {
+      "name": "lux",
+      "winrate": "48.39%",
+      "counters": [
+        "maokai",
+        "seraphine",
+        "sona",
+        "sylas",
+        "elise",
+        "lulu",
+        "janna"
+      ]
+    },
+    {
+      "name": "tahmkench",
+      "winrate": "48.20%",
+      "counters": [
+        "renata",
+        "maokai",
+        "shaco",
+        "sona",
+        "senna",
+        "taric",
+        "swain"
+      ]
+    },
+    {
+      "name": "shen",
+      "winrate": "47.95%",
+      "counters": [
+        "nautilus",
+        "elise",
+        "lulu",
+        "poppy",
+        "pantheon",
+        "xerath",
+        "janna"
+      ]
+    },
+    {
+      "name": "swain",
+      "winrate": "47.81%",
+      "counters": [
+        "fiddlesticks",
+        "sona",
+        "milio",
+        "brand",
+        "lulu",
+        "bard",
+        "senna"
+      ]
+    },
+    {
+      "name": "sylas",
+      "winrate": "47.79%",
+      "counters": [
+        "leona",
+        "fiddlesticks",
+        "hwei",
+        "nami",
+        "pyke",
+        "elise",
+        "maokai"
+      ]
+    },
+    {
+      "name": "brand",
+      "winrate": "47.70%",
+      "counters": [
+        "zyra",
+        "poppy",
+        "renata",
+        "pantheon",
+        "blitzcrank",
+        "taric",
+        "nami"
+      ]
+    },
+    {
+      "name": "senna",
+      "winrate": "47.62%",
+      "counters": [
+        "thresh",
+        "maokai",
+        "pantheon",
+        "janna",
+        "lux",
+        "velkoz",
+        "elise"
+      ]
+    },
+    {
+      "name": "hwei",
+      "winrate": "47.48%",
+      "counters": [
+        "nami",
+        "milio",
+        "soraka",
+        "blitzcrank",
+        "yuumi",
+        "leona",
+        "janna"
+      ]
+    },
+    {
+      "name": "mel",
+      "winrate": "44.37%",
+      "counters": [
+        "tahmkench",
+        "maokai",
+        "leona",
+        "lux",
+        "zilean",
+        "neeko",
+        "milio"
+      ]
+    }
+  ]
+}

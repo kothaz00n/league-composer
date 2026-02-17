@@ -164,22 +164,30 @@ function getChampionStats(championName, role = null, queue = 'soloq') {
             // ALL: aggregate across roles for this queue
             const qData = queueData[queue];
             if (qData) {
-                let bestEntry = null;
-                let bestMatches = -1;
-                for (const roleKey of Object.keys(qData)) {
-                    const roleData = qData[roleKey];
-                    if (roleData && roleData[championName]) {
-                        const candidate = roleData[championName];
-                        const matches = typeof candidate === 'object' ? (candidate.matches || 0) : 0;
-                        if (matches > bestMatches) {
-                            bestMatches = matches;
-                            bestEntry = candidate;
+                // If we have explicit "all" role data from scraper, use it
+                if (qData.all && qData.all[championName]) {
+                    entry = qData.all[championName];
+                    hasData = true;
+                } else {
+                    // Fallback: finding the role with the most matches
+                    let bestEntry = null;
+                    let bestMatches = -1;
+                    for (const roleKey of Object.keys(qData)) {
+                        if (roleKey === 'all') continue; // Skip 'all' in fallback loop to avoid double dipping if it exists but missing this champ
+                        const roleData = qData[roleKey];
+                        if (roleData && roleData[championName]) {
+                            const candidate = roleData[championName];
+                            const matches = typeof candidate === 'object' ? (candidate.matches || 0) : 0;
+                            if (matches > bestMatches) {
+                                bestMatches = matches;
+                                bestEntry = candidate;
+                            }
                         }
                     }
-                }
-                if (bestEntry) {
-                    entry = bestEntry;
-                    hasData = true;
+                    if (bestEntry) {
+                        entry = bestEntry;
+                        hasData = true;
+                    }
                 }
             }
         }

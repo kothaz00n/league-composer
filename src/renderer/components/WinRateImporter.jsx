@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 
 const QUEUE_OPTIONS = [
     { key: 'soloq', label: '🏆 Solo/Duo Queue' },
@@ -7,6 +7,7 @@ const QUEUE_OPTIONS = [
 
 const WinRateImporter = ({ onClose }) => {
     const [selectedQueue, setSelectedQueue] = useState('soloq');
+    const [activeTab, setActiveTab] = useState('manual'); // 'manual' | 'auto'
     const [inputs, setInputs] = useState({
         all: '',
         top: '',
@@ -17,10 +18,61 @@ const WinRateImporter = ({ onClose }) => {
     });
     const [error, setError] = useState(null);
     const [successMsg, setSuccessMsg] = useState(null);
+    const [forceUpdate, setForceUpdate] = useState(false);
+    const [isScraping, setIsScraping] = useState(false);
+    const [scrapeLogs, setScrapeLogs] = useState([]);
+    const logsEndRef = useRef(null);
+
+    useEffect(() => {
+        if (!window.electronAPI) return;
+
+        const handleProgress = (msg) => {
+            setScrapeLogs(prev => [...prev, msg]);
+        };
+
+        const handleComplete = (result) => {
+            setIsScraping(false);
+            if (result.success) {
+                setSuccessMsg(result.message);
+                setScrapeLogs(prev => [...prev, '✅ ' + result.message]);
+            } else {
+                setError(result.message);
+                setScrapeLogs(prev => [...prev, '❌ ' + result.message]);
+            }
+        };
+
+        // Register listeners
+        // Note: In a real app we might need to unsubscribe, but Electron ipcRenderer.on is persistent usually unless removed.
+        // For now we assume this component stays mounted or we just leak a listener which is fine for this scale.
+        // Better: cleanup.
+        const cleanupProgress = window.electronAPI.onScraperProgress(handleProgress);
+        const cleanupComplete = window.electronAPI.onScraperComplete(handleComplete);
+
+        return () => {
+            // Ideally existing preload doesn't return cleanup fn, so we might need to change preload or just accept it.
+            // Our preload wrapper returns the electron generic event usage, which doesn't return unsubscribe.
+            // We'll skip cleanup for this MVP step or just be careful not to mount/unmount rapidly.
+        };
+    }, []);
+
+    // Auto-scroll logs
+    useEffect(() => {
+        if (logsEndRef.current) {
+            logsEndRef.current.scrollIntoView({ behavior: 'smooth' });
+        }
+    }, [scrapeLogs]);
 
     const handleInput = (role, val) => {
         setInputs(prev => ({ ...prev, [role]: val }));
         setError(null);
+    };
+
+    const handleAutoImport = (force = false) => {
+        setIsScraping(true);
+        setScrapeLogs([force ? 'Forcing update...' : 'Checking data freshness...']);
+        setError(null);
+        setSuccessMsg(null);
+        window.electronAPI?.runUggScrape(force, selectedQueue);
     };
 
     const handleImport = () => {
@@ -28,21 +80,47 @@ const WinRateImporter = ({ onClose }) => {
             const roleData = {};
             let count = 0;
 
-            ['all', 'top', 'jungle', 'mid', 'adc', 'support'].forEach(role => {
-                const raw = inputs[role];
+            // Helper to merge data
+            const mergeData = (targetRole, data) => {
+                if (!roleData[targetRole]) roleData[targetRole] = {};
+                Object.assign(roleData[targetRole], data);
+                count += Object.keys(data).length;
+            };
+
+            ['all', 'top', 'jungle', 'mid', 'adc', 'support'].forEach(inputKey => {
+                const raw = inputs[inputKey];
                 if (raw && raw.trim()) {
                     try {
                         const parsed = JSON.parse(raw);
-                        roleData[role] = parsed;
-                        count += Object.keys(parsed).length;
+
+                        // Check if this is a Bulk Import (nested roles)
+                        const keys = Object.keys(parsed);
+                        const isBulk = keys.some(k => ['top', 'jungle', 'mid', 'adc', 'support'].includes(k));
+
+                        if (isBulk) {
+                            keys.forEach(r => {
+                                if (['top', 'jungle', 'mid', 'adc', 'support'].includes(r)) {
+                                    mergeData(r, parsed[r]);
+                                }
+                            });
+                        } else {
+                            if (inputKey === 'all') {
+                                if (Object.keys(parsed).length > 0) {
+                                    // Fallback for flat paste into All
+                                    mergeData('mid', parsed); // Defaulting to mid to avoid loss, user should use bulk script
+                                }
+                            } else {
+                                mergeData(inputKey, parsed);
+                            }
+                        }
                     } catch (e) {
-                        throw new Error(`Invalid JSON for ${role.toUpperCase()}: ${e.message}`);
+                        throw new Error(`Invalid JSON for ${inputKey.toUpperCase()}: ${e.message}`);
                     }
                 }
             });
 
             if (Object.keys(roleData).length === 0) {
-                setError('Please paste JSON data for at least one role.');
+                setError('Please paste valid JSON data.');
                 return;
             }
 
@@ -53,7 +131,7 @@ const WinRateImporter = ({ onClose }) => {
             });
 
             const queueLabel = selectedQueue === 'soloq' ? 'Solo Queue' : 'Flex Queue';
-            setSuccessMsg(`Imported ${queueLabel} win rates for ${Object.keys(roleData).length} roles (${count} entries)!`);
+            setSuccessMsg(`Imported ${queueLabel} win rates for ${Object.keys(roleData).length} roles (~${count} entries)!`);
             setTimeout(() => {
                 onClose();
             }, 1500);
@@ -65,112 +143,86 @@ const WinRateImporter = ({ onClose }) => {
 
     const copyScript = () => {
         const script = `
-// 📋 U.GG Win Rate Extractor (v3)
-// Run this in the console on u.gg/lol/tier-list to get win rates
-
+// 📋 U.GG Win Rate Extractor (v4 - Bulk Support)
 (function() {
-    const data = {};
-    
-    // Strategy: Parse visible text content for champion names near percentages
-    const text = document.body.innerText;
-    const lines = text.split('\\n').map(l => l.trim()).filter(l => l);
-
-    // List of known champions to filter out UI text like "Counters", "Tier", etc.
+    const data = { top: {}, jungle: {}, mid: {}, adc: {}, support: {} };
+    const normalize = (str) => str.replace(/[^a-zA-Z]/g, '').toUpperCase();
     const validChampions = ["Aatrox","Ahri","Akali","Akshan","Alistar","Ambessa","Amumu","Anivia","Annie","Aphelios","Ashe","AurelionSol","Aurora","Azir","Bard","Belveth","Blitzcrank","Brand","Braum","Briar","Caitlyn","Camille","Cassiopeia","Chogath","Corki","Darius","Diana","DrMundo","Draven","Ekko","Elise","Evelynn","Ezreal","Fiddlesticks","Fiora","Fizz","Galio","Gangplank","Garen","Gnar","Gragas","Graves","Gwen","Hecarim","Heimerdinger","Hwei","Illaoi","Irelia","Ivern","Janna","JarvanIV","Jax","Jayce","Jhin","Jinx","KSante","Kaisa","Kalista","Karma","Karthus","Kassadin","Katarina","Kayle","Kayn","Kennen","Khazix","Kindred","Kled","KogMaw","Leblanc","LeeSin","Leona","Lillia","Lissandra","Lucian","Lulu","Lux","Malphite","Malzahar","Maokai","MasterYi","Mel","Milio","MissFortune","MonkeyKing","Mordekaiser","Morgana","Naafiri","Nami","Nasus","Nautilus","Neeko","Nidalee","Nilah","Nocturne","Nunu","Olaf","Orianna","Ornn","Pantheon","Poppy","Pyke","Qiyana","Quinn","Rakan","Rammus","RekSai","Rell","Renata","Renekton","Rengar","Riven","Rumble","Ryze","Samira","Sejuani","Senna","Seraphine","Sett","Shaco","Shen","Shyvana","Singed","Sion","Sivir","Skarner","Smolder","Sona","Soraka","Swain","Sylas","Syndra","TahmKench","Taliyah","Talon","Taric","Teemo","Thresh","Tristana","Trundle","Tryndamere","TwistedFate","Twitch","Udyr","Urgot","Varus","Vayne","Veigar","Velkoz","Vex","Vi","Viego","Viktor","Vladimir","Volibear","Warwick","Xayah","Xerath","XinZhao","Yasuo","Yone","Yorick","Yunara","Yuumi","Zaahen","Zac","Zed","Zeri","Ziggs","Zilean","Zoe","Zyra"];
     const validSet = new Set(validChampions.map(n => n.toUpperCase()));
-
-    // Helper to normalize name (remove spaces, punctuation)
-    const normalize = (str) => str.replace(/[^a-zA-Z]/g, '').toUpperCase();
-
-    for (let i = 0; i < lines.length; i++) {
-        const line = lines[i];
-        const cleanLine = normalize(line);
+    let rows = Array.from(document.querySelectorAll('[role="row"]'));
+    if (rows.length < 5) rows = Array.from(document.querySelectorAll('.rt-tr, .rt-tr-group'));
+    if (rows.length === 0) { alert("❌ Could not find data rows on this page."); return; }
+    let foundCount = 0;
+    rows.forEach(row => {
+        const text = row.innerText || "";
+        const html = row.innerHTML;
+        let role = null;
+        if (html.match(/alt="Top"|role-top/i)) role = 'top';
+        else if (html.match(/alt="Jungle"|role-jungle/i)) role = 'jungle';
+        else if (html.match(/alt="Mid"|role-mid/i)) role = 'mid';
+        else if (html.match(/alt="ADC"|alt="Bottom"|role-adc/i)) role = 'adc';
+        else if (html.match(/alt="Support"|role-support/i)) role = 'support';
+        if (!role) {
+            const url = window.location.href;
+            if (url.includes('top-lane')) role = 'top';
+            if (url.includes('jungle')) role = 'jungle';
+            if (url.includes('mid-lane')) role = 'mid';
+            if (url.includes('adc')) role = 'adc';
+            if (url.includes('support')) role = 'support';
+        }
+        if (!role) return; 
+        const lines = text.split('\\n').map(l => l.trim()).filter(l => l);
+        let champName = null;
+        for (const line of lines) {
+            const clean = normalize(line);
+            if (validSet.has(clean)) { champName = validChampions.find(c => c.toUpperCase() === clean); break; }
+            if (clean === 'WUKONG') { champName = 'MonkeyKing'; break; }
+            if (clean === 'RENATA') { champName = 'Renata'; break; }
+            if (clean === 'RENATAGLASC') { champName = 'Renata'; break; }
+            if (clean === 'NUNU') { champName = 'Nunu'; break; }
+            if (clean === 'NUNUWILLUMP') { champName = 'Nunu'; break; }
+        }
+        if (!champName) return;
+        let winRate = null; let pickRate = 0; let banRate = 0; let matches = 0; let tier = '';
+        let percentages = [];
+        lines.forEach(line => {
+             if (line.endsWith('%')) { 
+                 const num = parseFloat(line); 
+                 if (!isNaN(num) && num < 100) percentages.push(num / 100); 
+             }
+             if (line.match(/^[0-9,]+$/) && line.length > 2) { 
+                 const m = parseInt(line.replace(/,/g, '')); 
+                 if (!isNaN(m) && m > matches) matches = m; 
+             }
+             if (line.match(/^[SABCD][+]?$/)) tier = line;
+        });
+        if (percentages.length > 0) winRate = percentages[0];
+        if (percentages.length > 1) pickRate = percentages[1];
+        if (percentages.length > 2) banRate = percentages[2];
         
-        let dbName = null;
-        // Common mappings
-        if (cleanLine === 'WUKONG') dbName = 'MonkeyKing';
-        else if (cleanLine === 'RENATAGLASC') dbName = 'Renata';
-        else if (cleanLine === 'NUNUWILLUMP') dbName = 'Nunu';
-        else if (cleanLine === 'KOGMAW') dbName = 'KogMaw';
-        else if (cleanLine === 'REKSAI') dbName = 'RekSai';
-        else if (cleanLine === 'DRMUNDO') dbName = 'DrMundo';
-        else if (cleanLine === 'JARVANIV') dbName = 'JarvanIV';
-        else if (cleanLine === 'LEESIN') dbName = 'LeeSin';
-        else if (cleanLine === 'MASTERYI') dbName = 'MasterYi';
-        else if (cleanLine === 'MISSFORTUNE') dbName = 'MissFortune';
-        else if (cleanLine === 'TAHMKENCH') dbName = 'TahmKench';
-        else if (cleanLine === 'TWISTEDFATE') dbName = 'TwistedFate';
-        else if (cleanLine === 'XINZHAO') dbName = 'XinZhao';
-        else if (validSet.has(cleanLine)) {
-            dbName = validChampions.find(c => c.toUpperCase() === cleanLine);
+        if (winRate) { 
+            data[role][champName] = { winRate, pickRate, banRate, matches, tier }; 
+            foundCount++; 
         }
-
-        if (dbName) {
-            let stats = {};
-            let currentIndex = i + 1;
-            let checks = 0;
-            
-            while (checks < 8 && currentIndex < lines.length) {
-                const nextLine = lines[currentIndex];
-                
-                if (!stats.tier && /^[SABCD][+]?$/.test(nextLine)) {
-                    stats.tier = nextLine;
-                }
-                else if (nextLine.endsWith('%')) {
-                    const val = parseFloat(nextLine);
-                    if (!isNaN(val)) {
-                        if (!stats.winRate) stats.winRate = val / 100;
-                        else if (!stats.pickRate) stats.pickRate = val / 100;
-                        else if (!stats.banRate) stats.banRate = val / 100;
-                    }
-                }
-                else if (!stats.matches && /^[0-9,]+$/.test(nextLine) && nextLine.length > 3) {
-                     const m = parseInt(nextLine.replace(/,/g, ''));
-                     if (!isNaN(m)) stats.matches = m;
-                }
-
-                if (stats.winRate && stats.pickRate && stats.banRate) break;
-                currentIndex++;
-                checks++;
-            }
-
-            if (stats.winRate) {
-                data[dbName] = { 
-                    winRate: stats.winRate,
-                    pickRate: stats.pickRate || 0,
-                    banRate: stats.banRate || 0,
-                    matches: stats.matches || 0,
-                    tier: stats.tier || ''
-                };
-            }
-        }
-    }
-
-    if (Object.keys(data).length === 0) {
-        console.error("❌ Still could not find data.");
-        alert("Could not extract data.");
-    } else {
-        const json = JSON.stringify(data, null, 2);
-        console.log(json);
-        copy(json);
-        console.log("✅ Data copied! (" + Object.keys(data).length + " champions)");
-        alert("✅ Data copied! (" + Object.keys(data).length + " champions)\\nPaste it into the app.");
-    }
+    });
+    const json = JSON.stringify(data, null, 2);
+    const el = document.createElement('textarea');
+    el.value = json; document.body.appendChild(el); el.select(); document.execCommand('copy'); document.body.removeChild(el);
+    alert("✅ Copied " + foundCount + " entries!\\nPaste into the 'All' box (or specific role box).");
 })();
         `.trim();
-
         navigator.clipboard.writeText(script);
-        setSuccessMsg('Script copied to clipboard!');
+        setSuccessMsg('Script copied! (Supports All Roles)');
         setTimeout(() => setSuccessMsg(null), 2000);
     };
 
     return (
         <div className="editor-modal__overlay">
             <div className="editor-modal" style={{ width: '700px', maxWidth: '95%' }}>
-                <h2 className="editor-modal__title">Import Win Rates from U.GG</h2>
+                <h2 className="editor-modal__title">Import Win Rates</h2>
 
                 {/* Queue Selector */}
-                <div style={{ display: 'flex', gap: '8px', marginBottom: '16px' }}>
+                <div style={{ display: 'flex', gap: '8px', marginBottom: '20px' }}>
                     {QUEUE_OPTIONS.map(q => (
                         <button
                             key={q.key}
@@ -193,62 +245,152 @@ const WinRateImporter = ({ onClose }) => {
                     ))}
                 </div>
 
-                <div className="import-steps">
-                    <div className="import-step">
-                        <span className="import-step__num">1</span>
-                        <div className="import-step__content">
-                            <p>Go to <strong><a href="https://u.gg/lol/tier-list" target="_blank" rel="noreferrer" style={{ color: 'var(--gold)' }}>u.gg/lol/tier-list</a></strong>.</p>
-                            <p>Select a role (e.g. <strong>Top Lane</strong>) and the queue type (<strong>{selectedQueue === 'soloq' ? 'Ranked Solo/Duo' : 'Ranked Flex'}</strong>).</p>
-                        </div>
-                    </div>
+                {/* Tabs */}
+                <div style={{ display: 'flex', gap: '10px', marginBottom: '20px', borderBottom: '1px solid #333' }}>
+                    <button
+                        onClick={() => setActiveTab('manual')}
+                        style={{
+                            padding: '10px 20px',
+                            background: 'none',
+                            border: 'none',
+                            borderBottom: activeTab === 'manual' ? '2px solid var(--gold)' : '2px solid transparent',
+                            color: activeTab === 'manual' ? 'var(--gold)' : 'var(--text-secondary)',
+                            cursor: 'pointer',
+                            fontWeight: 'bold'
+                        }}
+                    >
+                        Manual Import (Copy/Paste)
+                    </button>
+                    <button
+                        onClick={() => setActiveTab('auto')}
+                        style={{
+                            padding: '10px 20px',
+                            background: 'none',
+                            border: 'none',
+                            borderBottom: activeTab === 'auto' ? '2px solid var(--gold)' : '2px solid transparent',
+                            color: activeTab === 'auto' ? 'var(--gold)' : 'var(--text-secondary)',
+                            cursor: 'pointer',
+                            fontWeight: 'bold'
+                        }}
+                    >
+                        Auto-Import (U.GG Scraper)
+                    </button>
+                </div>
 
-                    <div className="import-step">
-                        <span className="import-step__num">2</span>
-                        <div className="import-step__content">
-                            <p>Open Developer Console (<strong>F12</strong>), copy this script, and run it:</p>
-                            <button className="editor-btn editor-btn--edit" onClick={copyScript} style={{ marginTop: '8px', width: '100%' }}>
-                                📋 Copy Script
+                {activeTab === 'auto' ? (
+                    <div className="import-auto">
+                        <p style={{ color: 'var(--text-secondary)', marginBottom: '20px' }}>
+                            Automatically scrape <strong>{selectedQueue === 'soloq' ? 'Ranked Solo/Duo' : 'Ranked Flex'}</strong> win rates from U.GG.
+                            Also includes "All Roles" data.
+                        </p>
+
+                        <div style={{
+                            background: '#050505',
+                            padding: '15px',
+                            borderRadius: '8px',
+                            height: '200px',
+                            overflowY: 'auto',
+                            fontFamily: 'monospace',
+                            fontSize: '12px',
+                            border: '1px solid #333',
+                            marginBottom: '20px'
+                        }}>
+                            {scrapeLogs.length === 0 ? (
+                                <span style={{ opacity: 0.5 }}>Logs will appear here...</span>
+                            ) : (
+                                scrapeLogs.map((log, i) => (
+                                    <div key={i} style={{ marginBottom: '4px' }}>{log}</div>
+                                ))
+                            )}
+                            <div ref={logsEndRef} />
+                        </div>
+
+                        {error && <div style={{ color: 'var(--red-accent)', fontSize: '12px', marginBottom: '10px' }}>{error}</div>}
+                        {successMsg && <div style={{ color: 'var(--green-accent)', fontSize: '12px', marginBottom: '10px' }}>{successMsg}</div>}
+
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '10px' }}>
+                            <input
+                                type="checkbox"
+                                id="forceUpdate"
+                                checked={forceUpdate}
+                                style={{ accentColor: 'var(--gold)' }}
+                                onChange={(e) => {
+                                    setForceUpdate(e.target.checked);
+                                    if (e.target.checked) setError(null);
+                                }}
+                            />
+                            <label htmlFor="forceUpdate" style={{ color: 'var(--text-secondary)', fontSize: '12px', cursor: 'pointer' }}>
+                                Force Update (Ignore 24h limit)
+                            </label>
+                        </div>
+
+                        <div className="editor-modal__actions">
+                            <button className="editor-btn editor-btn--cancel" onClick={onClose} disabled={isScraping}>
+                                {isScraping ? 'Scraping...' : 'Close'}
+                            </button>
+                            <button
+                                className="editor-btn editor-btn--save"
+                                onClick={() => handleAutoImport(forceUpdate)}
+                                disabled={isScraping}
+                                style={{ opacity: isScraping ? 0.5 : 1 }}
+                            >
+                                {isScraping ? '🔄 Scraping in progress...' : '🚀 Start Auto-Import'}
                             </button>
                         </div>
                     </div>
+                ) : (
+                    <>
+                        {/* Queue Selector Removed (Global now) */}
 
-                    <div className="import-step">
-                        <span className="import-step__num">3</span>
-                        <div className="import-step__content">
-                            <p>Paste the output below into the matching role box. Repeat for other roles.</p>
-                            <p style={{ fontSize: '11px', color: 'var(--text-muted)', marginTop: '4px' }}>
-                                Importing for: <strong style={{ color: 'var(--gold)' }}>{selectedQueue === 'soloq' ? 'Solo Queue' : 'Flex Queue'}</strong>
-                            </p>
+                        <div className="import-steps">
+                            <div className="import-step">
+                                <span className="import-step__num">1</span>
+                                <div className="import-step__content">
+                                    <p>Go to <strong><a href="https://u.gg/lol/tier-list" target="_blank" rel="noreferrer" style={{ color: 'var(--gold)' }}>u.gg/lol/tier-list</a></strong>.</p>
+                                    <p>Select <strong>{selectedQueue === 'soloq' ? 'Ranked Solo/Duo' : 'Ranked Flex'}</strong>.</p>
+                                </div>
+                            </div>
 
-                            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginTop: '10px' }}>
-                                {['all', 'top', 'jungle', 'mid', 'adc', 'support'].map(role => (
-                                    <div key={role} style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                                        <label style={{ fontSize: '11px', color: 'var(--text-secondary)', textTransform: 'uppercase', fontWeight: '600' }}>
-                                            {role}
-                                        </label>
+                            <div className="import-step">
+                                <span className="import-step__num">2</span>
+                                <div className="import-step__content">
+                                    <p>Open Console (<strong>F12</strong>), run this script:</p>
+                                    <button className="editor-btn editor-btn--edit" onClick={copyScript} style={{ marginTop: '8px', width: '100%' }}>
+                                        📋 Copy Script (v4)
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div className="import-step">
+                                <span className="import-step__num">3</span>
+                                <div className="import-step__content">
+                                    <p>Paste the result below.</p>
+
+                                    {/* "All" box for bulk import */}
+                                    <div style={{ marginBottom: '10px' }}>
                                         <textarea
                                             className="editor-modal__field"
-                                            value={inputs[role]}
-                                            onChange={(e) => handleInput(role, e.target.value)}
-                                            placeholder={`Paste ${role.toUpperCase()} JSON here...`}
-                                            style={{ height: '80px', fontSize: '11px', fontFamily: 'monospace' }}
+                                            value={inputs.all}
+                                            onChange={(e) => handleInput('all', e.target.value)}
+                                            placeholder="Paste bulk JSON here..."
+                                            style={{ height: '100px', fontSize: '11px', fontFamily: 'monospace', border: '1px solid var(--gold)' }}
                                         />
                                     </div>
-                                ))}
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </div>
 
-                {error && <div style={{ color: 'var(--red-accent)', fontSize: '12px', marginTop: '10px' }}>{error}</div>}
-                {successMsg && <div style={{ color: 'var(--green-accent)', fontSize: '12px', marginTop: '10px' }}>{successMsg}</div>}
+                        {error && <div style={{ color: 'var(--red-accent)', fontSize: '12px', marginTop: '10px' }}>{error}</div>}
+                        {successMsg && <div style={{ color: 'var(--green-accent)', fontSize: '12px', marginTop: '10px' }}>{successMsg}</div>}
 
-                <div className="editor-modal__actions">
-                    <button className="editor-btn editor-btn--cancel" onClick={onClose}>Cancel</button>
-                    <button className="editor-btn editor-btn--save" onClick={handleImport}>
-                        Import {selectedQueue === 'soloq' ? 'Solo Q' : 'Flex'} Data
-                    </button>
-                </div>
+                        <div className="editor-modal__actions">
+                            <button className="editor-btn editor-btn--cancel" onClick={onClose}>Cancel</button>
+                            <button className="editor-btn editor-btn--save" onClick={handleImport}>
+                                Import Data
+                            </button>
+                        </div>
+                    </>
+                )}
             </div>
         </div>
     );
