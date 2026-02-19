@@ -43,7 +43,16 @@ contextBridge.exposeInMainWorld('electronAPI', {
 
     // Champions
     getChampionData: () => ipcRenderer.invoke('champion:get-data'),
+    saveWinRates: (data) => ipcRenderer.send('winrate:save', data),
     getChampionStats: (name, role, queue) => ipcRenderer.invoke('champion:get-stats', name, role, queue),
+    saveArchetype: (data) => ipcRenderer.send('composition:save-archetype', data),
+    onSaveArchetypeSuccess: (callback) => ipcRenderer.on('composition:save-success', (_, data) => callback(data)),
+
+    getAllCompositions: () => ipcRenderer.invoke('composition:get-all'),
+    saveComposition: (data) => ipcRenderer.send('composition:save-comp', data),
+    onSaveCompositionSuccess: (callback) => ipcRenderer.on('composition:save-comp-success', (_, data) => callback(data)),
+    analyzeComposition: (team, queue) => ipcRenderer.invoke('composition:analyze', team, queue),
+    getOpPicks: (queue) => ipcRenderer.invoke('champion:get-op-picks', queue),
     getImportedChampions: (queue, role) => ipcRenderer.invoke('champion:get-imported-list', queue, role),
     getAvailableQueues: () => ipcRenderer.invoke('champion:get-available-queues'),
 

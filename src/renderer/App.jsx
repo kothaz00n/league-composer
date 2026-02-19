@@ -5,6 +5,7 @@ import CompAnalysis from './components/CompAnalysis';
 import RecommendationPanel from './components/RecommendationPanel';
 import CompositionsEditor from './components/CompositionsEditor';
 import WinRateImporter from './components/WinRateImporter';
+import { IconSword, IconHome, IconCompositions, IconImport, IconGame } from './components/HextechIcons';
 
 // Data Dragon base URL for champion assets
 const DDRAGON_BASE = 'https://ddragon.leagueoflegends.com/cdn';
@@ -83,6 +84,11 @@ export default function App() {
     const [rosterData, setRosterData] = useState(null);
     const [championData, setChampionData] = useState(null);
 
+    // Memoize the champion list so it doesn't break React dependency arrays in children
+    const allChampions = React.useMemo(() => {
+        return Object.values(championData?.idToName || {});
+    }, [championData]);
+
     // Use full DDragon map when available, fallback to hardcoded subset
     const getChampionName = (id) => {
         return championData?.idToName?.[id] || CHAMPION_ID_MAP[id] || null;
@@ -144,6 +150,18 @@ export default function App() {
         }
     }, [draftState]);
 
+    // Fetch custom archetypes
+    const [customArchetypes, setCustomArchetypes] = useState([]);
+    useEffect(() => {
+        if (window.electronAPI?.getAllCompositions) {
+            window.electronAPI.getAllCompositions().then(data => {
+                if (data && data.archetypes) {
+                    setCustomArchetypes(data.archetypes);
+                }
+            });
+        }
+    }, [currentView]); // Refresh when view changes (e.g. coming back from editor)
+
     // ─── Draft Controls ─────────────────────────────────────────────────
     const [targetArchetype, setTargetArchetype] = useState('auto');
     const [overrideRole, setOverrideRole] = useState(null);
@@ -189,13 +207,13 @@ export default function App() {
                         rosterData={rosterData}
                         onSave={handleSaveRoster}
                         onBack={() => setCurrentView('dashboard')}
-                        allChampions={Object.values(championData?.idToName || {})}
+                        allChampions={allChampions}
                     />
                 );
             case 'builder':
                 return (
                     <TeamBuilder
-                        allChampions={Object.values(championData?.idToName || {})}
+                        allChampions={allChampions}
                         championData={championData}
                         onBack={() => setCurrentView('dashboard')}
                     />
@@ -203,42 +221,36 @@ export default function App() {
             case 'winrates':
                 return (
                     <WinRateBrowser
-                        allChampions={Object.values(championData?.idToName || {})}
+                        allChampions={allChampions}
                         onBack={() => setCurrentView('dashboard')}
                         onOpenImporter={() => setIsImporterOpen(true)}
                     />
                 );
             case 'editor':
                 return (
-                    <>
-                        <div className="titlebar">
-                            <span className="titlebar__title">⚔ Draft Recommender</span>
-                            <div className="titlebar__controls">
-                                <button className="titlebar__btn titlebar__btn--nav" onClick={() => setIsImporterOpen(true)} title="Import Data">
-                                    📥
-                                </button>
-                                <button className="titlebar__btn" onClick={handleMinimize}>─</button>
-                                <button className="titlebar__btn titlebar__btn--close" onClick={handleClose}>✕</button>
-                            </div>
-                        </div>
-                        <CompositionsEditor onBack={() => setCurrentView('dashboard')} />
-                    </>
+                    <CompositionsEditor
+                        onBack={() => setCurrentView('dashboard')}
+                        allChampions={allChampions}
+                    />
                 );
             case 'draft':
                 return (
                     <>
                         {/* Frameless Titlebar */}
                         <div className="titlebar">
-                            <span className="titlebar__title">⚔ Draft Recommender</span>
+                            <span className="titlebar__title" style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                                <IconSword size={15} style={{ color: 'var(--hextech-gold)' }} />
+                                Draft Recommender
+                            </span>
                             <div className="titlebar__controls">
                                 <button className="titlebar__btn titlebar__btn--nav" onClick={() => setCurrentView('dashboard')} title="Home">
-                                    🏠
+                                    <IconHome size={14} />
                                 </button>
                                 <button className="titlebar__btn titlebar__btn--nav" onClick={() => setCurrentView('editor')} title="Compositions Editor">
-                                    📋
+                                    <IconCompositions size={14} />
                                 </button>
                                 <button className="titlebar__btn titlebar__btn--nav" onClick={() => setIsImporterOpen(true)} title="Import Data">
-                                    📥
+                                    <IconImport size={14} />
                                 </button>
                                 <button className="titlebar__btn" onClick={handleMinimize}>─</button>
                                 <button className="titlebar__btn titlebar__btn--close" onClick={handleClose}>✕</button>
@@ -272,13 +284,21 @@ export default function App() {
                                                 onChange={handleArchetypeChange}
                                             >
                                                 <option value="auto">Auto-Detect</option>
-                                                <option value="hardEngage">Hard Engage</option>
-                                                <option value="dive">Dive / Pick</option>
-                                                <option value="protect">Protect / Peel</option>
-                                                <option value="poke">Poke / Siege</option>
-                                                <option value="splitpush">Splitpush</option>
-                                                <option value="teamfight">Teamfight</option>
-                                                <option value="earlyGame">Early Game</option>
+                                                <optgroup label="Standard Archetypes">
+                                                    <option value="hardEngage">Hard Engage</option>
+                                                    <option value="dive">Dive / Pick</option>
+                                                    <option value="protect">Protect / Peel</option>
+                                                    <option value="poke">Poke / Siege</option>
+                                                    <option value="splitpush">Splitpush</option>
+                                                    <option value="teamfight">Teamfight</option>
+                                                </optgroup>
+                                                {customArchetypes.length > 0 && (
+                                                    <optgroup label="Custom Archetypes">
+                                                        {customArchetypes.map((arch, idx) => (
+                                                            <option key={idx} value={arch.name}>{arch.name}</option>
+                                                        ))}
+                                                    </optgroup>
+                                                )}
                                             </select>
                                         </div>
 
@@ -304,7 +324,7 @@ export default function App() {
                                 </>
                             ) : (
                                 <div className="empty-state">
-                                    <div className="empty-state__icon">🎮</div>
+                                    <div className="empty-state__icon"><IconGame size={40} /></div>
                                     <div className="empty-state__title">Waiting for Draft</div>
                                     <div className="empty-state__desc">
                                         Waiting for Champion Select to start...
@@ -323,9 +343,11 @@ export default function App() {
     };
 
     return (
-        <>
-            {renderView()}
-            {isImporterOpen && <WinRateImporter onClose={() => setIsImporterOpen(false)} />}
-        </>
+        <div className="app-container">
+            <div className="app-content">
+                {renderView()}
+                {isImporterOpen && <WinRateImporter onClose={() => setIsImporterOpen(false)} />}
+            </div>
+        </div>
     );
 }

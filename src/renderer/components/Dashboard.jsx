@@ -1,92 +1,114 @@
 import React from 'react';
+import {
+    IconSword,
+    IconTeamBuilder,
+    IconRoster,
+    IconWinRate,
+    IconCompositions,
+} from './HextechIcons';
 
 const Dashboard = ({ onViewChange, isClientReady }) => {
     return (
-        <div className="flex flex-col h-full">
+        <div className="flex flex-col h-full theme-transition">
             {/* Titlebar */}
             <div className="titlebar">
-                <span className="titlebar__title">⚔ Draft Recommender</span>
-                <div className="titlebar__controls">
+                <span className="titlebar__title" style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                    <IconSword size={16} style={{ color: 'var(--hextech-gold)' }} />
+                    Draft Recommender
+                </span>
+                <div className="titlebar__controls" style={{ display: 'flex', gap: '8px' }}>
                     <button className="titlebar__btn" onClick={() => window.electronAPI?.minimizeWindow()}>─</button>
                     <button className="titlebar__btn titlebar__btn--close" onClick={() => window.electronAPI?.closeWindow()}>✕</button>
                 </div>
             </div>
 
-            <div className="flex-1 flex flex-col p-6 overflow-y-auto">
-                <header className="mb-6">
-                    <h1 className="text-2xl font-bold text-gold mb-1">League Team Comp</h1>
-                    <p className="text-sm text-gray-400">Master your draft. Plan your victory.</p>
+            <div className="dashboard-page">
+                <header className="dashboard-header">
+                    <h1 className="dashboard-title">League Team Comp</h1>
+                    <p className="dashboard-subtitle">MASTER YOUR DRAFT. DOMINATE THE RIFT.</p>
                 </header>
 
-                <div className="grid grid-cols-1 gap-4 mb-6">
+                <div className="dashboard-grid">
                     {/* Team Builder Card */}
                     <div
-                        className="bg-gray-800/50 p-5 rounded-xl border border-white/10 hover:border-gold/50 hover:bg-white/5 transition cursor-pointer group flex items-center gap-4"
+                        className="dashboard-card group"
                         onClick={() => onViewChange('builder')}
+                        style={{ animationDelay: '0ms' }}
                     >
-                        <div className="text-3xl group-hover:scale-110 transition-transform">🛠️</div>
-                        <div>
-                            <h2 className="text-lg font-bold text-gray-100">Team Builder</h2>
-                            <p className="text-xs text-gray-400">
-                                Plan your composition. Drag & drop champions, check synergies and tier stats.
+                        <div className="dashboard-card__icon">
+                            <IconTeamBuilder size={28} />
+                        </div>
+                        <div className="dashboard-card__content">
+                            <h2 className="dashboard-card__title">Team Builder</h2>
+                            <p className="dashboard-card__desc">
+                                Plan your composition. Drag &amp; drop champions, verify synergies, and analyze tier stats.
                             </p>
                         </div>
                     </div>
 
                     {/* Roster Card */}
                     <div
-                        className="bg-gray-800/50 p-5 rounded-xl border border-white/10 hover:border-gold/50 hover:bg-white/5 transition cursor-pointer group flex items-center gap-4"
+                        className="dashboard-card group"
                         onClick={() => onViewChange('roster')}
+                        style={{ animationDelay: '100ms' }}
                     >
-                        <div className="text-3xl group-hover:scale-110 transition-transform">👥</div>
-                        <div>
-                            <h2 className="text-lg font-bold text-gray-100">Roster & Favorites</h2>
-                            <p className="text-xs text-gray-400">
-                                Configure your team. Set favorite champions for personalized recommendations.
+                        <div className="dashboard-card__icon">
+                            <IconRoster size={28} />
+                        </div>
+                        <div className="dashboard-card__content">
+                            <h2 className="dashboard-card__title">Roster &amp; Favorites</h2>
+                            <p className="dashboard-card__desc">
+                                Configure your team roster. Set favorite champions for tailored draft recommendations.
                             </p>
                         </div>
                     </div>
 
                     {/* Win Rates Card */}
                     <div
-                        className="bg-gray-800/50 p-5 rounded-xl border border-white/10 hover:border-gold/50 hover:bg-white/5 transition cursor-pointer group flex items-center gap-4"
+                        className="dashboard-card group"
                         onClick={() => onViewChange('winrates')}
+                        style={{ animationDelay: '200ms' }}
                     >
-                        <div className="text-3xl group-hover:scale-110 transition-transform">📊</div>
-                        <div>
-                            <h2 className="text-lg font-bold text-gray-100">Win Rates</h2>
-                            <p className="text-xs text-gray-400">
-                                Browse champion win rates, tiers, pick rates, and ban rates by role.
+                        <div className="dashboard-card__icon">
+                            <IconWinRate size={28} />
+                        </div>
+                        <div className="dashboard-card__content">
+                            <h2 className="dashboard-card__title">Win Rates Reference</h2>
+                            <p className="dashboard-card__desc">
+                                Browse champion win rates, tier lists, pick rates, and ban rates by role.
                             </p>
                         </div>
                     </div>
 
-                    {/* Import Data Card */}
+                    {/* Compositions Editor Card */}
                     <div
-                        className="bg-gray-800/50 p-5 rounded-xl border border-white/10 hover:border-gold/50 hover:bg-white/5 transition cursor-pointer group flex items-center gap-4"
+                        className="dashboard-card group"
                         onClick={() => onViewChange('editor')}
+                        style={{ animationDelay: '300ms' }}
                     >
-                        <div className="text-3xl group-hover:scale-110 transition-transform">📋</div>
-                        <div>
-                            <h2 className="text-lg font-bold text-gray-100">Compositions Editor</h2>
-                            <p className="text-xs text-gray-400">
-                                Edit composition archetypes and data imports.
+                        <div className="dashboard-card__icon">
+                            <IconCompositions size={28} />
+                        </div>
+                        <div className="dashboard-card__content">
+                            <h2 className="dashboard-card__title">Compositions Editor</h2>
+                            <p className="dashboard-card__desc">
+                                Design custom composition archetypes and manage data imports for the engine.
                             </p>
                         </div>
                     </div>
                 </div>
 
                 {/* Status Section */}
-                <div className="mt-auto bg-black/20 p-3 rounded-lg border border-white/5 flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                        <div className={`w-3 h-3 rounded-full ${isClientReady ? 'bg-green-500' : 'bg-yellow-500 animate-pulse'}`}></div>
-                        <span className="text-sm text-gray-300">
-                            {isClientReady ? 'League Client Connected' : 'Waiting for League Client...'}
+                <div className="dashboard-status">
+                    <div className="status-indicator">
+                        <div className={`status-dot ${isClientReady ? 'connected' : 'waiting'}`}></div>
+                        <span className="status-text">
+                            {isClientReady ? 'LEAGUE CLIENT CONNECTED' : 'WAITING FOR LEAGUE CLIENT...'}
                         </span>
                     </div>
                     {isClientReady && (
-                        <span className="text-xs text-green-400 bg-green-900/20 px-2 py-1 rounded border border-green-800">
-                            Ready
+                        <span className="status-badge ready">
+                            SYSTEM READY
                         </span>
                     )}
                 </div>

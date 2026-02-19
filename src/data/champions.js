@@ -134,6 +134,27 @@ function getNameToIdMap() {
     return nameToIdMap || {};
 }
 
+/**
+ * Get a map of lowercase name -> correct ID (e.g., "twistedfate" -> "TwistedFate").
+ * Also handles common mapping issues if possible.
+ */
+function getChampionNameMap() {
+    if (!nameToIdMap) return {};
+    const map = {};
+    for (const name of Object.keys(nameToIdMap)) {
+        map[name.toLowerCase()] = name;
+        map[name.replace(/[^a-zA-Z0-9]/g, '').toLowerCase()] = name;
+        // Manual overrides for known deviations if needed
+        if (name === 'MonkeyKing') {
+            map['wukong'] = 'MonkeyKing';
+        }
+        if (name === 'Renata') { // Riot sometimes uses RenataGlasc
+            // check if it's RenataGlasc in newer versions
+        }
+    }
+    return map;
+}
+
 module.exports = {
     loadChampionData,
     getChampionName,
@@ -144,4 +165,5 @@ module.exports = {
     getAllChampions,
     getIdToNameMap,
     getNameToIdMap,
+    getChampionNameMap,
 };

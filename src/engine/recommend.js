@@ -20,7 +20,7 @@
  * Also returns team composition analysis (archetype + tier).
  */
 
-const countersDB = require('../data/counters.json');
+let countersDB = require('../data/counters.json');
 const { getChampionStats } = require('../data/winRateProvider');
 const { getChampionTags, getIdToNameMap } = require('../data/champions');
 const {
@@ -39,11 +39,15 @@ let isInitialized = false;
 /**
  * Initialize the engine with Data Dragon data.
  * Called from main.js after loadChampionData() completes.
- * @param {{ idToName: Object, nameToId: Object, tagsMap: Object }} data
+ * @param {{ idToName: Object, nameToId: Object, tagsMap: Object, countersDB: Object }} data
  */
-function initializeEngine({ idToName, nameToId }) {
+function initializeEngine({ idToName, nameToId, countersDB: injectedDB }) {
     championIdMap = idToName || {};
     championNameMap = nameToId || {};
+    if (injectedDB) {
+        countersDB = injectedDB;
+        console.log(`[Engine] Injected countersDB with ${Object.keys(countersDB).length} keys`);
+    }
     isInitialized = true;
     console.log(`[Engine] Initialized with ${Object.keys(championIdMap).length} champions`);
 }
@@ -71,6 +75,16 @@ function normalizeRole(role) {
  * Resolve a champion ID to a name, using dynamic Data Dragon data
  * with fallback to the counters DB entries.
  */
+// Helper to strip flex pick marker
+function cleanName(name) {
+    if (!name) return name;
+    return name.endsWith('*') ? name.slice(0, -1) : name;
+}
+
+/**
+ * Resolve a champion ID to a name, using dynamic Data Dragon data
+ * with fallback to the counters DB entries.
+ */
 function resolveChampionName(id) {
     return championIdMap[id] || null;
 }
@@ -79,14 +93,14 @@ function resolveChampionName(id) {
  * Resolve a champion name to an ID.
  */
 function resolveChampionId(name) {
-    return championNameMap[name] || 0;
+    return championNameMap[cleanName(name)] || 0;
 }
 
 /**
  * Get tags for a champion by name.
  */
 function getTagsForChampion(name) {
-    return getChampionTags(name);
+    return getChampionTags(cleanName(name));
 }
 
 /**
@@ -119,7 +133,7 @@ function analyzeTeamComposition(allyPickIds) {
 
 /**
  * Compute recommendations.
- * @param {{ role: string, allyPicks: number[], enemyPicks: number[], bannedChampions: number[], targetArchetype: string }} params
+ * @param {{ role: string, allyPicks: number[], enemyPicks: number[], bannedChampions: number[], targetArchetype: string, targetArchetypeDef: Object }} params
  * @param {Object} options.rosterConfig - user roster settings (roles, favorites)
  * @param {Array} options.allies - full ally objects { role, championId, ... }
  * @returns {{ recommendations: Array, compositionAnalysis: Object }}
@@ -130,6 +144,7 @@ function getRecommendations({
     enemyPicks = [],
     bannedChampions = [],
     targetArchetype = null,
+    targetArchetypeDef = null, // Custom definition from user
     rosterConfig = null,
     allies = [],
 }) {
@@ -145,9 +160,13 @@ function getRecommendations({
 
     // Analyze current team composition
     const compAnalysis = analyzeTeamComposition(allyPicks);
+    const allyCount = allyPicks.length;
 
     const results = [];
-    const allChampions = getIdToNameMap(); // Get all champions from the new champions module
+    const allChampions = championIdMap; // Use internal map (injected or loaded)
+
+    // Flex Pick Strategy: Are we in early draft?
+    const isEarlyDraft = allyCount <= 2;
 
     for (const champId of Object.keys(allChampions)) {
         const champName = allChampions[champId];
@@ -167,14 +186,35 @@ function getRecommendations({
         let synergyScore = 0;
         let archetypeScore = 0;
 
+        // ─── Win rate bonus (NEW) & Tier Bonus ───────────────────────────────
+        // Determine context role for win rate lookup
+        // If a role is assigned, use it; otherwise, use 'all' for general win rate.
+        const lookupRole = normalizedRole || 'all';
+
+        const stats = getChampionStats(champName, lookupRole);
+
+        // Ensure we only recommend champions that are actually played in this role
+        if (lookupRole !== 'all' && !stats.hasData) {
+            continue;
+        }
+
+        const champWinRate = stats.winRate;
+        const champTier = stats.tier || '';
+        const champPickRate = stats.pickRate || 0;
+
+        // Merge dynamic counters from U.GG scraper
+        const dynamicCounters = stats.counters || {};
+        const mergedCounters = { ...(champData.counters || {}), ...dynamicCounters };
+
         // ─── Counter bonus ──────────────────────────────────────
         for (const enemyName of enemyNames) {
-            if (champData.counters && champData.counters[enemyName]) {
-                const winrate = champData.counters[enemyName];
+            if (mergedCounters[enemyName]) {
+                const winrate = mergedCounters[enemyName];
                 const bonus = (winrate - 0.50) * 100; // e.g. 0.55 → +5 points
                 score += bonus;
                 counterScore += bonus;
-                scoreDetails.push(`Counters ${enemyName} (${(winrate * 100).toFixed(0)}% WR)`);
+                const verb = winrate < 0.50 ? 'Countered by' : 'Counters';
+                scoreDetails.push(`${verb} ${enemyName} (${(winrate * 100).toFixed(0)}% WR)`);
             }
         }
 
@@ -189,17 +229,9 @@ function getRecommendations({
             }
         }
 
-        // ─── Win rate bonus (NEW) & Tier Bonus ───────────────────────────────
-        // Determine context role for win rate lookup
-        // If a role is assigned, use it; otherwise, use 'all' for general win rate.
-        const lookupRole = normalizedRole || 'all';
 
-        const stats = getChampionStats(champName, lookupRole);
-        const champWinRate = stats.winRate;
-        const champTier = stats.tier || '';
-        const champPickRate = stats.pickRate || 0;
-
-        const wrBonus = (champWinRate - 0.50) * 50; // e.g. 0.53 → +1.5 points
+        // Base WR Bonus
+        const wrBonus = (champWinRate - 0.50) * 50;
         score += wrBonus;
 
         // Tier Bonus logic
@@ -207,10 +239,8 @@ function getRecommendations({
         else if (champTier === 'S') score += 8;
         else if (champTier === 'A') score += 5;
         else if (champTier === 'B') score += 2;
-        // C/D: 0 bonus
 
-        // Pick Rate Bonus (Popularity suggests viability)
-        // e.g. 10% pick rate -> +1 point. Modest bonus.
+        // Pick Rate Bonus
         score += (champPickRate * 10);
 
         if (champWinRate > 0.52) {
@@ -224,7 +254,31 @@ function getRecommendations({
         const champTags = getTagsForChampion(champName);
         let fitBonus = 0;
 
-        // If user manually selected a target archetype, prioritize that
+        // ─── FLEX PICK & Custom Archetype Logic ─────────────────
+        if (targetArchetypeDef && targetArchetypeDef.typical_comp) {
+            // Check if this champion is part of the custom archetype plan
+            const planRole = normalizedRole;
+            // Check if this specific champion is in the plan for this role
+            const planNameRaw = targetArchetypeDef.typical_comp[planRole];
+            if (planNameRaw) {
+                const planName = cleanName(planNameRaw);
+                const isFlex = planNameRaw.endsWith('*');
+
+                if (planName === champName) {
+                    // It's the exact planned champion
+                    score += 20;
+                    scoreDetails.push('Planned Pick');
+
+                    // FLEX PRIORITY
+                    if (isFlex && isEarlyDraft) {
+                        score += 50; // Huge bonus to secure flex pick early
+                        scoreDetails.push('★ FLEX PRIORITY');
+                    }
+                }
+            }
+        }
+
+        // Standard Archetype Logic
         if (targetArchetype) {
             fitBonus = getArchetypeFitBonus(champTags, targetArchetype);
             if (fitBonus > 0) {
@@ -246,17 +300,14 @@ function getRecommendations({
             score += 1; // Slight preference for main role
         }
 
-        // ─── Roster / Favorites / Flex Logic (NEW) ──────────────
+        // ─── Roster / Favorites / Flex Mode ─────────────────────
         if (rosterConfig && rosterConfig.roster) {
-            // Check if this champion is a favorite for the assigned role
-            // Normalized role is 'top', 'jungle', etc.
             const roleKey = normalizedRole;
             const roleData = rosterConfig.roster[roleKey];
 
             if (roleData && roleData.favorites && roleData.favorites.includes(champName)) {
-                // Determine if it's MY role or someone else's
                 if (rosterConfig.myRole === roleKey) {
-                    score += 15; // Massive bonus for comfort pick
+                    score += 15;
                     scoreDetails.push(`Your Main ❤️`);
                 } else {
                     score += 5;
@@ -264,28 +315,20 @@ function getRecommendations({
                 }
             }
 
-            // Flex Mode: Synergy with potential teammate picks
+            // Flex Mode Synergy
             if (rosterConfig.gameMode === 'flex') {
-                // Retrieve potential allies (teammates who haven't picked yet)
-                // We assume the roster data matches the assigned positions
                 const otherRoles = Object.keys(rosterConfig.roster).filter(r => r !== roleKey);
-
                 let flexSynergyParams = 0;
 
                 for (const r of otherRoles) {
-                    // Check if this role is open (not picked)
-                    // Allies array from LCU: { role: 'TOP', championId: 0, ... }
-                    const allyInRole = allies.find(a => (a.role?.toLowerCase() || '') === r); // Riot uses UPPERCASE
+                    const allyInRole = allies.find(a => (a.role?.toLowerCase() || '') === r);
                     if (allyInRole && allyInRole.championId === 0) {
-                        // Check favorites for this role
                         const favs = rosterConfig.roster[r].favorites || [];
                         for (const fav of favs) {
-                            // Synergy: How well does champName play WITH fav?
-                            // countersDB[champName].synergies[fav]
                             const syn = champData.synergies?.[fav];
                             if (syn && syn > 0.52) {
                                 flexSynergyParams++;
-                                score += (syn - 0.50) * 20; // Bonus for potential synergy
+                                score += (syn - 0.50) * 20;
                             }
                         }
                     }
@@ -311,7 +354,7 @@ function getRecommendations({
             roles: champData.roles, // e.g. ["Mage", "Support"]
             tags: champTags,     // e.g. ["Mage"]
             compRoles: compRoles, // e.g. ["poke", "dps"]
-            tier: champTier || calculateTier(score), // Uses imported Tier if available, else synthetic
+            tier: champTier || calculateTier(score),
             details: scoreDetails,
             analysis: {
                 synergy: synergyScore,
@@ -344,10 +387,191 @@ function calculateTier(score) {
     return 'D';
 }
 
+/**
+ * Advanced analysis of a full team composition (names).
+ * Calculates Meta Score, Tier, and suggests substitutions.
+ * @param {Object} teamRoles - { top: "Name", jungle: "Name", ... }
+ */
+function getCompositionAnalysis(teamRoles, queue = 'soloq') {
+    const teamChampions = [];
+    const roleMap = {}; // name -> role
+
+    // 1. Collect Valid Champions
+    for (const [role, name] of Object.entries(teamRoles)) {
+        if (!name) continue;
+        const stats = getChampionStats(name, role, queue);
+        const tags = getTagsForChampion(name);
+        roleMap[name] = role;
+        teamChampions.push({
+            name,
+            role,
+            stats,
+            tags,
+            winRate: stats.winRate || 0.50
+        });
+    }
+
+    if (teamChampions.length === 0) return null;
+
+    // 2. Base Composition Detection
+    // We can reuse detectTeamComposition but we need to adapt the input or just use the logic here
+    const composition = detectTeamComposition(teamChampions);
+
+    // 3. Calculate Meta Score
+    // Formula: 50% Avg WR + 30% Comp Fit + 20% Synergy (simplified to just WR and Fit for now)
+    const avgWR = teamChampions.reduce((sum, c) => sum + c.winRate, 0) / teamChampions.length;
+
+    // Normalize WR: 45% -> 0, 55% -> 100
+    // roughly: (wr - 0.45) / 0.10 * 100
+    let wrScore = (avgWR - 0.45) * 1000; // 0.50 -> 50
+    wrScore = Math.max(0, Math.min(100, wrScore));
+
+    // Comp Fit: 0 to 1 -> 0 to 100. detectTeamComposition returns confidence.
+    // Max confidence is roughly (5 champs * 3 points) = 15.
+    const maxConf = teamChampions.length * 3;
+    let fitScore = (composition.confidence / maxConf) * 100;
+    fitScore = Math.max(0, Math.min(100, fitScore));
+
+    const metaScore = Math.round((wrScore * 0.6) + (fitScore * 0.4));
+
+    // Tier Calculation
+    let tier = 'D';
+    if (metaScore >= 85) tier = 'S';
+    else if (metaScore >= 70) tier = 'A';
+    else if (metaScore >= 55) tier = 'B';
+    else if (metaScore >= 40) tier = 'C';
+
+    const isOutOfMeta = avgWR < 0.49;
+
+    // 4. Substitution Suggestions
+    const suggestions = [];
+    const allChamps = getIdToNameMap(); // id -> name
+    const allNames = Object.values(allChamps);
+
+    // Identify weak links (WR < 49% or just lowest in team)
+    // For each member, try to find a better option
+    for (const member of teamChampions) {
+        if (member.winRate > 0.52) continue; // Don't replace strong picks
+
+        // Find candidates in same role with similar tags
+        const candidates = [];
+
+        for (const candidateName of allNames) {
+            if (candidateName === member.name) continue;
+            // Check if candidate is already in team
+            if (Object.values(teamRoles).includes(candidateName)) continue;
+
+            const candStats = getChampionStats(candidateName, member.role, queue);
+            if (!candStats || candStats.matches < 50) continue; // Skip low sample size
+
+            // Must have significantly higher WR
+            if (candStats.winRate <= member.winRate + 0.015) continue; // +1.5% improvement min
+
+            // Must match at least one PRIMARY tag (Archetype preservation)
+            const candTags = getTagsForChampion(candidateName);
+            const commonTags = member.tags.filter(t => candTags.includes(t));
+
+            // Heuristic: If they share the first tag (primary class), it's a good sub
+            if (commonTags.length > 0 && commonTags.includes(member.tags[0])) {
+                candidates.push({
+                    name: candidateName,
+                    winRate: candStats.winRate,
+                    diff: candStats.winRate - member.winRate
+                });
+            }
+        }
+
+        // Sort candidates by WR improvement
+        candidates.sort((a, b) => b.diff - a.diff);
+
+        // Add top suggestion if any
+        if (candidates.length > 0) {
+            const best = candidates[0];
+            suggestions.push({
+                out: member.name,
+                in: best.name,
+                diff: (best.diff * 100).toFixed(1)
+            });
+        }
+    }
+
+    // Limit suggestions to top 3 improvements
+    suggestions.sort((a, b) => parseFloat(b.diff) - parseFloat(a.diff));
+    const topSuggestions = suggestions.slice(0, 3);
+
+    return {
+        ...composition,
+        tier,
+        metaScore,
+        isOutOfMeta,
+        suggestions: topSuggestions,
+        championCount: teamChampions.length
+    };
+}
+
+/**
+ * Get OP Picks (High Tier/WR champions).
+ * @param {string} [queue='soloq']
+ * @returns {Array} List of OP champions
+ */
+function getOpPicks(queue = 'soloq') {
+    const allChamps = getIdToNameMap();
+    const allNames = Object.values(allChamps);
+    const opCandidates = [];
+
+    // Consider major roles
+    const ROLES = ['top', 'jungle', 'mid', 'adc', 'support'];
+
+    for (const name of allNames) {
+        // Check finding best role for this champ
+        // Or just check all roles and return the best instances
+        for (const role of ROLES) {
+            const stats = getChampionStats(name, role, queue);
+            if (!stats.hasData) continue;
+
+            // Criteria for "OP":
+            // 1. Tier S or S+
+            // 2. OR Winrate > 52.5% and Matches > 100
+            const isHighTier = ['S+', 'S'].includes(stats.tier);
+            const isHighVibe = stats.winRate > 0.525 && stats.matches > 100;
+
+            if (isHighTier || isHighVibe) {
+                opCandidates.push({
+                    name,
+                    role,
+                    tier: stats.tier || calculateTier((stats.winRate - 0.50) * 100 + (stats.pickRate * 10)),
+                    winRate: stats.winRate,
+                    pickRate: stats.pickRate,
+                    matches: stats.matches,
+                    score: stats.winRate * 100 + (stats.pickRate * 10) + (isHighTier ? 5 : 0)
+                });
+            }
+        }
+    }
+
+    // Sort by internal score desc
+    opCandidates.sort((a, b) => b.score - a.score);
+
+    // Filter duplicates (same champ in multiple roles? maybe keep them if they are good in both)
+    // Let's keep unique champions, preferring their best role
+    const uniqueOps = [];
+    const seen = new Set();
+    for (const cand of opCandidates) {
+        if (!seen.has(cand.name)) {
+            uniqueOps.push(cand);
+            seen.add(cand.name);
+        }
+    }
+
+    return uniqueOps.slice(0, 10); // Return top 10
+}
+
 module.exports = {
     initializeEngine,
     getRecommendations,
     normalizeRole,
     analyzeTeamComposition,
     resolveChampionName,
+    getCompositionAnalysis,
+    getOpPicks,
 };

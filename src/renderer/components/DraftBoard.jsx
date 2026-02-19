@@ -1,4 +1,5 @@
 import React from 'react';
+import { IconCompositions } from './HextechIcons';
 
 const ROLE_LABELS = {
     top: 'TOP',
@@ -62,7 +63,7 @@ export default function DraftBoard({ allies, enemies, bans, localPlayer, getCham
         <div className="draft-board">
             {/* Section Header */}
             <div className="section-header">
-                <span className="section-header__icon">📋</span>
+                <span className="section-header__icon"><IconCompositions size={16} /></span>
                 <span className="section-header__title">Draft Board</span>
                 {localPlayer?.role && (
                     <span className="section-header__badge">

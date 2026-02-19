@@ -1,4 +1,5 @@
 import React from 'react';
+import { IconInsight } from './HextechIcons';
 
 const ROLE_LABELS = {
     top: 'TOP', jungle: 'JUNGLE', mid: 'MID',
@@ -60,7 +61,7 @@ export default function RecommendationPanel({ recommendations, role, getChampion
         return (
             <div className="recommendations">
                 <div className="section-header">
-                    <span className="section-header__icon">💡</span>
+                    <span className="section-header__icon"><IconInsight size={16} /></span>
                     <span className="section-header__title">Recommendations</span>
                 </div>
                 <div style={{ textAlign: 'center', padding: '20px', color: 'var(--text-muted)', fontSize: '13px' }}>
@@ -75,7 +76,7 @@ export default function RecommendationPanel({ recommendations, role, getChampion
     return (
         <div className="recommendations">
             <div className="section-header">
-                <span className="section-header__icon">💡</span>
+                <span className="section-header__icon"><IconInsight size={16} /></span>
                 <span className="section-header__title">Top Picks</span>
                 {role && (
                     <span className="section-header__badge">

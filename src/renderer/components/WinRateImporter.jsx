@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { IconTrophy, IconFlex, IconClipboard, IconImport } from './HextechIcons';
 
 const QUEUE_OPTIONS = [
-    { key: 'soloq', label: '🏆 Solo/Duo Queue' },
-    { key: 'flex', label: '👥 Flex Queue' },
+    { key: 'soloq', label: 'Solo/Duo Queue', Icon: IconTrophy },
+    { key: 'flex', label: 'Flex Queue', Icon: IconFlex },
 ];
 
 const WinRateImporter = ({ onClose }) => {
@@ -34,10 +35,10 @@ const WinRateImporter = ({ onClose }) => {
             setIsScraping(false);
             if (result.success) {
                 setSuccessMsg(result.message);
-                setScrapeLogs(prev => [...prev, '✅ ' + result.message]);
+                setScrapeLogs(prev => [...prev, '[OK] ' + result.message]);
             } else {
                 setError(result.message);
-                setScrapeLogs(prev => [...prev, '❌ ' + result.message]);
+                setScrapeLogs(prev => [...prev, '[ERR] ' + result.message]);
             }
         };
 
@@ -238,8 +239,13 @@ const WinRateImporter = ({ onClose }) => {
                                 fontWeight: '700',
                                 cursor: 'pointer',
                                 transition: 'all 0.2s',
+                                display: 'inline-flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                gap: '8px',
                             }}
                         >
+                            <q.Icon size={15} />
                             {q.label}
                         </button>
                     ))}
@@ -334,7 +340,7 @@ const WinRateImporter = ({ onClose }) => {
                                 disabled={isScraping}
                                 style={{ opacity: isScraping ? 0.5 : 1 }}
                             >
-                                {isScraping ? '🔄 Scraping in progress...' : '🚀 Start Auto-Import'}
+                                {isScraping ? 'Scraping in progress...' : 'Start Auto-Import'}
                             </button>
                         </div>
                     </div>
@@ -355,8 +361,8 @@ const WinRateImporter = ({ onClose }) => {
                                 <span className="import-step__num">2</span>
                                 <div className="import-step__content">
                                     <p>Open Console (<strong>F12</strong>), run this script:</p>
-                                    <button className="editor-btn editor-btn--edit" onClick={copyScript} style={{ marginTop: '8px', width: '100%' }}>
-                                        📋 Copy Script (v4)
+                                    <button className="editor-btn editor-btn--edit" onClick={copyScript} style={{ marginTop: '8px', width: '100%', display: 'inline-flex', alignItems: 'center', gap: 8, justifyContent: 'center' }}>
+                                        <IconClipboard size={14} /> Copy Script (v4)
                                     </button>
                                 </div>
                             </div>

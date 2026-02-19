@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from 'react';
+import { RoleIcon } from './HextechIcons';
+import ViewHeader from './ViewHeader';
 
 const RosterManager = ({ rosterData, onSave, onBack, allChampions = [] }) => {
     const ROLE_ORDER = ['top', 'jungle', 'mid', 'adc', 'support'];
+    const ROLE_NAMES = { top: 'Top', jungle: 'Jungle', mid: 'Mid', adc: 'Bottom', support: 'Support' };
 
     const [formData, setFormData] = useState({
         myRole: 'top',
@@ -84,54 +87,50 @@ const RosterManager = ({ rosterData, onSave, onBack, allChampions = [] }) => {
     };
 
     return (
-        <div className="flex flex-col h-full bg-gray-900 text-gray-100 p-6 overflow-hidden">
-            {/* Header */}
-            <div className="flex justify-between items-center mb-6">
-                <button onClick={onBack} className="text-gray-400 hover:text-white flex items-center gap-2">
-                    Start
-                </button>
-                <h2 className="text-2xl font-bold text-gold">Roster Management</h2>
-                <button
-                    onClick={handleSave}
-                    className="bg-gold text-black px-6 py-2 rounded font-bold hover:bg-yellow-400 transition"
-                >
+        <div className="roster-container">
+            {/* Unified back navigation */}
+            <ViewHeader title="Roster & Favorites" onBack={onBack}>
+                <button onClick={handleSave} className="editor-btn editor-btn--primary"
+                    style={{ fontSize: '11px', padding: '6px 14px' }}>
                     Save Changes
                 </button>
-            </div>
+            </ViewHeader>
 
-            <div className="flex-1 overflow-y-auto pr-2">
+            {/* Scrollable content area */}
+            <div style={{ flex: 1, overflowY: 'auto', padding: '24px 40px' }}>
+
                 {/* Global Settings */}
-                <div className="bg-gray-800/50 p-4 rounded-xl border border-white/10 mb-6 flex gap-8 items-center">
-                    <div className="flex flex-col gap-2">
-                        <label className="text-sm text-gray-400 uppercase font-bold">My Main Role</label>
+                <div className="roster-settings">
+                    <div>
+                        <span className="roster-label">My Main Role</span>
                         <select
                             value={formData.myRole}
                             onChange={(e) => handleMainRoleChange(e.target.value)}
-                            className="bg-black/40 border border-white/20 rounded p-2 text-gold font-bold"
+                            className="roster-select"
                         >
                             {ROLE_ORDER.map(r => <option key={r} value={r}>{r.toUpperCase()}</option>)}
                         </select>
                     </div>
 
-                    <div className="flex flex-col gap-2">
-                        <label className="text-sm text-gray-400 uppercase font-bold">Game Mode</label>
-                        <div className="flex bg-black/40 rounded p-1 border border-white/10">
+                    <div>
+                        <span className="roster-label">Game Mode</span>
+                        <div className="roster-toggle-group">
                             <button
                                 onClick={() => handleGameModeChange('solo')}
-                                className={`px-4 py-1 rounded transition ${formData.gameMode === 'solo' ? 'bg-blue-600 text-white' : 'text-gray-400 hover:text-white'}`}
+                                className={`roster-toggle-btn ${formData.gameMode === 'solo' ? 'active' : ''}`}
                             >
                                 Solo/Duo
                             </button>
                             <button
                                 onClick={() => handleGameModeChange('flex')}
-                                className={`px-4 py-1 rounded transition ${formData.gameMode === 'flex' ? 'bg-purple-600 text-white' : 'text-gray-400 hover:text-white'}`}
+                                className={`roster-toggle-btn ${formData.gameMode === 'flex' ? 'active' : ''}`}
                             >
                                 Flex / Clash
                             </button>
                         </div>
                     </div>
 
-                    <div className="text-xs text-gray-500 max-w-xs ml-auto">
+                    <div className="dashboard-subtitle" style={{ maxWidth: '300px', marginBottom: '4px' }}>
                         {formData.gameMode === 'solo'
                             ? "In SoloQ, we prioritize YOUR favorites and the meta for your role."
                             : "In Flex, we consider EVERYONE'S favorites to suggest team synergies."}
@@ -139,57 +138,51 @@ const RosterManager = ({ rosterData, onSave, onBack, allChampions = [] }) => {
                 </div>
 
                 {/* Role Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
+                <div className="roster-grid">
                     {ROLE_ORDER.map(role => {
                         const roleData = formData.roster[role] || { player: '', favorites: [] };
                         const isMyRole = formData.myRole === role;
 
                         return (
-                            <div
-                                key={role}
-                                className={`bg-gray-800/30 p-4 rounded-xl border ${isMyRole ? 'border-gold/50 bg-gold/5' : 'border-white/5'}`}
-                            >
-                                <div className="flex items-center justify-between mb-3">
-                                    <h3 className="text-lg font-bold uppercase text-gray-300">{role}</h3>
-                                    {isMyRole && <span className="text-xs text-gold bg-gold/10 px-2 rounded">ME</span>}
+                            <div key={role} className={`roster-card ${isMyRole ? 'main' : ''}`}>
+                                <div className="roster-role-title" style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                                    <RoleIcon role={role} size={16} />
+                                    <span>{ROLE_NAMES[role]}</span>
+                                    {isMyRole && <span className="roster-tag-main">MAIN</span>}
                                 </div>
 
-                                {/* Player Name Input */}
                                 <input
                                     type="text"
                                     placeholder={isMyRole ? "Me" : "Player Name"}
                                     value={roleData.player}
                                     onChange={(e) => handlePlayerNameChange(role, e.target.value)}
-                                    className="w-full bg-black/20 border border-white/10 rounded p-2 text-sm mb-4 focus:border-gold/50 outline-none"
+                                    className="roster-input"
                                 />
 
-                                {/* Favorites List */}
-                                <div className="mb-2">
-                                    <label className="text-xs text-gray-500 uppercase font-bold mb-1 block">Favorites</label>
-                                    <div className="flex flex-wrap gap-2 min-h-[40px]">
+                                <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+                                    <span className="roster-label">Favorites</span>
+                                    <div className="roster-fav-list">
                                         {roleData.favorites.map(fav => (
-                                            <span key={fav} className="bg-gray-700 text-xs px-2 py-1 rounded flex items-center gap-1 border border-white/10">
+                                            <span key={fav} className="roster-fav-chip">
                                                 {fav}
-                                                <button
+                                                <span
                                                     onClick={() => removeFavorite(role, fav)}
-                                                    className="w-3 h-3 flex items-center justify-center text-red-400 hover:text-red-200"
+                                                    className="roster-remove-fav"
                                                 >
-                                                    ×
-                                                </button>
+                                                    ✕
+                                                </span>
                                             </span>
                                         ))}
                                     </div>
-                                </div>
 
-                                {/* Add Favorite Input */}
-                                <div className="relative">
-                                    {activeRoleForInput === role ? (
-                                        <div className="flex gap-1">
+                                    <div className="relative mt-auto">
+                                        {activeRoleForInput === role ? (
                                             <input
                                                 autoFocus
                                                 list="champion-list"
-                                                className="w-full bg-black/40 border border-gold/50 rounded p-1 text-xs"
-                                                placeholder="Champ Name..."
+                                                className="roster-input"
+                                                style={{ marginBottom: 0, padding: '8px' }}
+                                                placeholder="Type champ name..."
                                                 value={champInput}
                                                 onChange={(e) => setChampInput(e.target.value)}
                                                 onKeyDown={(e) => {
@@ -200,35 +193,31 @@ const RosterManager = ({ rosterData, onSave, onBack, allChampions = [] }) => {
                                                     }
                                                 }}
                                                 onBlur={() => {
-                                                    // Delay to allow click
                                                     setTimeout(() => {
-                                                        // If input creates valid add on blur? Maybe annoying.
-                                                        // Just close for now.
                                                         setActiveRoleForInput(null);
                                                         setChampInput('');
                                                     }, 200);
                                                 }}
                                             />
-                                        </div>
-                                    ) : (
-                                        <button
-                                            onClick={() => setActiveRoleForInput(role)}
-                                            className="w-full text-xs text-gray-400 hover:text-gold border border-dashed border-white/20 rounded p-2 hover:border-gold/30"
-                                        >
-                                            + Add Favorite
-                                        </button>
-                                    )}
+                                        ) : (
+                                            <button
+                                                onClick={() => setActiveRoleForInput(role)}
+                                                className="roster-add-btn"
+                                            >
+                                                + Add Favorite
+                                            </button>
+                                        )}
+                                    </div>
                                 </div>
                             </div>
                         );
                     })}
                 </div>
-            </div>
 
-            {/* Hidden Datalist for Autocomplete */}
-            <datalist id="champion-list">
-                {allChampions.map(c => <option key={c} value={c} />)}
-            </datalist>
+                <datalist id="champion-list">
+                    {allChampions.map(c => <option key={c} value={c} />)}
+                </datalist>
+            </div>
         </div>
     );
 };

@@ -16,10 +16,10 @@ const puppeteer = require('puppeteer');
  * 
  * @param {function} onProgress - Callback for logging progress messages
  */
-async function scrapeUGGChampions(onProgress = (msg) => console.log(msg), queueType = 'soloq') {
+async function scrapeUGGChampions(onProgress = (msg) => console.log(msg), queueType = 'soloq', nameMap = {}) {
     onProgress(`Launching browser for ${queueType}...`);
     const browser = await puppeteer.launch({
-        headless: true,
+        headless: true, // Run invisibly in background
         defaultViewport: null, // Full page
         args: ['--start-maximized', '--no-sandbox', '--disable-setuid-sandbox'],
     });
@@ -48,7 +48,7 @@ async function scrapeUGGChampions(onProgress = (msg) => console.log(msg), queueT
         // Set a large viewport to ensure we see desktop layout
         await page.setViewport({ width: 1920, height: 1080 });
 
-        const queueParam = queueType === 'flex' ? '?queueType=ranked_flex' : '';
+        const queueParam = queueType === 'flex' ? '?queueType=ranked_flex_sr' : '';
 
         // Define all role pages to scrape
         const roleUrls = [
@@ -66,7 +66,8 @@ async function scrapeUGGChampions(onProgress = (msg) => console.log(msg), queueT
 
             try {
                 // Navigate to the role-specific page
-                await page.goto(url, { waitUntil: 'networkidle2', timeout: 60000 });
+                // metadata: using domcontentloaded is faster/safer than networkidle2 for ad-heavy sites
+                await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 60000 });
 
                 // Wait for the table to load with flexible selector
                 try {
@@ -95,7 +96,8 @@ async function scrapeUGGChampions(onProgress = (msg) => console.log(msg), queueT
                 await new Promise(resolve => setTimeout(resolve, 2000));
 
                 // Extract champion data for this role
-                const championData = await page.evaluate(() => {
+                // Pass nameMap to evaluate context
+                const championData = await page.evaluate((nameMap) => {
                     const rows = document.querySelectorAll('div[role="row"]');
                     const champions = {};
 
@@ -110,8 +112,13 @@ async function scrapeUGGChampions(onProgress = (msg) => console.log(msg), queueT
                             const slug = href.split('/')[3];
                             if (!slug) return;
 
-                            // Normalize name (simple capitalization for now)
-                            const championName = slug.charAt(0).toUpperCase() + slug.slice(1).toLowerCase();
+                            // Normalize name using provided map or fallback
+                            let championName = slug.charAt(0).toUpperCase() + slug.slice(1).toLowerCase();
+                            // Simple check for map presence (slug is usually lowercase clean)
+                            // "missfortune" -> "MissFortune"
+                            if (nameMap && nameMap[slug]) {
+                                championName = nameMap[slug];
+                            }
 
                             // Get win rate
                             // Look for div with winrate class, then span > b inside it
@@ -137,7 +144,7 @@ async function scrapeUGGChampions(onProgress = (msg) => console.log(msg), queueT
                                 }
 
                                 // Get pick rate
-                                const pickRateDiv = row.querySelector('div[class*="pick-rate"]');
+                                const pickRateDiv = row.querySelector('div[class*="pickrate"]');
                                 const pickRateText = pickRateDiv ? pickRateDiv.textContent.trim() : null;
                                 let pickRateVal = 0;
                                 if (pickRateText && pickRateText.includes('%')) {
@@ -145,11 +152,36 @@ async function scrapeUGGChampions(onProgress = (msg) => console.log(msg), queueT
                                 }
 
                                 // Get ban rate
-                                const banRateDiv = row.querySelector('div[class*="ban-rate"]');
+                                const banRateDiv = row.querySelector('div[class*="banrate"]');
                                 const banRateText = banRateDiv ? banRateDiv.textContent.trim() : null;
                                 let banRateVal = 0;
                                 if (banRateText && banRateText.includes('%')) {
                                     banRateVal = parseFloat(banRateText.replace('%', '')) / 100;
+                                }
+
+                                // Get counters (worst matchups)
+                                const againstDiv = row.querySelector('div[class*="against"]');
+                                const counters = {};
+                                if (againstDiv) {
+                                    const counterLinks = againstDiv.querySelectorAll('a[href*="/lol/champions/"]');
+                                    let count = 0;
+                                    counterLinks.forEach(a => {
+                                        if (count >= 3) return;
+                                        const href = a.getAttribute('href');
+                                        const counterSlug = href.split('/')[3];
+                                        if (counterSlug) {
+                                            let counterName = counterSlug.charAt(0).toUpperCase() + counterSlug.slice(1).toLowerCase();
+                                            if (nameMap && nameMap[counterSlug]) {
+                                                counterName = nameMap[counterSlug];
+                                            }
+                                            // Ignore if it's the champion itself (view more link)
+                                            if (counterName !== championName) {
+                                                // Assign a bad winrate (< 0.5) to indicate it's a counter
+                                                counters[counterName] = 0.47;
+                                                count++;
+                                            }
+                                        }
+                                    });
                                 }
 
                                 champions[championName] = {
@@ -158,7 +190,8 @@ async function scrapeUGGChampions(onProgress = (msg) => console.log(msg), queueT
                                     banRate: banRateVal,
                                     matches: matches,
                                     tier: tier,
-                                    slug: slug
+                                    slug: slug,
+                                    counters: counters
                                 };
                             }
                         } catch (err) {
@@ -167,14 +200,14 @@ async function scrapeUGGChampions(onProgress = (msg) => console.log(msg), queueT
                     });
 
                     return champions;
-                });
+                }, nameMap);
 
                 // Assign to our result structure
                 resultData[queueType][role] = championData; // Use dynamic queueType key
                 onProgress(`  - Found ${Object.keys(championData).length} champions for ${role}.`);
 
                 // Polite delay
-                await new Promise(resolve => setTimeout(resolve, 1000));
+                await new Promise(resolve => setTimeout(resolve, 3500));
 
             } catch (roleError) {
                 onProgress(`  ! Error scraping ${role}: ${roleError.message}`);

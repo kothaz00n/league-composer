@@ -32,12 +32,14 @@ let lcuWebSocket = null;
 let pollingInterval = null;
 let draftPreferences = { targetArchetype: 'auto', overrideRole: null };
 let rosterConfig = null; // Store roster data in memory
+let currentSession = null;
 
 // ─── Constants ──────────────────────────────────────────────────────────
 const POLL_INTERVAL_MS = 5000;
 const IS_DEV = !app.isPackaged;
 const WINRATES_PATH = path.join(__dirname, '../data/winrates.json');
-const ROSTER_PATH = path.join(__dirname, '../data/roster.json'); // Added WINRATES_PATH
+const ROSTER_PATH = path.join(__dirname, '../data/roster.json');
+const COMPOSITIONS_PATH = path.join(__dirname, '../data/compositions.json');
 
 // ─── Window Creation ────────────────────────────────────────────────────
 function createWindow() {
@@ -184,6 +186,118 @@ function setupIPC() {
         }
     });
 
+    // ─── Compositions IPC ──────────────────────────────────────────────────
+    ipcMain.on('composition:save-archetype', (event, { name, composition }) => {
+        try {
+            console.log(`[Main] Saving new archetype "${name}" to ${COMPOSITIONS_PATH}`);
+            let data = { archetypes: [] };
+            if (fs.existsSync(COMPOSITIONS_PATH)) {
+                data = JSON.parse(fs.readFileSync(COMPOSITIONS_PATH, 'utf8'));
+            } else {
+                // Initialize if missing
+                data = { version: "1.0", last_updated: new Date().toISOString(), compositions: [], archetypes: [] };
+            }
+
+            // Create new archetype object
+            const newArchetype = {
+                name: name,
+                description: "Created via Team Builder",
+                notes: "",
+                examples: "",
+                typical_comp: composition, // { top: "...", jungle: "...", ... }
+                champion_pool: {
+                    top: [composition.top].filter(Boolean),
+                    jungle: [composition.jungle].filter(Boolean),
+                    mid: [composition.mid].filter(Boolean),
+                    adc: [composition.adc].filter(Boolean),
+                    support: [composition.support].filter(Boolean)
+                },
+                pro_games_info: ""
+            };
+
+            // Add to array
+            if (!data.archetypes) data.archetypes = [];
+            data.archetypes.push(newArchetype);
+
+            fs.writeFileSync(COMPOSITIONS_PATH, JSON.stringify(data, null, 2));
+            event.reply('composition:save-success', { name });
+            console.log('[Main] Archetype saved successfully.');
+
+        } catch (err) {
+            console.error('[Main] Failed to save archetype:', err);
+            event.reply('composition:save-error', { message: err.message });
+        }
+    });
+
+    ipcMain.handle('composition:get-all', async () => {
+        try {
+            if (fs.existsSync(COMPOSITIONS_PATH)) {
+                const data = JSON.parse(fs.readFileSync(COMPOSITIONS_PATH, 'utf8'));
+                return data;
+            }
+            return { compositions: [], archetypes: [] };
+        } catch (err) {
+            console.error('[Main] Failed to load compositions:', err);
+            return { compositions: [], archetypes: [] };
+        }
+    });
+
+    ipcMain.on('composition:save-comp', (event, { composition, index }) => {
+        try {
+            console.log(`[Main] Saving composition to index ${index} in ${COMPOSITIONS_PATH}`);
+            let data = { compositions: [], archetypes: [] };
+            if (fs.existsSync(COMPOSITIONS_PATH)) {
+                data = JSON.parse(fs.readFileSync(COMPOSITIONS_PATH, 'utf8'));
+            }
+
+            if (!data.compositions) data.compositions = [];
+
+            if (index === -1) {
+                // New composition
+                data.compositions.push(composition);
+            } else if (index >= 0 && index < data.compositions.length) {
+                // Update existing
+                data.compositions[index] = composition;
+            } else {
+                // New composition if index out of bounds
+                data.compositions.push(composition);
+            }
+
+            fs.writeFileSync(COMPOSITIONS_PATH, JSON.stringify(data, null, 2));
+            event.reply('composition:save-comp-success', { index });
+            console.log('[Main] Composition saved successfully.');
+
+        } catch (err) {
+            console.error('[Main] Failed to save composition:', err);
+            event.reply('composition:save-comp-error', { message: err.message });
+        }
+    });
+
+    ipcMain.handle('composition:analyze', async (event, team, queue = 'soloq') => {
+        // team: { top: "Name", jungle: "Name", ... }
+        try {
+            // Lazy load engine if not initialized? It should be initialized by now if app is running.
+            // But if we are in dev/testing, maybe not.
+            // Actually, champions and winrates should be loaded.
+            const { getCompositionAnalysis } = require('../engine/recommend');
+            const result = getCompositionAnalysis(team, queue);
+            return result;
+        } catch (err) {
+            console.error('[Main] Analysis failed:', err);
+            return null;
+        }
+    });
+
+    ipcMain.handle('champion:get-op-picks', async (event, queue = 'soloq') => {
+        try {
+            const { getOpPicks } = require('../engine/recommend');
+            return getOpPicks(queue);
+        } catch (err) {
+            console.error('[Main] Failed to get OP picks:', err);
+            return [];
+        }
+    });
+
     // ─── Scraper ────────────────────────────────────────────────────────
     ipcMain.on('scraper:run-ugg', async (event, force = false, queueType = 'soloq') => {
         console.log(`[Main] Request to run U.GG scrape (${queueType})...`);
@@ -219,7 +333,11 @@ function setupIPC() {
             console.log(`[Main] Starting U.GG scrape for ${queueType}...`);
 
             const onProgress = (msg) => event.reply('scraper:progress', msg);
-            const rawData = await scrapeUGGChampions(onProgress, queueType);
+            // Get name map for normalization
+            const { getChampionNameMap } = require('../data/champions');
+            const nameMap = getChampionNameMap();
+
+            const rawData = await scrapeUGGChampions(onProgress, queueType, nameMap);
 
             if (!rawData || !rawData[queueType]) {
                 throw new Error('Scraper returned invalid data structure');
@@ -237,7 +355,7 @@ function setupIPC() {
             console.log('[Main] Scrape complete and saved.');
 
             // Reload in memory
-            winRateProvider.loadWinRates();
+            loadWinRates();
 
             // Create summary stats
             const totalChamps = Object.values(rawData[queueType]).reduce((acc, roleObj) => acc + Object.keys(roleObj).length, 0);
@@ -432,7 +550,26 @@ function handleChampSelectUpdate(session) {
         }
 
         if (allBans.length > 0) {
-            console.log(`[Main] Bans detected: ${allBans.map(id => getChampionName(id) || id).join(', ')}`);
+            console.log(`[Main] Bans detected: ${allBans.map(id => getIdToNameMap()[id] || id).join(', ')}`);
+        }
+
+        // Resolve Target Archetype Definition (for Custom Flex Picks)
+        let targetArchetypeDef = null;
+        if (draftPreferences.targetArchetype && draftPreferences.targetArchetype !== 'auto') {
+            // Check if it's a custom archetype from JSON
+            if (fs.existsSync(COMPOSITIONS_PATH)) {
+                try {
+                    const compData = JSON.parse(fs.readFileSync(COMPOSITIONS_PATH, 'utf8'));
+                    if (compData.archetypes) {
+                        const custom = compData.archetypes.find(a => a.name === draftPreferences.targetArchetype);
+                        if (custom) {
+                            targetArchetypeDef = custom;
+                        }
+                    }
+                } catch (e) {
+                    console.error('[Main] Error reading custom archetypes:', e);
+                }
+            }
         }
 
         // Get recommendations + composition analysis
@@ -442,6 +579,7 @@ function handleChampSelectUpdate(session) {
             enemyPicks,
             bannedChampions: allBans,
             targetArchetype: draftPreferences.targetArchetype,
+            targetArchetypeDef, // Pass the custom definition
             rosterConfig, // Pass roster data to engine
             allies: (myTeam || []), // Need allies data for linking summoner names
             localPlayerCellId,

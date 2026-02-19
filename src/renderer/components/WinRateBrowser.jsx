@@ -1,12 +1,14 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
+import { RoleIcon, IconGlobe, IconTrophy, IconFlex, IconImport, IconEmptyInbox } from './HextechIcons';
+import ViewHeader from './ViewHeader';
 
 const QUEUE_TABS = [
-    { key: 'soloq', label: '🏆 Solo Q' },
-    { key: 'flex', label: '👥 Flex' },
+    { key: 'soloq', label: 'Solo Q', Icon: IconTrophy },
+    { key: 'flex', label: 'Flex', Icon: IconFlex },
 ];
 
 const ROLE_TABS = ['all', 'top', 'jungle', 'mid', 'adc', 'support'];
-const ROLE_LABELS = { all: '🌐 ALL', top: '🗡 TOP', jungle: '🌿 JNG', mid: '🔥 MID', adc: '🏹 ADC', support: '🛡 SUP' };
+const ROLE_NAMES_MAP = { all: 'All Roles', top: 'Top', jungle: 'Jungle', mid: 'Mid', adc: 'Bottom', support: 'Support' };
 
 export default function WinRateBrowser({ allChampions, onBack, onOpenImporter }) {
     const [stats, setStats] = useState({});
@@ -38,7 +40,7 @@ export default function WinRateBrowser({ allChampions, onBack, onOpenImporter })
 
         window.electronAPI.getImportedChampions(
             selectedQueue,
-            selectedRole === 'all' ? null : selectedRole
+            selectedRole // Pass 'all' explicitly
         ).then(list => {
             setImportedChamps(list || []);
         });
@@ -58,7 +60,7 @@ export default function WinRateBrowser({ allChampions, onBack, onOpenImporter })
         const fetchAll = async () => {
             setLoading(true);
             const results = {};
-            const role = selectedRole === 'all' ? null : selectedRole;
+            const role = selectedRole;
             const batchSize = 30;
 
             for (let i = 0; i < championsToFetch.length; i += batchSize) {
@@ -122,175 +124,157 @@ export default function WinRateBrowser({ allChampions, onBack, onOpenImporter })
         return sortDir === 'desc' ? ' ▼' : ' ▲';
     };
 
-    const wrColor = (wr) => {
-        if (wr >= 0.53) return '#4ade80';
-        if (wr >= 0.51) return '#86efac';
-        if (wr >= 0.49) return '#d1d5db';
-        if (wr >= 0.47) return '#fca5a5';
-        return '#f87171';
+    const getTierClass = (tier) => {
+        if (!tier) return 'tier-c';
+        const map = { 'S+': 'tier-s-plus', 'S': 'tier-s', 'A': 'tier-a', 'B': 'tier-b', 'C': 'tier-c', 'D': 'tier-d' };
+        return map[tier] || 'tier-c';
     };
 
-    const tierStyle = (tier) => {
-        const styles = {
-            'S+': { color: '#fde047', bg: 'rgba(234,179,8,0.15)', border: 'rgba(234,179,8,0.3)' },
-            'S': { color: '#c9ab66', bg: 'rgba(201,171,102,0.1)', border: 'rgba(201,171,102,0.3)' },
-            'A': { color: '#67e8f9', bg: 'rgba(6,182,212,0.1)', border: 'rgba(6,182,212,0.3)' },
-            'B': { color: '#86efac', bg: 'rgba(34,197,94,0.1)', border: 'rgba(34,197,94,0.3)' },
-            'C': { color: '#d1d5db', bg: 'rgba(156,163,175,0.15)', border: 'rgba(156,163,175,0.3)' },
-            'D': { color: '#fca5a5', bg: 'rgba(239,68,68,0.1)', border: 'rgba(239,68,68,0.3)' },
-        };
-        return styles[tier] || styles['C'];
+    const getWinRateColor = (wr) => {
+        if (wr >= 0.53) return '#27ae60';
+        if (wr >= 0.51) return '#2ecc71';
+        if (wr >= 0.49) return '#a09b8c';
+        if (wr >= 0.47) return '#e84057';
+        return '#c0392b';
     };
 
     return (
-        <div style={{ display: 'flex', flexDirection: 'column', height: '100%', background: 'var(--bg-primary)', color: 'var(--text-primary)' }}>
-            {/* Header */}
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 16px', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                    <button onClick={onBack} style={{
-                        background: 'none', border: 'none', color: 'var(--text-muted)',
-                        cursor: 'pointer', fontSize: '13px', fontWeight: '700', padding: '4px 8px'
-                    }}>← Back</button>
-                    <h1 style={{ fontSize: '18px', fontWeight: '700', color: 'var(--gold)', margin: 0 }}>Win Rates</h1>
-                    <span style={{ fontSize: '11px', color: 'var(--text-muted)' }}>
-                        {champList.length} champions {importedChamps.length > 0 ? `(${importedChamps.length} imported)` : ''}
-                    </span>
-                    <button
-                        onClick={onOpenImporter}
-                        title="Import Data"
-                        style={{
-                            background: 'none', border: 'none', cursor: 'pointer', fontSize: '16px', marginLeft: '8px'
-                        }}
-                    >
-                        📥
-                    </button>
-                </div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                    {importedChamps.length > 0 && (
-                        <label style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '11px', color: 'var(--text-muted)', cursor: 'pointer' }}>
-                            <input
-                                type="checkbox"
-                                checked={showOnlyImported}
-                                onChange={e => setShowOnlyImported(e.target.checked)}
-                                style={{ accentColor: 'var(--gold)' }}
-                            />
-                            Imported only
-                        </label>
-                    )}
-                    <input
-                        style={{
-                            background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(255,255,255,0.15)',
-                            borderRadius: '6px', padding: '6px 10px', fontSize: '12px', outline: 'none',
-                            color: 'white', width: '160px'
-                        }}
-                        placeholder="Search champion..."
-                        value={searchTerm}
-                        onChange={(e) => setSearchTerm(e.target.value)}
-                    />
-                </div>
+        <div className="view-container" style={{ display: 'flex', flexDirection: 'column', height: '100%', overflow: 'hidden' }}>
+            {/* Unified back navigation */}
+            <ViewHeader title="Win Rate Reference" onBack={onBack}>
+                <button
+                    onClick={onOpenImporter}
+                    className="btn-hextech"
+                    title="Import Data from U.GG or Clipboard"
+                    style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontSize: '11px', padding: '6px 14px' }}
+                >
+                    <span>Import Data</span>
+                    <IconImport size={13} />
+                </button>
+                {importedChamps.length > 0 && (
+                    <label className="text-muted" style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '11px', cursor: 'pointer' }}>
+                        <input
+                            type="checkbox"
+                            checked={showOnlyImported}
+                            onChange={(e) => setShowOnlyImported(e.target.checked)}
+                            style={{ accentColor: 'var(--hextech-gold)' }}
+                        />
+                        Imported only
+                    </label>
+                )}
+            </ViewHeader>
+
+            {/* Search bar */}
+            <div style={{ padding: '8px 20px', borderBottom: '1px solid var(--hextech-gold-dim)' }}>
+                <input
+                    className="wr-search-input"
+                    placeholder="SEARCH CHAMPION..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                />
             </div>
 
-            {/* Queue Tabs */}
-            <div style={{ display: 'flex', gap: '4px', padding: '8px 16px', borderBottom: '1px solid rgba(255,255,255,0.05)', background: 'rgba(0,0,0,0.15)' }}>
-                {QUEUE_TABS.map(q => (
-                    <button
-                        key={q.key}
-                        onClick={() => setSelectedQueue(q.key)}
-                        style={{
-                            padding: '6px 14px', borderRadius: '6px', fontSize: '13px', fontWeight: '700',
-                            cursor: 'pointer', transition: 'all 0.2s', border: 'none',
-                            background: selectedQueue === q.key ? 'rgba(201,171,102,0.2)' : 'transparent',
-                            color: selectedQueue === q.key ? 'var(--gold)' : 'var(--text-muted)',
-                            outline: selectedQueue === q.key ? '1px solid rgba(201,171,102,0.3)' : 'none',
-                        }}
-                    >
-                        {q.label}
-                        {!availableQueues.includes(q.key) && (
-                            <span style={{ fontSize: '9px', marginLeft: '4px', opacity: 0.5 }}>○</span>
-                        )}
-                    </button>
-                ))}
-            </div>
+            {/* Queue & Role Tabs */}
+            <div className="wr-tabs-container">
+                <div style={{ display: 'flex', gap: '8px' }}>
+                    {QUEUE_TABS.map(q => (
+                        <button
+                            key={q.key}
+                            onClick={() => setSelectedQueue(q.key)}
+                            className={`btn-hextech ${selectedQueue === q.key ? 'active' : ''}`}
+                            style={{ minWidth: '100px', fontSize: '12px', display: 'inline-flex', alignItems: 'center', gap: 6 }}
+                        >
+                            <q.Icon size={13} />
+                            {q.label}
+                        </button>
+                    ))}
+                </div>
 
-            {/* Role Tabs */}
-            <div style={{ display: 'flex', gap: '4px', padding: '6px 16px', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
-                {ROLE_TABS.map(r => (
-                    <button
-                        key={r}
-                        onClick={() => setSelectedRole(r)}
-                        style={{
-                            padding: '5px 12px', borderRadius: '6px', fontSize: '12px', fontWeight: '700',
-                            cursor: 'pointer', transition: 'all 0.2s', border: 'none',
-                            background: selectedRole === r ? 'rgba(201,171,102,0.15)' : 'transparent',
-                            color: selectedRole === r ? 'var(--gold)' : 'var(--text-muted)',
-                            outline: selectedRole === r ? '1px solid rgba(201,171,102,0.2)' : 'none',
-                        }}
-                    >
-                        {ROLE_LABELS[r]}
-                    </button>
-                ))}
+                <div style={{ width: '1px', background: 'var(--border-subtle)', margin: '0 8px' }}></div>
+
+                <div style={{ display: 'flex', gap: '4px', flexWrap: 'wrap' }}>
+                    {ROLE_TABS.map(r => (
+                        <button
+                            key={r}
+                            onClick={() => setSelectedRole(r)}
+                            className={`btn-hextech ${selectedRole === r ? 'active' : ''}`}
+                            style={{ fontSize: '11px', padding: '6px 12px', display: 'inline-flex', alignItems: 'center', gap: 6 }}
+                        >
+                            {r === 'all'
+                                ? <IconGlobe size={13} />
+                                : <RoleIcon role={r} size={13} />}
+                            {ROLE_NAMES_MAP[r]}
+                        </button>
+                    ))}
+                </div>
             </div>
 
             {/* Table */}
-            <div style={{ flex: 1, overflowY: 'auto' }}>
+            <div className="wr-table-container" style={{ flex: '1 1 auto', overflowY: 'auto' }}>
                 {loading ? (
                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%', color: 'var(--text-muted)' }}>
-                        Loading stats...
+                        <span className="font-display" style={{ fontSize: '24px', letterSpacing: '2px' }}>LOADING DATA...</span>
                     </div>
                 ) : champList.length === 0 ? (
-                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100%', color: 'var(--text-muted)', gap: '8px' }}>
-                        <span style={{ fontSize: '32px' }}>📭</span>
-                        <span>No data for {selectedQueue === 'soloq' ? 'Solo Queue' : 'Flex'} — {ROLE_LABELS[selectedRole]}</span>
-                        <span style={{ fontSize: '11px' }}>Import data from the Dashboard → Import icon</span>
+                    <div className="empty-state">
+                        <span className="empty-state__icon"><IconEmptyInbox size={40} /></span>
+                        <span className="empty-state__title">NO DATA AVAILABLE</span>
+                        <span className="empty-state__desc">
+                            No win rate data found for {selectedQueue === 'soloq' ? 'Solo Queue' : 'Flex'} — {ROLE_NAMES_MAP[selectedRole]}.
+                        </span>
+                        <button onClick={onOpenImporter} className="btn-hextech">
+                            IMPORT DATA NOW
+                        </button>
                     </div>
                 ) : (
-                    <table style={{ width: '100%', fontSize: '13px', borderCollapse: 'collapse' }}>
+                    <table className="hex-table">
                         <thead>
-                            <tr style={{ position: 'sticky', top: 0, background: 'var(--bg-secondary)', borderBottom: '1px solid rgba(255,255,255,0.1)', zIndex: 1 }}>
-                                <ThCell onClick={() => toggleSort('name')} align="left">Champion{sortIndicator('name')}</ThCell>
-                                <ThCell onClick={() => toggleSort('tier')}>Tier{sortIndicator('tier')}</ThCell>
-                                <ThCell onClick={() => toggleSort('winRate')}>Win Rate{sortIndicator('winRate')}</ThCell>
-                                <ThCell onClick={() => toggleSort('pickRate')}>Pick %{sortIndicator('pickRate')}</ThCell>
-                                <ThCell onClick={() => toggleSort('banRate')}>Ban %{sortIndicator('banRate')}</ThCell>
-                                <ThCell>WR Bar</ThCell>
+                            <tr>
+                                <th onClick={() => toggleSort('name')}>Champion{sortIndicator('name')}</th>
+                                {selectedRole === 'all' && <th>Role</th>}
+                                <th onClick={() => toggleSort('tier')} style={{ textAlign: 'center' }}>Tier{sortIndicator('tier')}</th>
+                                <th onClick={() => toggleSort('winRate')} style={{ textAlign: 'center' }}>Win Rate{sortIndicator('winRate')}</th>
+                                <th onClick={() => toggleSort('pickRate')} style={{ textAlign: 'center' }}>Pick %{sortIndicator('pickRate')}</th>
+                                <th onClick={() => toggleSort('banRate')} style={{ textAlign: 'center' }}>Ban %{sortIndicator('banRate')}</th>
                             </tr>
                         </thead>
                         <tbody>
                             {champList.map((champ, idx) => {
-                                const ts = tierStyle(champ.tier);
-                                const wrWidth = Math.max(0, Math.min(((champ.winRate - 0.40) / 0.20) * 100, 100));
+                                const wr = champ.winRate || 0;
+                                const wrPercent = (wr * 100).toFixed(1);
+                                const wrColor = getWinRateColor(wr);
 
                                 return (
-                                    <tr key={champ.name} style={{
-                                        borderBottom: '1px solid rgba(255,255,255,0.04)',
-                                        background: idx % 2 === 0 ? 'rgba(255,255,255,0.02)' : 'transparent',
-                                    }}>
-                                        <td style={{ padding: '8px 12px', fontWeight: '600', color: 'white' }}>{champ.name}</td>
-                                        <td style={{ padding: '8px 12px', textAlign: 'center' }}>
-                                            <span style={{
-                                                padding: '2px 8px', borderRadius: '4px', fontSize: '11px', fontWeight: '700',
-                                                color: ts.color, background: ts.bg, border: `1px solid ${ts.border}`,
-                                            }}>
+                                    <tr key={champ.name}>
+                                        <td style={{ fontWeight: '600', color: 'var(--hextech-gold-light)' }}>
+                                            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                                                {/* Placeholder for avatar if available in future */}
+                                                <span>{selectedRole === 'all' && champ.name.includes('-') ? champ.name.split('-')[0] : champ.name}</span>
+                                            </div>
+                                        </td>
+                                        {selectedRole === 'all' && (
+                                            <td className="text-muted" style={{ fontSize: '11px', fontWeight: '700', textTransform: 'uppercase' }}>
+                                                {champ.role || '-'}
+                                            </td>
+                                        )}
+                                        <td style={{ textAlign: 'center' }}>
+                                            <span className={`tier-badge ${getTierClass(champ.tier)}`}>
                                                 {champ.tier || '?'}
                                             </span>
                                         </td>
-                                        <td style={{ padding: '8px 12px', textAlign: 'center', fontWeight: '700', color: wrColor(champ.winRate) }}>
-                                            {(champ.winRate * 100).toFixed(1)}%
+                                        <td style={{ textAlign: 'center' }}>
+                                            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                                                <span style={{ fontWeight: '700', color: wrColor, fontSize: '14px' }}>{wrPercent}%</span>
+                                                <div style={{ width: '60px', height: '3px', background: 'rgba(255,255,255,0.1)', marginTop: '4px', borderRadius: '2px', overflow: 'hidden' }}>
+                                                    <div style={{ width: `${Math.max(0, (wr - 0.4) / 0.2 * 100)}%`, height: '100%', background: wrColor }}></div>
+                                                </div>
+                                            </div>
                                         </td>
-                                        <td style={{ padding: '8px 12px', textAlign: 'center', color: 'var(--text-muted)' }}>
+                                        <td className="text-secondary" style={{ textAlign: 'center' }}>
                                             {champ.pickRate ? `${(champ.pickRate * 100).toFixed(1)}%` : '-'}
                                         </td>
-                                        <td style={{ padding: '8px 12px', textAlign: 'center', color: 'var(--text-muted)' }}>
+                                        <td className="text-secondary" style={{ textAlign: 'center' }}>
                                             {champ.banRate ? `${(champ.banRate * 100).toFixed(1)}%` : '-'}
-                                        </td>
-                                        <td style={{ padding: '8px 12px' }}>
-                                            <div style={{ width: '100%', height: '6px', background: 'rgba(255,255,255,0.08)', borderRadius: '3px', overflow: 'hidden' }}>
-                                                <div style={{
-                                                    height: '100%', borderRadius: '3px', transition: 'width 0.3s',
-                                                    background: champ.winRate >= 0.50 ? '#22c55e' : '#ef4444',
-                                                    width: `${wrWidth}%`,
-                                                }} />
-                                            </div>
                                         </td>
                                     </tr>
                                 );
@@ -303,17 +287,3 @@ export default function WinRateBrowser({ allChampions, onBack, onOpenImporter })
     );
 }
 
-function ThCell({ children, onClick, align = 'center' }) {
-    return (
-        <th
-            onClick={onClick}
-            style={{
-                padding: '10px 12px', color: 'var(--text-muted)', fontWeight: '700', fontSize: '11px',
-                textAlign: align, cursor: onClick ? 'pointer' : 'default', userSelect: 'none',
-                textTransform: 'uppercase', letterSpacing: '0.5px',
-            }}
-        >
-            {children}
-        </th>
-    );
-}
