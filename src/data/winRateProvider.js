@@ -74,20 +74,7 @@ function loadWinRates(externalData = null) {
  * @returns {number}
  */
 function getWinRate(championName, role = null, queue = 'soloq') {
-    queue = queue || 'soloq';
-    if (dataSource === 'imported' && role) {
-        const qData = queueData[queue];
-        if (qData) {
-            const roleKey = Object.keys(qData).find(k => k.toLowerCase() === role.toLowerCase());
-            const roleData = roleKey ? qData[roleKey] : null;
-            if (roleData && roleData[championName]) {
-                const entry = roleData[championName];
-                return typeof entry === 'object' ? (entry.winRate || 0.50) : entry;
-            }
-        }
-        return 0; // No data found
-    }
-    return 0; // No data found
+    return getChampionStats(championName, role, queue).winRate;
 }
 
 /**
