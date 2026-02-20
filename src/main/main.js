@@ -22,6 +22,7 @@ const { loadChampionData, getIdToNameMap, getNameToIdMap, getChampionTags,
 const { loadWinRates, getChampionStats, getAllWinRates, getImportedChampions, getAvailableQueues } = require('../data/winRateProvider');
 const { validateWinRateData } = require('./inputValidation');
 const { scrapeUGGChampions } = require('./scrapers/ugg');
+const { validateRosterData } = require('./validators');
 
 // ─── State ──────────────────────────────────────────────────────────────
 let mainWindow = null;
@@ -177,9 +178,32 @@ function setupIPC() {
 
     ipcMain.on('roster:save', (event, data) => {
         try {
+            if (!validateRosterData(data)) {
+                console.error('[Main] Invalid roster data received');
+                event.reply('roster:save-error', { message: 'Invalid data format' });
+                return;
+            }
+
+            // Create a sanitized object to ensure no extra properties are saved
+            const cleanData = {
+                myRole: data.myRole,
+                gameMode: data.gameMode,
+                roster: {}
+            };
+
+            const validRoles = ['top', 'jungle', 'mid', 'adc', 'support'];
+            for (const role of validRoles) {
+                if (data.roster && data.roster[role]) {
+                    cleanData.roster[role] = {
+                        favorites: data.roster[role].favorites,
+                        player: data.roster[role].player || ""
+                    };
+                }
+            }
+
             console.log(`[Main] Saving roster config to ${ROSTER_PATH}`);
-            fs.writeFileSync(ROSTER_PATH, JSON.stringify(data, null, 2));
-            rosterConfig = data; // Update cache
+            fs.writeFileSync(ROSTER_PATH, JSON.stringify(cleanData, null, 2));
+            rosterConfig = cleanData; // Update cache with clean data
             // Trigger update if session active
             if (sessionState.current) handleChampSelectUpdate(sessionState.current);
             event.reply('roster:save-success');
