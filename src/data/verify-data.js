@@ -13,7 +13,7 @@ const {
     detectTeamComposition,
     getCompositionTier,
     getArchetypeFitBonus,
-} = require('./archetypeMapping');
+} = require('./archetypeMapping.cjs');
 const { getRecommendations, initializeEngine } = require('../engine/recommend');
 const { loadChampionData, getIdToNameMap, getNameToIdMap, getChampionTags } = require('./champions');
 const countersDB = require('./counters.json');
