@@ -159,14 +159,13 @@ function setupIPC() {
 
     ipcMain.handle('roster:load', async () => {
         try {
-            if (fs.existsSync(ROSTER_PATH)) {
-                const data = fs.readFileSync(ROSTER_PATH, 'utf8');
-                rosterConfig = JSON.parse(data); // Cache
-                return rosterConfig;
-            }
-            return null;
+            const data = await fs.promises.readFile(ROSTER_PATH, 'utf8');
+            rosterConfig = JSON.parse(data); // Cache
+            return rosterConfig;
         } catch (err) {
-            console.error('[Main] Failed to load roster:', err);
+            if (err.code !== 'ENOENT') {
+                console.error('[Main] Failed to load roster:', err);
+            }
             return null;
         }
     });
