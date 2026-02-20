@@ -74,20 +74,33 @@ function createWindow() {
 
 // ─── Helper Functions ───────────────────────────────────────────────────
 /**
+ * Safely reads and parses a JSON file.
+ * @param {string} filePath - Path to the JSON file.
+ * @param {any} [defaultValue=null] - Value to return if file doesn't exist or error occurs.
+ * @returns {any} - Parsed JSON data or default value.
+ */
+function readJsonFile(filePath, defaultValue = null) {
+    if (fs.existsSync(filePath)) {
+        try {
+            const raw = fs.readFileSync(filePath, 'utf8');
+            return JSON.parse(raw);
+        } catch (err) {
+            console.error(`[Main] Error reading JSON file at ${filePath}:`, err);
+        }
+    }
+    return defaultValue;
+}
+
+/**
  * Reloads win rates from the local file or uses a fallback.
  * @param {object} [initialData={}] - Optional initial data to merge or use if file not found.
  */
 function reloadWinRates(initialData = {}) {
     let winRateData = { ...initialData };
-    if (fs.existsSync(WINRATES_PATH)) {
-        try {
-            const raw = fs.readFileSync(WINRATES_PATH, 'utf8');
-            const fileData = JSON.parse(raw);
-            winRateData = { ...winRateData, ...fileData }; // Merge file data
-            console.log(`[Main] Loaded ${Object.keys(fileData).length} win rates from local file`);
-        } catch (e) {
-            console.error('[Main] Error reading local winrates.json:', e);
-        }
+    const fileData = readJsonFile(WINRATES_PATH);
+    if (fileData) {
+        winRateData = { ...winRateData, ...fileData }; // Merge file data
+        console.log(`[Main] Loaded ${Object.keys(fileData).length} win rates from local file`);
     }
     loadWinRates(winRateData); // Pass the combined data to the provider
 }
@@ -117,12 +130,7 @@ function setupIPC() {
     ipcMain.on('winrate:save', (event, data) => {
         try {
             // Read existing file to merge
-            let existing = {};
-            if (fs.existsSync(WINRATES_PATH)) {
-                try {
-                    existing = JSON.parse(fs.readFileSync(WINRATES_PATH, 'utf8'));
-                } catch (e) { /* ignore parse errors */ }
-            }
+            let existing = readJsonFile(WINRATES_PATH, {});
 
             // If data has a queue key (soloq/flex), merge into existing
             const queue = data._queue; // e.g. 'soloq' or 'flex'
@@ -159,17 +167,12 @@ function setupIPC() {
     // ─── Roster IPC ─────────────────────────────────────────────────────────
 
     ipcMain.handle('roster:load', async () => {
-        try {
-            if (fs.existsSync(ROSTER_PATH)) {
-                const data = fs.readFileSync(ROSTER_PATH, 'utf8');
-                rosterConfig = JSON.parse(data); // Cache
-                return rosterConfig;
-            }
-            return null;
-        } catch (err) {
-            console.error('[Main] Failed to load roster:', err);
-            return null;
+        const data = readJsonFile(ROSTER_PATH);
+        if (data) {
+            rosterConfig = data; // Cache
+            return rosterConfig;
         }
+        return null;
     });
 
 
@@ -191,10 +194,8 @@ function setupIPC() {
     ipcMain.on('composition:save-archetype', (event, { name, composition }) => {
         try {
             console.log(`[Main] Saving new archetype "${name}" to ${COMPOSITIONS_PATH}`);
-            let data = { archetypes: [] };
-            if (fs.existsSync(COMPOSITIONS_PATH)) {
-                data = JSON.parse(fs.readFileSync(COMPOSITIONS_PATH, 'utf8'));
-            } else {
+            let data = readJsonFile(COMPOSITIONS_PATH);
+            if (!data) {
                 // Initialize if missing
                 data = { version: "1.0", last_updated: new Date().toISOString(), compositions: [], archetypes: [] };
             }
@@ -231,25 +232,13 @@ function setupIPC() {
     });
 
     ipcMain.handle('composition:get-all', async () => {
-        try {
-            if (fs.existsSync(COMPOSITIONS_PATH)) {
-                const data = JSON.parse(fs.readFileSync(COMPOSITIONS_PATH, 'utf8'));
-                return data;
-            }
-            return { compositions: [], archetypes: [] };
-        } catch (err) {
-            console.error('[Main] Failed to load compositions:', err);
-            return { compositions: [], archetypes: [] };
-        }
+        return readJsonFile(COMPOSITIONS_PATH, { compositions: [], archetypes: [] });
     });
 
     ipcMain.on('composition:save-comp', (event, { composition, index }) => {
         try {
             console.log(`[Main] Saving composition to index ${index} in ${COMPOSITIONS_PATH}`);
-            let data = { compositions: [], archetypes: [] };
-            if (fs.existsSync(COMPOSITIONS_PATH)) {
-                data = JSON.parse(fs.readFileSync(COMPOSITIONS_PATH, 'utf8'));
-            }
+            let data = readJsonFile(COMPOSITIONS_PATH, { compositions: [], archetypes: [] });
 
             if (!data.compositions) data.compositions = [];
 
@@ -304,12 +293,7 @@ function setupIPC() {
         console.log(`[Main] Request to run U.GG scrape (${queueType})...`);
         try {
             // Check last updated time
-            let existing = {};
-            if (fs.existsSync(WINRATES_PATH)) {
-                try {
-                    existing = JSON.parse(fs.readFileSync(WINRATES_PATH, 'utf8'));
-                } catch (e) { /* ignore */ }
-            }
+            let existing = readJsonFile(WINRATES_PATH, {});
 
             // Check specific queue timestamp if it exists, otherwise check root
             // We'll store metadata per queue now
@@ -558,17 +542,11 @@ function handleChampSelectUpdate(session) {
         let targetArchetypeDef = null;
         if (draftPreferences.targetArchetype && draftPreferences.targetArchetype !== 'auto') {
             // Check if it's a custom archetype from JSON
-            if (fs.existsSync(COMPOSITIONS_PATH)) {
-                try {
-                    const compData = JSON.parse(fs.readFileSync(COMPOSITIONS_PATH, 'utf8'));
-                    if (compData.archetypes) {
-                        const custom = compData.archetypes.find(a => a.name === draftPreferences.targetArchetype);
-                        if (custom) {
-                            targetArchetypeDef = custom;
-                        }
-                    }
-                } catch (e) {
-                    console.error('[Main] Error reading custom archetypes:', e);
+            const compData = readJsonFile(COMPOSITIONS_PATH);
+            if (compData && compData.archetypes) {
+                const custom = compData.archetypes.find(a => a.name === draftPreferences.targetArchetype);
+                if (custom) {
+                    targetArchetypeDef = custom;
                 }
             }
         }
@@ -649,9 +627,9 @@ app.whenReady().then(async () => {
         reloadWinRates();
 
         // Load roster
-        if (fs.existsSync(ROSTER_PATH)) {
-            const rData = fs.readFileSync(ROSTER_PATH, 'utf8');
-            rosterConfig = JSON.parse(rData);
+        const rData = readJsonFile(ROSTER_PATH);
+        if (rData) {
+            rosterConfig = rData;
             console.log('[Main] Roster config loaded');
         }
 
