@@ -77,15 +77,15 @@ function createWindow() {
  * Reloads win rates from the local file or uses a fallback.
  * @param {object} [initialData={}] - Optional initial data to merge or use if file not found.
  */
-function reloadWinRates(initialData = {}) {
+async function reloadWinRates(initialData = {}) {
     let winRateData = { ...initialData };
-    if (fs.existsSync(WINRATES_PATH)) {
-        try {
-            const raw = fs.readFileSync(WINRATES_PATH, 'utf8');
-            const fileData = JSON.parse(raw);
-            winRateData = { ...winRateData, ...fileData }; // Merge file data
-            console.log(`[Main] Loaded ${Object.keys(fileData).length} win rates from local file`);
-        } catch (e) {
+    try {
+        const raw = await fs.promises.readFile(WINRATES_PATH, 'utf8');
+        const fileData = JSON.parse(raw);
+        winRateData = { ...winRateData, ...fileData }; // Merge file data
+        console.log(`[Main] Loaded ${Object.keys(fileData).length} win rates from local file`);
+    } catch (e) {
+        if (e.code !== 'ENOENT') {
             console.error('[Main] Error reading local winrates.json:', e);
         }
     }
@@ -114,7 +114,7 @@ function setupIPC() {
         }
     });
 
-    ipcMain.on('winrate:save', (event, data) => {
+    ipcMain.on('winrate:save', async (event, data) => {
         try {
             // Read existing file to merge
             let existing = {};
@@ -146,7 +146,7 @@ function setupIPC() {
 
             console.log(`[Main] Saving win rates to ${WINRATES_PATH}`);
             fs.writeFileSync(WINRATES_PATH, JSON.stringify(existing, null, 2));
-            reloadWinRates(existing);
+            await reloadWinRates(existing);
 
             if (currentSession) handleChampSelectUpdate(currentSession);
             event.reply('winrate:save-success', { count: Object.keys(data).length });
@@ -646,7 +646,7 @@ app.whenReady().then(async () => {
         console.log(`[Champions] Loaded ${Object.keys(getIdToNameMap()).length} champions with tags (${getLatestVersion()})`);
 
         // Load win rates
-        reloadWinRates();
+        await reloadWinRates();
 
         // Load roster
         if (fs.existsSync(ROSTER_PATH)) {
