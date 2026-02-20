@@ -20,6 +20,7 @@ const { loadChampionData, getIdToNameMap, getNameToIdMap, getChampionTags,
     getAllChampions,
 } = require('../data/champions');
 const { loadWinRates, getChampionStats, getAllWinRates, getImportedChampions, getAvailableQueues } = require('../data/winRateProvider');
+const { validateWinRateData } = require('./inputValidation');
 const { scrapeUGGChampions } = require('./scrapers/ugg');
 
 // ─── State ──────────────────────────────────────────────────────────────
@@ -115,6 +116,8 @@ function setupIPC() {
 
     ipcMain.on('winrate:save', (event, data) => {
         try {
+            validateWinRateData(data);
+
             // Read existing file to merge
             let existing = {};
             if (fs.existsSync(WINRATES_PATH)) {
