@@ -20,6 +20,7 @@ const { loadChampionData, getIdToNameMap, getNameToIdMap, getChampionTags,
     getAllChampions,
 } = require('../data/champions');
 const { loadWinRates, getChampionStats, getAllWinRates, getImportedChampions, getAvailableQueues } = require('../data/winRateProvider');
+const { validateWinRateData } = require('./inputValidation');
 const { scrapeUGGChampions } = require('./scrapers/ugg');
 
 // ─── State ──────────────────────────────────────────────────────────────
@@ -32,7 +33,7 @@ let lcuWebSocket = null;
 let pollingInterval = null;
 let draftPreferences = { targetArchetype: 'auto', overrideRole: null };
 let rosterConfig = null; // Store roster data in memory
-let currentSession = null;
+const sessionState = { current: null };
 
 // ─── Constants ──────────────────────────────────────────────────────────
 const POLL_INTERVAL_MS = 5000;
@@ -56,6 +57,7 @@ function createWindow() {
             preload: path.join(__dirname, 'preload.js'),
             contextIsolation: true,
             nodeIntegration: false,
+            sandbox: true,
         },
     });
 
@@ -76,9 +78,9 @@ function createWindow() {
  * Reloads win rates from the local file or uses a fallback.
  * @param {object} [initialData={}] - Optional initial data to merge or use if file not found.
  */
-function reloadWinRates(initialData = {}) {
+function reloadWinRates(initialData = {}, skipFileRead = false) {
     let winRateData = { ...initialData };
-    if (fs.existsSync(WINRATES_PATH)) {
+    if (!skipFileRead && fs.existsSync(WINRATES_PATH)) {
         try {
             const raw = fs.readFileSync(WINRATES_PATH, 'utf8');
             const fileData = JSON.parse(raw);
@@ -108,20 +110,21 @@ function setupIPC() {
         console.log('[Main] Updated draft preferences:', prefs);
         draftPreferences = { ...draftPreferences, ...prefs };
         // If we have an active session, re-run analysis immediately
-        if (currentSession) {
-            handleChampSelectUpdate(currentSession);
+        if (sessionState.current) {
+            handleChampSelectUpdate(sessionState.current);
         }
     });
 
-    ipcMain.on('winrate:save', (event, data) => {
+    ipcMain.on('winrate:save', async (event, data) => {
         try {
+            validateWinRateData(data);
+
             // Read existing file to merge
             let existing = {};
-            if (fs.existsSync(WINRATES_PATH)) {
-                try {
-                    existing = JSON.parse(fs.readFileSync(WINRATES_PATH, 'utf8'));
-                } catch (e) { /* ignore parse errors */ }
-            }
+            try {
+                const raw = await fs.promises.readFile(WINRATES_PATH, 'utf8');
+                existing = JSON.parse(raw);
+            } catch (e) { /* ignore read or parse errors */ }
 
             // If data has a queue key (soloq/flex), merge into existing
             const queue = data._queue; // e.g. 'soloq' or 'flex'
@@ -144,10 +147,10 @@ function setupIPC() {
             }
 
             console.log(`[Main] Saving win rates to ${WINRATES_PATH}`);
-            fs.writeFileSync(WINRATES_PATH, JSON.stringify(existing, null, 2));
-            reloadWinRates(existing);
+            await fs.promises.writeFile(WINRATES_PATH, JSON.stringify(existing, null, 2));
+            reloadWinRates(existing, true);
 
-            if (currentSession) handleChampSelectUpdate(currentSession);
+            if (sessionState.current) handleChampSelectUpdate(sessionState.current);
             event.reply('winrate:save-success', { count: Object.keys(data).length });
         } catch (err) {
             console.error('[Main] Failed to save winrates:', err);
@@ -178,7 +181,7 @@ function setupIPC() {
             fs.writeFileSync(ROSTER_PATH, JSON.stringify(data, null, 2));
             rosterConfig = data; // Update cache
             // Trigger update if session active
-            if (currentSession) handleChampSelectUpdate(currentSession);
+            if (sessionState.current) handleChampSelectUpdate(sessionState.current);
             event.reply('roster:save-success');
         } catch (err) {
             console.error('[Main] Failed to save roster:', err);
@@ -367,7 +370,7 @@ function setupIPC() {
             });
 
             // Trigger engine update
-            if (currentSession) handleChampSelectUpdate(currentSession);
+            if (sessionState.current) handleChampSelectUpdate(sessionState.current);
 
         } catch (error) {
             console.error('[Main] Scraper failed:', error);
@@ -507,7 +510,7 @@ function connectWebSocket(credentials) {
  */
 function handleChampSelectUpdate(session) {
     try {
-        currentSession = session; // Update current session state
+        sessionState.current = session; // Update current session state
 
         // Parse the session data
         const { myTeam, theirTeam, bans, localPlayerCellId, timer } = session;

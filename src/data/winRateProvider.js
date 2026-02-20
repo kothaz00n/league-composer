@@ -224,4 +224,6 @@ module.exports = {
     getChampionStats,
     getImportedChampions,
     getAvailableQueues,
+    VALID_ROLES,
+    VALID_QUEUES,
 };
