@@ -33,7 +33,7 @@ let lcuWebSocket = null;
 let pollingInterval = null;
 let draftPreferences = { targetArchetype: 'auto', overrideRole: null };
 let rosterConfig = null; // Store roster data in memory
-let currentSession = null;
+const sessionState = { current: null };
 
 // ─── Constants ──────────────────────────────────────────────────────────
 const POLL_INTERVAL_MS = 5000;
@@ -110,8 +110,8 @@ function setupIPC() {
         console.log('[Main] Updated draft preferences:', prefs);
         draftPreferences = { ...draftPreferences, ...prefs };
         // If we have an active session, re-run analysis immediately
-        if (currentSession) {
-            handleChampSelectUpdate(currentSession);
+        if (sessionState.current) {
+            handleChampSelectUpdate(sessionState.current);
         }
     });
 
@@ -150,7 +150,7 @@ function setupIPC() {
             await fs.promises.writeFile(WINRATES_PATH, JSON.stringify(existing, null, 2));
             reloadWinRates(existing, true);
 
-            if (currentSession) handleChampSelectUpdate(currentSession);
+            if (sessionState.current) handleChampSelectUpdate(sessionState.current);
             event.reply('winrate:save-success', { count: Object.keys(data).length });
         } catch (err) {
             console.error('[Main] Failed to save winrates:', err);
@@ -181,7 +181,7 @@ function setupIPC() {
             fs.writeFileSync(ROSTER_PATH, JSON.stringify(data, null, 2));
             rosterConfig = data; // Update cache
             // Trigger update if session active
-            if (currentSession) handleChampSelectUpdate(currentSession);
+            if (sessionState.current) handleChampSelectUpdate(sessionState.current);
             event.reply('roster:save-success');
         } catch (err) {
             console.error('[Main] Failed to save roster:', err);
@@ -370,7 +370,7 @@ function setupIPC() {
             });
 
             // Trigger engine update
-            if (currentSession) handleChampSelectUpdate(currentSession);
+            if (sessionState.current) handleChampSelectUpdate(sessionState.current);
 
         } catch (error) {
             console.error('[Main] Scraper failed:', error);
@@ -510,7 +510,7 @@ function connectWebSocket(credentials) {
  */
 function handleChampSelectUpdate(session) {
     try {
-        currentSession = session; // Update current session state
+        sessionState.current = session; // Update current session state
 
         // Parse the session data
         const { myTeam, theirTeam, bans, localPlayerCellId, timer } = session;
