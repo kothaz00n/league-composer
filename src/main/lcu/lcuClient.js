@@ -12,15 +12,38 @@ const axios = require('axios');
 const https = require('https');
 
 /**
+ * Creates an HTTPS agent specifically configured for the LCU API.
+ *
+ * SECURITY NOTE:
+ * The League Client Update (LCU) uses a self-signed certificate that is generated
+ * dynamically and not signed by a trusted Certificate Authority (CA).
+ *
+ * To connect to it, we must bypass standard certificate validation using
+ * `rejectUnauthorized: false`.
+ *
+ * This is acceptable in this specific context because:
+ * 1. The connection is strictly limited to `127.0.0.1` (localhost).
+ * 2. The port and authentication token are read from the lockfile created by the
+ *    authenticated LCU process itself.
+ * 3. The risk of Man-in-the-Middle (MitM) attacks on the loopback interface is
+ *    limited to local attackers with enough privileges to intercept traffic,
+ *    who would likely already have full system access.
+ *
+ * @returns {https.Agent} Configured HTTPS agent.
+ */
+function createLcuHttpsAgent() {
+    return new https.Agent({
+        rejectUnauthorized: false,
+    });
+}
+
+/**
  * Creates an axios instance configured for the LCU API.
  * @param {{ port: string, token: string, protocol: string }} credentials
  * @returns {import('axios').AxiosInstance}
  */
 function createLcuClient({ port, token, protocol }) {
-    // Create HTTPS agent that accepts self-signed certificates
-    const httpsAgent = new https.Agent({
-        rejectUnauthorized: false, // Required for Riot's self-signed cert
-    });
+    const httpsAgent = createLcuHttpsAgent();
 
     // Encode credentials for Basic Auth: "riot:{token}"
     const authString = Buffer.from(`riot:${token}`).toString('base64');
