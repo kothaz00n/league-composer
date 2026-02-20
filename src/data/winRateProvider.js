@@ -91,6 +91,21 @@ function getWinRate(championName, role = null, queue = 'soloq') {
 }
 
 /**
+ * Get stats for multiple champions at once.
+ * @param {string[]} championNames
+ * @param {string} [role]
+ * @param {string} [queue]
+ * @returns {Object} { [name]: stats }
+ */
+function getMultipleChampionStats(championNames, role = null, queue = 'soloq') {
+    const results = {};
+    for (const name of championNames) {
+        results[name] = getChampionStats(name, role, queue);
+    }
+    return results;
+}
+
+/**
  * Get full stats for a champion.
  * @param {string} championName
  * @param {string} [role]
@@ -224,4 +239,5 @@ module.exports = {
     getChampionStats,
     getImportedChampions,
     getAvailableQueues,
+    getMultipleChampionStats,
 };

@@ -19,7 +19,7 @@ const { loadChampionData, getIdToNameMap, getNameToIdMap, getChampionTags,
     getLatestVersion,
     getAllChampions,
 } = require('../data/champions');
-const { loadWinRates, getChampionStats, getAllWinRates, getImportedChampions, getAvailableQueues } = require('../data/winRateProvider');
+const { loadWinRates, getChampionStats, getMultipleChampionStats, getAllWinRates, getImportedChampions, getAvailableQueues } = require('../data/winRateProvider');
 const { scrapeUGGChampions } = require('./scrapers/ugg');
 
 // ─── State ──────────────────────────────────────────────────────────────
@@ -406,6 +406,10 @@ ipcMain.handle('champion:get-data', () => {
 
 ipcMain.handle('champion:get-stats', (_, name, role, queue) => {
     return getChampionStats(name, role, queue);
+});
+
+ipcMain.handle('champion:get-multiple-stats', (_, names, role, queue) => {
+    return getMultipleChampionStats(names, role, queue);
 });
 
 ipcMain.handle('champion:get-imported-list', (_, queue, role) => {

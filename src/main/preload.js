@@ -45,6 +45,7 @@ contextBridge.exposeInMainWorld('electronAPI', {
     getChampionData: () => ipcRenderer.invoke('champion:get-data'),
     saveWinRates: (data) => ipcRenderer.send('winrate:save', data),
     getChampionStats: (name, role, queue) => ipcRenderer.invoke('champion:get-stats', name, role, queue),
+    getMultipleChampionStats: (names, role, queue) => ipcRenderer.invoke('champion:get-multiple-stats', names, role, queue),
     saveArchetype: (data) => ipcRenderer.send('composition:save-archetype', data),
     onSaveArchetypeSuccess: (callback) => ipcRenderer.on('composition:save-success', (_, data) => callback(data)),
 

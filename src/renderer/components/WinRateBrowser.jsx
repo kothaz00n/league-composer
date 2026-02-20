@@ -61,21 +61,40 @@ export default function WinRateBrowser({ allChampions, onBack, onOpenImporter })
             setLoading(true);
             const results = {};
             const role = selectedRole;
-            const batchSize = 30;
+            const batchSize = 100;
 
             for (let i = 0; i < championsToFetch.length; i += batchSize) {
                 const batch = championsToFetch.slice(i, i + batchSize);
-                const promises = batch.map(async (name) => {
+
+                if (window.electronAPI.getMultipleChampionStats) {
                     try {
-                        const data = await window.electronAPI.getChampionStats(name, role, selectedQueue);
-                        results[`${name}-${selectedQueue}-${selectedRole}`] = { ...data, name };
+                        const batchData = await window.electronAPI.getMultipleChampionStats(batch, role, selectedQueue);
+                        batch.forEach(name => {
+                            const data = batchData[name] || { winRate: 0.50, tier: '?', pickRate: 0, banRate: 0, hasData: false };
+                            results[`${name}-${selectedQueue}-${selectedRole}`] = { ...data, name };
+                        });
                     } catch (e) {
-                        results[`${name}-${selectedQueue}-${selectedRole}`] = {
-                            name, winRate: 0.50, tier: '?', pickRate: 0, banRate: 0, hasData: false
-                        };
+                        console.error('Batch fetch error:', e);
+                        // Fallback handling if batch fails completely
+                        batch.forEach(name => {
+                            results[`${name}-${selectedQueue}-${selectedRole}`] = {
+                                name, winRate: 0.50, tier: '?', pickRate: 0, banRate: 0, hasData: false
+                            };
+                        });
                     }
-                });
-                await Promise.all(promises);
+                } else {
+                    const promises = batch.map(async (name) => {
+                        try {
+                            const data = await window.electronAPI.getChampionStats(name, role, selectedQueue);
+                            results[`${name}-${selectedQueue}-${selectedRole}`] = { ...data, name };
+                        } catch (e) {
+                            results[`${name}-${selectedQueue}-${selectedRole}`] = {
+                                name, winRate: 0.50, tier: '?', pickRate: 0, banRate: 0, hasData: false
+                            };
+                        }
+                    });
+                    await Promise.all(promises);
+                }
             }
 
             setStats(prev => ({ ...prev, ...results }));
