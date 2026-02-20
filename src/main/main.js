@@ -76,9 +76,9 @@ function createWindow() {
  * Reloads win rates from the local file or uses a fallback.
  * @param {object} [initialData={}] - Optional initial data to merge or use if file not found.
  */
-function reloadWinRates(initialData = {}) {
+function reloadWinRates(initialData = {}, skipFileRead = false) {
     let winRateData = { ...initialData };
-    if (fs.existsSync(WINRATES_PATH)) {
+    if (!skipFileRead && fs.existsSync(WINRATES_PATH)) {
         try {
             const raw = fs.readFileSync(WINRATES_PATH, 'utf8');
             const fileData = JSON.parse(raw);
@@ -113,15 +113,14 @@ function setupIPC() {
         }
     });
 
-    ipcMain.on('winrate:save', (event, data) => {
+    ipcMain.on('winrate:save', async (event, data) => {
         try {
             // Read existing file to merge
             let existing = {};
-            if (fs.existsSync(WINRATES_PATH)) {
-                try {
-                    existing = JSON.parse(fs.readFileSync(WINRATES_PATH, 'utf8'));
-                } catch (e) { /* ignore parse errors */ }
-            }
+            try {
+                const raw = await fs.promises.readFile(WINRATES_PATH, 'utf8');
+                existing = JSON.parse(raw);
+            } catch (e) { /* ignore read or parse errors */ }
 
             // If data has a queue key (soloq/flex), merge into existing
             const queue = data._queue; // e.g. 'soloq' or 'flex'
@@ -144,8 +143,8 @@ function setupIPC() {
             }
 
             console.log(`[Main] Saving win rates to ${WINRATES_PATH}`);
-            fs.writeFileSync(WINRATES_PATH, JSON.stringify(existing, null, 2));
-            reloadWinRates(existing);
+            await fs.promises.writeFile(WINRATES_PATH, JSON.stringify(existing, null, 2));
+            reloadWinRates(existing, true);
 
             if (currentSession) handleChampSelectUpdate(currentSession);
             event.reply('winrate:save-success', { count: Object.keys(data).length });
