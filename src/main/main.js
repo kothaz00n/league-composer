@@ -172,10 +172,10 @@ function setupIPC() {
     });
 
 
-    ipcMain.on('roster:save', (event, data) => {
+    ipcMain.on('roster:save', async (event, data) => {
         try {
             console.log(`[Main] Saving roster config to ${ROSTER_PATH}`);
-            fs.writeFileSync(ROSTER_PATH, JSON.stringify(data, null, 2));
+            await fs.promises.writeFile(ROSTER_PATH, JSON.stringify(data, null, 2));
             rosterConfig = data; // Update cache
             // Trigger update if session active
             if (currentSession) handleChampSelectUpdate(currentSession);
