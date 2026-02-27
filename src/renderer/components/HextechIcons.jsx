@@ -415,58 +415,157 @@ export function IconSword({ size = 16, className = '', style = {} }) {
     );
 }
 
-/** TEAM BUILDER — Wrench over grid */
-export function IconTeamBuilder({ size = 16, className = '', style = {} }) {
+// ────────────────────────────────────────────────────────────────────────
+// ELABORATE STITCH-STYLE DASHBOARD ICONS
+// ────────────────────────────────────────────────────────────────────────
+
+/** TEAM BUILDER — Intricate magic circle and gears */
+export function IconTeamBuilderDashboard({ size = 100, className = '', style = {} }) {
     return (
-        <svg width={size} height={size} viewBox="0 0 20 20" fill="none"
+        <svg width={size} height={size} viewBox="0 0 100 100" fill="none"
             xmlns="http://www.w3.org/2000/svg" className={className} style={style}>
-            {/* Square grid (5 slots) */}
-            <rect x="1" y="1" width="18" height="18" stroke="currentColor" strokeWidth="1.5" fill="none" opacity="0.4" />
-            <line x1="7" y1="1" x2="7" y2="19" stroke="currentColor" strokeWidth="0.8" opacity="0.3" />
-            <line x1="13" y1="1" x2="13" y2="19" stroke="currentColor" strokeWidth="0.8" opacity="0.3" />
-            {/* Wrench handle */}
-            <line x1="6" y1="14" x2="14" y2="6" stroke="currentColor" strokeWidth="2" strokeLinecap="square" />
-            {/* Wrench head circle */}
-            <circle cx="14" cy="6" r="3" stroke="currentColor" strokeWidth="1.5" fill="none" />
-            <circle cx="6" cy="14" r="2" stroke="currentColor" strokeWidth="1" fill="none" opacity="0.6" />
+            {/* Outer Runic Circle */}
+            <circle cx="50" cy="50" r="42" stroke="#0ac8b9" strokeWidth="2" strokeDasharray="6 4" opacity="0.8" />
+            <circle cx="50" cy="50" r="38" stroke="#0397ab" strokeWidth="1" opacity="0.6" />
+            {/* Octagram / Star lines */}
+            <path d="M50 8 L50 92 M8 50 L92 50 M20 20 L80 80 M20 80 L80 20" stroke="#0ac8b9" strokeWidth="1.5" opacity="0.3" />
+            {/* Outer floating diamonds */}
+            {[...Array(8)].map((_, i) => (
+                <rect key={i} x="48" y="2" width="4" height="4" fill="#0ac8b9" transform={`rotate(${i * 45} 50 50)`} />
+            ))}
+            {/* Background Gear */}
+            <circle cx="50" cy="50" r="28" stroke="#c8aa6e" strokeWidth="3" opacity="0.9" />
+            <circle cx="50" cy="50" r="22" stroke="#c8aa6e" strokeWidth="1" opacity="0.5" />
+            {[...Array(8)].map((_, i) => (
+                <path key={`gear${i}`} d="M46 18 L54 18 L52 24 L48 24 Z" fill="#c8aa6e" transform={`rotate(${i * 45} 50 50)`} />
+            ))}
+            {/* Inner mechanism */}
+            <circle cx="50" cy="50" r="14" stroke="#0ac8b9" strokeWidth="2" />
+            <circle cx="50" cy="50" r="8" fill="#0397ab" opacity="0.8" />
+            <circle cx="50" cy="50" r="4" fill="#0ac8b9" />
+            {/* Magical nodes */}
+            <circle cx="50" cy="15" r="5" stroke="#c8aa6e" strokeWidth="1.5" />
+            <path d="M48 15 L50 12 L52 15 L50 18 Z" fill="#0ac8b9" />
+            <circle cx="50" cy="85" r="5" stroke="#c8aa6e" strokeWidth="1.5" />
+            <path d="M48 85 L50 82 L52 85 L50 88 Z" fill="#0ac8b9" />
+            <circle cx="15" cy="50" r="5" stroke="#c8aa6e" strokeWidth="1.5" />
+            <path d="M15 48 L18 50 L15 52 L12 50 Z" fill="#0ac8b9" />
+            <circle cx="85" cy="50" r="5" stroke="#c8aa6e" strokeWidth="1.5" />
+            <path d="M85 48 L88 50 L85 52 L82 50 Z" fill="#0ac8b9" />
         </svg>
     );
 }
 
-/** ROSTER — Two vertical rectangles (team/people) */
-export function IconRoster({ size = 16, className = '', style = {} }) {
+/** ROSTER — Golden scroll with champion slots */
+export function IconRosterDashboard({ size = 100, className = '', style = {} }) {
     return (
-        <svg width={size} height={size} viewBox="0 0 20 20" fill="none"
+        <svg width={size} height={size} viewBox="0 0 100 100" fill="none"
             xmlns="http://www.w3.org/2000/svg" className={className} style={style}>
-            {/* Three player columns */}
-            <rect x="2" y="5" width="4" height="13" stroke="currentColor" strokeWidth="1.5" fill="none" />
-            <rect x="8" y="3" width="4" height="15" stroke="currentColor" strokeWidth="1.5" fill="none" />
-            <rect x="14" y="5" width="4" height="13" stroke="currentColor" strokeWidth="1.5" fill="none" opacity="0.8" />
-            {/* Heads (circles) */}
-            <circle cx="4" cy="3" r="1.5" stroke="currentColor" strokeWidth="1.2" fill="none" />
-            <circle cx="10" cy="1" r="1.5" stroke="currentColor" strokeWidth="1.2" fill="none" />
-            <circle cx="16" cy="3" r="1.5" stroke="currentColor" strokeWidth="1.2" fill="none" opacity="0.8" />
+            {/* Scroll Background */}
+            <path d="M20 25 Q20 20 25 20 L75 20 Q80 20 80 25 L80 80 Q80 85 75 85 L25 85 Q20 85 20 80 Z"
+                fill="#f0e6d2" stroke="#c8aa6e" strokeWidth="2" opacity="0.85" />
+            {/* Scroll Roll Top */}
+            <ellipse cx="25" cy="20" rx="8" ry="4" fill="#d4c29c" stroke="#785a28" strokeWidth="1.5" />
+            <ellipse cx="75" cy="20" rx="8" ry="4" fill="#d4c29c" stroke="#785a28" strokeWidth="1.5" />
+            <path d="M17 20 L83 20" stroke="#785a28" strokeWidth="2" />
+            {/* Scroll Roll Bottom */}
+            <ellipse cx="25" cy="85" rx="8" ry="4" fill="#d4c29c" stroke="#785a28" strokeWidth="1.5" />
+            <ellipse cx="75" cy="85" rx="8" ry="4" fill="#d4c29c" stroke="#785a28" strokeWidth="1.5" />
+            <path d="M17 85 L83 85" stroke="#785a28" strokeWidth="2" />
+
+            {/* Crown */}
+            <path d="M40 10 L45 15 L50 5 L55 15 L60 10 L58 20 L42 20 Z" fill="#c8aa6e" stroke="#785a28" strokeWidth="1" />
+
+            {/* Portraits Lines */}
+            <circle cx="40" cy="40" r="12" fill="#ff4e50" stroke="#c8aa6e" strokeWidth="2" opacity="0.8" />
+            <circle cx="60" cy="40" r="12" fill="#0ac8b9" stroke="#c8aa6e" strokeWidth="2" opacity="0.8" />
+            <circle cx="50" cy="65" r="12" fill="#cc33ff" stroke="#c8aa6e" strokeWidth="2" opacity="0.8" />
+
+            <path d="M35 38 L45 42 M40 35 L40 45" stroke="#fff" strokeWidth="1" opacity="0.5" />
+            <path d="M55 38 L65 42 M60 35 L60 45" stroke="#fff" strokeWidth="1" opacity="0.5" />
+            <path d="M45 63 L55 67 M50 60 L50 70" stroke="#fff" strokeWidth="1" opacity="0.5" />
+
+            {/* Little Deco Stars */}
+            <path d="M12 40 L15 45 L11 43 Z" fill="#0ac8b9" />
+            <path d="M85 60 L88 65 L84 63 Z" fill="#0ac8b9" />
         </svg>
     );
 }
 
-/** WIN RATE CHART — Bar chart with diagonal accent */
-export function IconWinRate({ size = 16, className = '', style = {} }) {
+/** WIN RATES — Glowing chart with arrow */
+export function IconWinRateDashboard({ size = 100, className = '', style = {} }) {
     return (
-        <svg width={size} height={size} viewBox="0 0 20 20" fill="none"
+        <svg width={size} height={size} viewBox="0 0 100 100" fill="none"
             xmlns="http://www.w3.org/2000/svg" className={className} style={style}>
-            {/* Grid border */}
-            <rect x="1" y="1" width="18" height="18" stroke="currentColor" strokeWidth="1" fill="none" opacity="0.3" />
-            {/* Bars */}
-            <rect x="3" y="12" width="3" height="6" stroke="currentColor" strokeWidth="1.2" fill="none" opacity="0.6" />
-            <rect x="8" y="7" width="3" height="11" stroke="currentColor" strokeWidth="1.2" fill="none" opacity="0.8" />
-            <rect x="13" y="3" width="3" height="15" stroke="currentColor" strokeWidth="1.2" fill="currentColor" opacity="0.3" />
-            <rect x="13" y="3" width="3" height="15" stroke="currentColor" strokeWidth="1.2" fill="none" />
-            {/* Trend line */}
-            <polyline points="4.5,14 9.5,9 14.5,5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="square" fill="none" opacity="0.7" />
+            {/* Axes */}
+            <path d="M15 15 L15 85 L85 85" stroke="#c8aa6e" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
+            <path d="M10 80 L20 80 M10 60 L15 60 M10 40 L15 40 M10 20 L15 20" stroke="#785a28" strokeWidth="2" />
+
+            {/* Bar 1 */}
+            <rect x="25" y="55" width="10" height="30" fill="#0397ab" rx="2">
+                <animate attributeName="height" values="10;30;20;30" dur="3s" repeatCount="indefinite" />
+                <animate attributeName="y" values="75;55;65;55" dur="3s" repeatCount="indefinite" />
+            </rect>
+            {/* Bar 2 */}
+            <rect x="40" y="35" width="10" height="50" fill="#c8aa6e" rx="2">
+                <animate attributeName="height" values="20;50;40;50" dur="4s" repeatCount="indefinite" />
+                <animate attributeName="y" values="65;35;45;35" dur="4s" repeatCount="indefinite" />
+            </rect>
+            {/* Bar 3 */}
+            <rect x="55" y="60" width="10" height="25" fill="#9933ff" rx="2">
+                <animate attributeName="height" values="15;25;35;25" dur="2.5s" repeatCount="indefinite" />
+                <animate attributeName="y" values="70;60;50;60" dur="2.5s" repeatCount="indefinite" />
+            </rect>
+            {/* Bar 4 */}
+            <rect x="70" y="25" width="10" height="60" fill="#0ac8b9" rx="2">
+                <animate attributeName="height" values="30;60;45;60" dur="3.5s" repeatCount="indefinite" />
+                <animate attributeName="y" values="55;25;40;25" dur="3.5s" repeatCount="indefinite" />
+            </rect>
+
+            {/* Glowing Arrow Trendline */}
+            <path d="M22 65 L40 40 L55 55 L75 25" stroke="#0ac8b9" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round"
+                filter="drop-shadow(0 0 4px #0ac8b9)" />
+            <path d="M75 25 L65 25 M75 25 L75 35" stroke="#0ac8b9" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round"
+                filter="drop-shadow(0 0 4px #0ac8b9)" />
+
+            {/* Magic Sparkles */}
+            <path d="M20 30 L23 35 L20 38 L17 35 Z" fill="#fff" opacity="0.8" filter="drop-shadow(0 0 2px #fff)" />
+            <path d="M80 50 L82 53 L80 55 L78 53 Z" fill="#fff" opacity="0.8" filter="drop-shadow(0 0 2px #fff)" />
+            <path d="M50 15 L54 22 L50 28 L46 22 Z" fill="#0ac8b9" opacity="0.6" />
         </svg>
     );
 }
+
+/** COMPOSITIONS — Book with a quill */
+export function IconCompositionsDashboard({ size = 100, className = '', style = {} }) {
+    return (
+        <svg width={size} height={size} viewBox="0 0 100 100" fill="none"
+            xmlns="http://www.w3.org/2000/svg" className={className} style={style}>
+            {/* Book Cover / Pages */}
+            <path d="M50 85 L20 75 L20 35 L50 45 L80 35 L80 75 Z" fill="#d4c29c" stroke="#785a28" strokeWidth="2" />
+            <path d="M50 85 L20 75 L20 30 L50 40 L80 30 L80 75" fill="#f0e6d2" stroke="#c8aa6e" strokeWidth="2" />
+            {/* Spine */}
+            <path d="M50 40 L50 85" stroke="#785a28" strokeWidth="3" strokeLinecap="round" />
+            <path d="M48 42 L48 83 M52 42 L52 83" stroke="#f0e6d2" strokeWidth="1" />
+
+            {/* Magical Page content */}
+            <path d="M30 46 L42 50 M30 52 L42 56 M30 58 L38 61" stroke="#a09b8c" strokeWidth="2" strokeLinecap="round" />
+            {/* Right page runic emblem */}
+            <circle cx="65" cy="55" r="8" stroke="#0ac8b9" strokeWidth="2" fill="none" />
+            <circle cx="65" cy="55" r="4" fill="#0397ab" />
+
+            {/* Blue Quill */}
+            <path d="M80 15 C70 15, 60 30, 45 60 L40 70 L47 62 C65 50, 85 40, 80 15 Z" fill="#0ac8b9" stroke="#0397ab" strokeWidth="1" />
+            <path d="M80 15 C75 25, 70 40, 45 60" stroke="#0397ab" strokeWidth="2" />
+            <path d="M70 25 L80 30 M65 35 L75 42 M55 45 L65 55" stroke="#0397ab" strokeWidth="1.5" strokeLinecap="round" opacity="0.5" />
+
+            {/* Feather glow */}
+            <circle cx="42" cy="68" r="3" fill="#fff" filter="drop-shadow(0 0 4px #0ac8b9)" />
+        </svg>
+    );
+}
+
+
 
 /** IMPORT — Arrow pointing down into box */
 export function IconImport({ size = 16, className = '', style = {} }) {
