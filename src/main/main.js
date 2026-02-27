@@ -32,6 +32,7 @@ let lcuWebSocket = null;
 let pollingInterval = null;
 let draftPreferences = { targetArchetype: 'auto', overrideRole: null };
 let rosterConfig = null; // Store roster data in memory
+let compositionsConfig = null; // Store compositions data in memory
 const sessionState = { current: null };
 
 // ─── Constants ──────────────────────────────────────────────────────────
@@ -74,19 +75,34 @@ function createWindow() {
 
 // ─── Helper Functions ───────────────────────────────────────────────────
 /**
+ * Asynchronously reads and parses a JSON file.
+ * @param {string} filePath - Path to the file.
+ * @param {any} defaultValue - Value to return if file doesn't exist or is invalid.
+ * @returns {Promise<any>}
+ */
+async function readJsonFile(filePath, defaultValue) {
+    try {
+        const raw = await fs.promises.readFile(filePath, 'utf8');
+        return JSON.parse(raw);
+    } catch (err) {
+        if (err.code !== 'ENOENT') {
+            console.error(`[Main] Error reading/parsing ${path.basename(filePath)}:`, err);
+        }
+        return defaultValue;
+    }
+}
+
+/**
  * Reloads win rates from the local file or uses a fallback.
  * @param {object} [initialData={}] - Optional initial data to merge or use if file not found.
  */
-function reloadWinRates(initialData = {}, skipFileRead = false) {
+async function reloadWinRates(initialData = {}, skipFileRead = false) {
     let winRateData = { ...initialData };
-    if (!skipFileRead && fs.existsSync(WINRATES_PATH)) {
-        try {
-            const raw = fs.readFileSync(WINRATES_PATH, 'utf8');
-            const fileData = JSON.parse(raw);
+    if (!skipFileRead) {
+        const fileData = await readJsonFile(WINRATES_PATH, null);
+        if (fileData) {
             winRateData = { ...winRateData, ...fileData }; // Merge file data
             console.log(`[Main] Loaded ${Object.keys(fileData).length} win rates from local file`);
-        } catch (e) {
-            console.error('[Main] Error reading local winrates.json:', e);
         }
     }
     loadWinRates(winRateData); // Pass the combined data to the provider
@@ -119,11 +135,7 @@ function setupIPC() {
             validateWinRateData(data);
 
             // Read existing file to merge
-            let existing = {};
-            try {
-                const raw = await fs.promises.readFile(WINRATES_PATH, 'utf8');
-                existing = JSON.parse(raw);
-            } catch (e) { /* ignore read or parse errors */ }
+            let existing = await readJsonFile(WINRATES_PATH, {});
 
             // If data has a queue key (soloq/flex), merge into existing
             const queue = data._queue; // e.g. 'soloq' or 'flex'
@@ -147,7 +159,7 @@ function setupIPC() {
 
             console.log(`[Main] Saving win rates to ${WINRATES_PATH}`);
             await fs.promises.writeFile(WINRATES_PATH, JSON.stringify(existing, null, 2));
-            reloadWinRates(existing, true);
+            await reloadWinRates(existing, true);
 
             if (sessionState.current) handleChampSelectUpdate(sessionState.current);
             event.reply('winrate:save-success', { count: Object.keys(data).length });
@@ -211,16 +223,15 @@ function setupIPC() {
     });
 
     // ─── Compositions IPC ──────────────────────────────────────────────────
-    ipcMain.on('composition:save-archetype', (event, { name, composition }) => {
+    ipcMain.on('composition:save-archetype', async (event, { name, composition }) => {
         try {
             console.log(`[Main] Saving new archetype "${name}" to ${COMPOSITIONS_PATH}`);
-            let data = { archetypes: [] };
-            if (fs.existsSync(COMPOSITIONS_PATH)) {
-                data = JSON.parse(fs.readFileSync(COMPOSITIONS_PATH, 'utf8'));
-            } else {
-                // Initialize if missing
-                data = { version: "1.0", last_updated: new Date().toISOString(), compositions: [], archetypes: [] };
-            }
+            let data = await readJsonFile(COMPOSITIONS_PATH, {
+                version: "1.0",
+                last_updated: new Date().toISOString(),
+                compositions: [],
+                archetypes: []
+            });
 
             // Create new archetype object
             const newArchetype = {
@@ -243,7 +254,8 @@ function setupIPC() {
             if (!data.archetypes) data.archetypes = [];
             data.archetypes.push(newArchetype);
 
-            fs.writeFileSync(COMPOSITIONS_PATH, JSON.stringify(data, null, 2));
+            await fs.promises.writeFile(COMPOSITIONS_PATH, JSON.stringify(data, null, 2));
+            compositionsConfig = data; // Update cache
             event.reply('composition:save-success', { name });
             console.log('[Main] Archetype saved successfully.');
 
@@ -255,24 +267,19 @@ function setupIPC() {
 
     ipcMain.handle('composition:get-all', async () => {
         try {
-            if (fs.existsSync(COMPOSITIONS_PATH)) {
-                const data = JSON.parse(fs.readFileSync(COMPOSITIONS_PATH, 'utf8'));
-                return data;
-            }
-            return { compositions: [], archetypes: [] };
+            const data = await readJsonFile(COMPOSITIONS_PATH, { compositions: [], archetypes: [] });
+            compositionsConfig = data; // Update cache
+            return data;
         } catch (err) {
             console.error('[Main] Failed to load compositions:', err);
             return { compositions: [], archetypes: [] };
         }
     });
 
-    ipcMain.on('composition:save-comp', (event, { composition, index }) => {
+    ipcMain.on('composition:save-comp', async (event, { composition, index }) => {
         try {
             console.log(`[Main] Saving composition to index ${index} in ${COMPOSITIONS_PATH}`);
-            let data = { compositions: [], archetypes: [] };
-            if (fs.existsSync(COMPOSITIONS_PATH)) {
-                data = JSON.parse(fs.readFileSync(COMPOSITIONS_PATH, 'utf8'));
-            }
+            let data = await readJsonFile(COMPOSITIONS_PATH, { compositions: [], archetypes: [] });
 
             if (!data.compositions) data.compositions = [];
 
@@ -287,7 +294,8 @@ function setupIPC() {
                 data.compositions.push(composition);
             }
 
-            fs.writeFileSync(COMPOSITIONS_PATH, JSON.stringify(data, null, 2));
+            await fs.promises.writeFile(COMPOSITIONS_PATH, JSON.stringify(data, null, 2));
+            compositionsConfig = data; // Update cache
             event.reply('composition:save-comp-success', { index });
             console.log('[Main] Composition saved successfully.');
 
@@ -327,12 +335,7 @@ function setupIPC() {
         console.log(`[Main] Request to run U.GG scrape (${queueType})...`);
         try {
             // Check last updated time
-            let existing = {};
-            if (fs.existsSync(WINRATES_PATH)) {
-                try {
-                    existing = JSON.parse(fs.readFileSync(WINRATES_PATH, 'utf8'));
-                } catch (e) { /* ignore */ }
-            }
+            let existing = await readJsonFile(WINRATES_PATH, {});
 
             // Check specific queue timestamp if it exists, otherwise check root
             // We'll store metadata per queue now
@@ -375,11 +378,11 @@ function setupIPC() {
                 lastUpdatedQueue: queueType // track which one was last updated for simple global cooldown
             };
 
-            fs.writeFileSync(WINRATES_PATH, JSON.stringify(merged, null, 2));
+            await fs.promises.writeFile(WINRATES_PATH, JSON.stringify(merged, null, 2));
             console.log('[Main] Scrape complete and saved.');
 
             // Reload in memory
-            reloadWinRates();
+            await reloadWinRates();
 
             // Create summary stats
             const totalChamps = Object.values(rawData[queueType]).reduce((acc, roleObj) => acc + Object.keys(roleObj).length, 0);
@@ -529,7 +532,7 @@ function connectWebSocket(credentials) {
 /**
  * Process a champ-select session update and send recommendations.
  */
-function handleChampSelectUpdate(session) {
+async function handleChampSelectUpdate(session) {
     try {
         sessionState.current = session; // Update current session state
 
@@ -580,18 +583,11 @@ function handleChampSelectUpdate(session) {
         // Resolve Target Archetype Definition (for Custom Flex Picks)
         let targetArchetypeDef = null;
         if (draftPreferences.targetArchetype && draftPreferences.targetArchetype !== 'auto') {
-            // Check if it's a custom archetype from JSON
-            if (fs.existsSync(COMPOSITIONS_PATH)) {
-                try {
-                    const compData = JSON.parse(fs.readFileSync(COMPOSITIONS_PATH, 'utf8'));
-                    if (compData.archetypes) {
-                        const custom = compData.archetypes.find(a => a.name === draftPreferences.targetArchetype);
-                        if (custom) {
-                            targetArchetypeDef = custom;
-                        }
-                    }
-                } catch (e) {
-                    console.error('[Main] Error reading custom archetypes:', e);
+            // Check if it's a custom archetype from memory cache
+            if (compositionsConfig && compositionsConfig.archetypes) {
+                const custom = compositionsConfig.archetypes.find(a => a.name === draftPreferences.targetArchetype);
+                if (custom) {
+                    targetArchetypeDef = custom;
                 }
             }
         }
@@ -669,14 +665,17 @@ app.whenReady().then(async () => {
         console.log(`[Champions] Loaded ${Object.keys(getIdToNameMap()).length} champions with tags (${getLatestVersion()})`);
 
         // Load win rates
-        reloadWinRates();
+        await reloadWinRates();
 
         // Load roster
-        if (fs.existsSync(ROSTER_PATH)) {
-            const rData = fs.readFileSync(ROSTER_PATH, 'utf8');
-            rosterConfig = JSON.parse(rData);
+        rosterConfig = await readJsonFile(ROSTER_PATH, null);
+        if (rosterConfig) {
             console.log('[Main] Roster config loaded');
         }
+
+        // Load compositions
+        compositionsConfig = await readJsonFile(COMPOSITIONS_PATH, { compositions: [], archetypes: [] });
+        console.log('[Main] Compositions config loaded');
 
         // Initialize the recommendation engine with Data Dragon data
         const idToName = getIdToNameMap();
