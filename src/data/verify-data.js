@@ -191,7 +191,7 @@ async function main() {
     });
     // Should favor champions with 'engage' or similar tags that fit 'hardEngage'
     const topRec = recsTarget.recommendations[0];
-    const hasFitReason = topRec.reasons.some(r => r.includes('Fits target hardEngage'));
+    const hasFitReason = topRec.details.some(r => r.includes('Fits target hardEngage'));
     assert(hasFitReason, `Top pick ${topRec.name} has reason: Fits target hardEngage`);
 
     console.log('');

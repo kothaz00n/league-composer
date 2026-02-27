@@ -30,6 +30,16 @@ const {
     getArchetypeFitBonus,
 } = require('../data/archetypeMapping.cjs');
 
+// ─── Constants ──────────────────────────────────────────────────────────
+const BASE_WIN_RATE = 0.50;
+const WIN_RATE_MULTIPLIER = 50;
+const TIER_BONUS_S_PLUS = 10;
+const TIER_BONUS_S = 8;
+const TIER_BONUS_A = 5;
+const TIER_BONUS_B = 2;
+const PICK_RATE_MULTIPLIER = 10;
+const HIGH_WIN_RATE_THRESHOLD = 0.52;
+
 // ─── Champion ID ↔ Name Mapping ─────────────────────────────────────────
 // This will be populated dynamically from Data Dragon via initializeEngine()
 let championIdMap = {};    // id → name
@@ -231,19 +241,19 @@ function getRecommendations({
 
 
         // Base WR Bonus
-        const wrBonus = (champWinRate - 0.50) * 50;
+        const wrBonus = (champWinRate - BASE_WIN_RATE) * WIN_RATE_MULTIPLIER;
         score += wrBonus;
 
         // Tier Bonus logic
-        if (champTier === 'S+') score += 10;
-        else if (champTier === 'S') score += 8;
-        else if (champTier === 'A') score += 5;
-        else if (champTier === 'B') score += 2;
+        if (champTier === 'S+') score += TIER_BONUS_S_PLUS;
+        else if (champTier === 'S') score += TIER_BONUS_S;
+        else if (champTier === 'A') score += TIER_BONUS_A;
+        else if (champTier === 'B') score += TIER_BONUS_B;
 
         // Pick Rate Bonus
-        score += (champPickRate * 10);
+        score += (champPickRate * PICK_RATE_MULTIPLIER);
 
-        if (champWinRate > 0.52) {
+        if (champWinRate > HIGH_WIN_RATE_THRESHOLD) {
             scoreDetails.push(`High Win Rate (${(champWinRate * 100).toFixed(1)}%)`);
         }
         if (champTier && ['S+', 'S', 'A'].includes(champTier)) {
