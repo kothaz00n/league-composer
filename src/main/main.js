@@ -17,10 +17,8 @@ const { LcuWebSocket } = require('./lcu/lcuWebSocket');
 const { getRecommendations, initializeEngine } = require('../engine/recommend');
 const { loadChampionData, getIdToNameMap, getNameToIdMap, getChampionTags,
     getLatestVersion,
-    getAllChampions,
 } = require('../data/champions');
-const { loadWinRates, getChampionStats, getAllWinRates, getImportedChampions, getAvailableQueues } = require('../data/winRateProvider');
-const { validateWinRateData } = require('./inputValidation');
+const { loadWinRates, getChampionStats, getImportedChampions, getAvailableQueues } = require('../data/winRateProvider');
 const { scrapeUGGChampions } = require('./scrapers/ugg');
 const { validateRosterData } = require('./validators');
 
