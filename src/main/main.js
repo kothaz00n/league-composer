@@ -381,7 +381,7 @@ function setupIPC() {
             console.log('[Main] Scrape complete and saved.');
 
             // Reload in memory
-            loadWinRates();
+            reloadWinRates();
 
             // Create summary stats
             const totalChamps = Object.values(rawData[queueType]).reduce((acc, roleObj) => acc + Object.keys(roleObj).length, 0);

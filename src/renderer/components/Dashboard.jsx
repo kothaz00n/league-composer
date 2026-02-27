@@ -1,15 +1,15 @@
 import React from 'react';
 import {
     IconSword,
-    IconTeamBuilder,
-    IconRoster,
-    IconWinRate,
-    IconCompositions,
+    IconTeamBuilderDashboard,
+    IconRosterDashboard,
+    IconWinRateDashboard,
+    IconCompositionsDashboard,
 } from './HextechIcons';
 
 const Dashboard = ({ onViewChange, isClientReady }) => {
     return (
-        <div className="flex flex-col h-full theme-transition">
+        <div className="flex flex-col h-full theme-transition dashboard-wrapper">
             {/* Titlebar */}
             <div className="titlebar">
                 <span className="titlebar__title" style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
@@ -23,22 +23,28 @@ const Dashboard = ({ onViewChange, isClientReady }) => {
             </div>
 
             <div className="dashboard-page">
-                <header className="dashboard-header">
+                <header className="dashboard-header text-center">
                     <h1 className="dashboard-title">League Team Comp</h1>
                     <p className="dashboard-subtitle">MASTER YOUR DRAFT. DOMINATE THE RIFT.</p>
+                    <div className="dashboard-divider">
+                        <div className="dashboard-divider-line"></div>
+                        <div className="dashboard-divider-diamond"></div>
+                        <div className="dashboard-divider-line"></div>
+                    </div>
                 </header>
 
-                <div className="dashboard-grid">
+                <div className="dashboard-grid mx-auto">
                     {/* Team Builder Card */}
                     <div
                         className="dashboard-card group"
                         onClick={() => onViewChange('builder')}
                         style={{ animationDelay: '0ms' }}
                     >
-                        <div className="dashboard-card__icon">
-                            <IconTeamBuilder size={28} />
-                        </div>
-                        <div className="dashboard-card__content">
+                        <div className="dashboard-card__border"></div>
+                        <div className="dashboard-card__inner">
+                            <div className="dashboard-card__icon">
+                                <IconTeamBuilderDashboard size={80} />
+                            </div>
                             <h2 className="dashboard-card__title">Team Builder</h2>
                             <p className="dashboard-card__desc">
                                 Plan your composition. Drag &amp; drop champions, verify synergies, and analyze tier stats.
@@ -52,10 +58,11 @@ const Dashboard = ({ onViewChange, isClientReady }) => {
                         onClick={() => onViewChange('roster')}
                         style={{ animationDelay: '100ms' }}
                     >
-                        <div className="dashboard-card__icon">
-                            <IconRoster size={28} />
-                        </div>
-                        <div className="dashboard-card__content">
+                        <div className="dashboard-card__border"></div>
+                        <div className="dashboard-card__inner">
+                            <div className="dashboard-card__icon">
+                                <IconRosterDashboard size={80} />
+                            </div>
                             <h2 className="dashboard-card__title">Roster &amp; Favorites</h2>
                             <p className="dashboard-card__desc">
                                 Configure your team roster. Set favorite champions for tailored draft recommendations.
@@ -69,10 +76,11 @@ const Dashboard = ({ onViewChange, isClientReady }) => {
                         onClick={() => onViewChange('winrates')}
                         style={{ animationDelay: '200ms' }}
                     >
-                        <div className="dashboard-card__icon">
-                            <IconWinRate size={28} />
-                        </div>
-                        <div className="dashboard-card__content">
+                        <div className="dashboard-card__border"></div>
+                        <div className="dashboard-card__inner">
+                            <div className="dashboard-card__icon">
+                                <IconWinRateDashboard size={80} />
+                            </div>
                             <h2 className="dashboard-card__title">Win Rates Reference</h2>
                             <p className="dashboard-card__desc">
                                 Browse champion win rates, tier lists, pick rates, and ban rates by role.
@@ -86,10 +94,11 @@ const Dashboard = ({ onViewChange, isClientReady }) => {
                         onClick={() => onViewChange('editor')}
                         style={{ animationDelay: '300ms' }}
                     >
-                        <div className="dashboard-card__icon">
-                            <IconCompositions size={28} />
-                        </div>
-                        <div className="dashboard-card__content">
+                        <div className="dashboard-card__border"></div>
+                        <div className="dashboard-card__inner">
+                            <div className="dashboard-card__icon">
+                                <IconCompositionsDashboard size={80} />
+                            </div>
                             <h2 className="dashboard-card__title">Compositions Editor</h2>
                             <p className="dashboard-card__desc">
                                 Design custom composition archetypes and manage data imports for the engine.
@@ -98,19 +107,13 @@ const Dashboard = ({ onViewChange, isClientReady }) => {
                     </div>
                 </div>
 
-                {/* Status Section */}
-                <div className="dashboard-status">
-                    <div className="status-indicator">
-                        <div className={`status-dot ${isClientReady ? 'connected' : 'waiting'}`}></div>
-                        <span className="status-text">
-                            {isClientReady ? 'LEAGUE CLIENT CONNECTED' : 'WAITING FOR LEAGUE CLIENT...'}
+                <div className="dashboard-footer">
+                    <div className="dashboard-status-bar">
+                        <div className={`status-dot-glow ${isClientReady ? 'connected' : 'waiting'}`}></div>
+                        <span className="status-text-glow">
+                            {isClientReady ? 'WAITING FOR LEAGUE CLIENT... (CONNECTED)' : 'WAITING FOR LEAGUE CLIENT...'}
                         </span>
                     </div>
-                    {isClientReady && (
-                        <span className="status-badge ready">
-                            SYSTEM READY
-                        </span>
-                    )}
                 </div>
             </div>
         </div>
