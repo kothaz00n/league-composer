@@ -25,6 +25,30 @@ const COMMON_LOCKFILE_PATHS = [
 ];
 
 /**
+ * Generates the list of lockfile paths to try, incorporating environment variables.
+ * @returns {string[]}
+ */
+function getFallbackLockfilePaths() {
+    const paths = [];
+
+    // Prioritize comma-separated paths from LEAGUE_LOCKFILE_PATHS
+    if (process.env.LEAGUE_LOCKFILE_PATHS) {
+        const envPaths = process.env.LEAGUE_LOCKFILE_PATHS.split(',').map(p => p.trim()).filter(Boolean);
+        paths.push(...envPaths);
+    }
+
+    // Prioritize a single path from LEAGUE_LOCKFILE_PATH
+    if (process.env.LEAGUE_LOCKFILE_PATH) {
+        paths.push(process.env.LEAGUE_LOCKFILE_PATH.trim());
+    }
+
+    // Append the hardcoded fallbacks
+    paths.push(...COMMON_LOCKFILE_PATHS);
+
+    return paths;
+}
+
+/**
  * Parses the lockfile content into usable connection data.
  * @param {string} content - Raw lockfile content
  * @returns {{ processName: string, pid: string, port: string, token: string, protocol: string }}
@@ -141,7 +165,8 @@ async function readLockfile(lockfilePath) {
     }
 
     // Strategy 3: Try common install paths
-    for (const commonPath of COMMON_LOCKFILE_PATHS) {
+    const fallbackPaths = getFallbackLockfilePaths();
+    for (const commonPath of fallbackPaths) {
         const result = tryReadFile(commonPath);
         if (result) return result;
     }
@@ -154,4 +179,4 @@ async function readLockfile(lockfilePath) {
     return null;
 }
 
-module.exports = { readLockfile, parseLockfile, COMMON_LOCKFILE_PATHS };
+module.exports = { readLockfile, parseLockfile, COMMON_LOCKFILE_PATHS, getFallbackLockfilePaths };
