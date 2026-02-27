@@ -17,8 +17,10 @@ const { LcuWebSocket } = require('./lcu/lcuWebSocket');
 const { getRecommendations, initializeEngine } = require('../engine/recommend');
 const { loadChampionData, getIdToNameMap, getNameToIdMap, getChampionTags,
     getLatestVersion,
+    getAllChampions,
 } = require('../data/champions');
-const { loadWinRates, getChampionStats, getImportedChampions, getAvailableQueues } = require('../data/winRateProvider');
+const { loadWinRates, getChampionStats, getAllWinRates, getImportedChampions, getAvailableQueues } = require('../data/winRateProvider');
+const { validateWinRateData } = require('./inputValidation');
 const { scrapeUGGChampions } = require('./scrapers/ugg');
 const { validateRosterData } = require('./validators');
 const { IPC_CHANNELS } = require('../common/ipcChannels');
@@ -380,7 +382,7 @@ function setupIPC() {
             console.log('[Main] Scrape complete and saved.');
 
             // Reload in memory
-            reloadWinRates();
+            loadWinRates();
 
             // Create summary stats
             const totalChamps = Object.values(rawData[queueType]).reduce((acc, roleObj) => acc + Object.keys(roleObj).length, 0);

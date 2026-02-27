@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Administrador de Precios - Parser PDF</title>
+    <link rel="stylesheet" href="index.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        .admin-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .upload-section {
+            background: var(--bg-card);
+            padding: 2rem;
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border-color);
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .preview-section {
+            background: var(--bg-card);
+            padding: 2rem;
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border-color);
+            overflow-x: auto;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+        }
+
+        .data-table th,
+        .data-table td {
+            border: 1px solid var(--border-color);
+            padding: 0.5rem;
+            text-align: left;
+        }
+
+        .data-table th {
+            background: var(--bg-secondary);
+            font-weight: 600;
+        }
+
+        .data-table tr:hover {
+            background: var(--bg-secondary);
+        }
+
+        .actions-bar {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 1rem;
+        }
+
+        .status-log {
+            margin-top: 1rem;
+            padding: 1rem;
+            background: #f8f9fa;
+            color: #333;
+            border-radius: 4px;
+            font-family: monospace;
+            max-height: 200px;
+            overflow-y: auto;
+            display: none;
+        }
+
+        .status-log.active {
+            display: block;
+        }
+
+        .promotions-section {
+            background: var(--bg-card);
+            padding: 2rem;
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border-color);
+            margin-bottom: 2rem;
+        }
+
+        .promo-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .promo-card {
+            background: var(--bg-secondary);
+            padding: 1.5rem;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border-color);
+            position: relative;
+        }
+
+        .promo-row {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1.5fr;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .promo-field {
+            display: flex;
+            flex-direction: column;
+            gap: 0.3rem;
+        }
+
+        .promo-field label {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+
+        .promo-field input,
+        .promo-field select,
+        .promo-field textarea {
+            padding: 0.5rem;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            font-family: inherit;
+        }
+
+        .btn-danger {
+            background: #ffebee;
+            color: #d32f2f;
+            border: 1px solid #ffcdd2;
+            padding: 0.3rem 0.6rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+        }
+
+        .btn-danger:hover {
+            background: #f44336;
+            color: white;
+        }
+    </style>
+    <!-- PDF.js CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+    <script>
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+    </script>
+</head>
+
+<body>
+    <div class="container admin-container">
+        <header class="header">
+            <div class="header-content">
+                <h1 class="title">Administrador de Precios</h1>
+                <p class="subtitle">Sube el PDF de precios para actualizar el sistema</p>
+                <a href="index.html" class="btn-secondary" style="margin-top: 1rem;">Volver al Inicio</a>
+            </div>
+        </header>
+
+        <main>
+            <section class="upload-section">
+                <h2 style="margin-bottom: 1rem;">1. Cargar PDF(s)</h2>
+                <input type="file" id="pdfInput" accept=".pdf" multiple class="btn-secondary">
+                <div id="fileInfo" style="margin-top: 0.5rem; color: var(--text-secondary);"></div>
+
+                <div class="actions-bar">
+                    <button id="processBtn" class="btn-primary" disabled>Procesar PDF</button>
+                </div>
+            </section>
+
+            <section class="upload-section">
+                <h2 style="margin-bottom: 1rem;">2. Conexión Google Sheets</h2>
+                <p style="margin-bottom: 1rem; color: var(--text-secondary);">
+                    Configura la conexión para subir los datos procesados.
+                </p>
+                <div class="actions-bar">
+                    <button id="authBtn" class="btn-secondary">Autenticar con Google</button>
+                </div>
+                <div id="authStatus" style="margin-top: 0.5rem;">No autenticado</div>
+            </section>
+
+            <section class="promotions-section">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                    <h2>3. Gestión de Promociones</h2>
+                    <button id="addPromoBtn" class="btn-secondary">+ Agregar Promoción</button>
+                </div>
+                <div id="promotionsList" class="promo-grid">
+                    <!-- Las promociones se cargarán aquí -->
+                </div>
+                <div class="actions-bar"
+                    style="margin-top: 2rem; border-top: 1px solid var(--border-color); padding-top: 1.5rem;">
+                    <button id="savePromosBtn" class="btn-primary" disabled>Guardar Promociones en Sheets</button>
+                </div>
+            </section>
+
+            <section class="preview-section hidden" id="previewSection">
+                <h2 style="margin-bottom: 1rem;">4. Vista Previa de Precios (PDF)</h2>
+                <div id="statusLog" class="status-log"></div>
+                <div style="overflow-x: auto;">
+                    <table class="data-table" id="previewTable">
+                        <thead>
+                            <tr id="tableHeader"></tr>
+                        </thead>
+                        <tbody id="tableBody"></tbody>
+                    </table>
+                </div>
+                <div class="actions-bar" style="margin-top: 1rem;">
+                    <button id="uploadBtn" class="btn-primary" disabled>Subir Precios a Sheets</button>
+                </div>
+            </section>
+        </main>
+        <footer class="footer">
+            <div class="footer-links">
+                <a href="privacy.html" class="footer-link">Política de Privacidad</a>
+                <a href="terms.html" class="footer-link">Condiciones del Servicio</a>
+            </div>
+            <p style="margin-top: 1rem; color: var(--color-text-muted); font-size: 0.8rem;">&copy; 2026 Parser PDF -
+                Todos los derechos reservados</p>
+        </footer>
+    </div>
+
+    <!-- Google API Client -->
+    <script async defer src="https://apis.google.com/js/api.js" id="gapiScript"></script>
+    <script async defer src="https://accounts.google.com/gsi/client" id="gisScript"></script>
+
+    <script src="precios.js"></script>
+    <script src="admin.js"></script>
+</body>
+
+</html>
