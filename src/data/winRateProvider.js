@@ -6,9 +6,6 @@
  * Falls back to static data when no imported data exists.
  */
 
-// ─── Static Win Rate Data (Patch 14.3 approximations) ───────────────────
-const STATIC_WIN_RATES = {};
-
 // ─── Data Store ─────────────────────────────────────────────────────────
 // New format: { soloq: { top: {...}, ... }, flex: { top: {...}, ... } }
 // Legacy format: { top: {...}, ... } (auto-migrated to soloq)
@@ -50,19 +47,15 @@ function loadWinRates(externalData = null) {
             const count = Object.values(queueData.soloq).reduce((s, rd) => s + Object.keys(rd).length, 0);
             console.log(`[WinRate] Migrated legacy role-based data to soloq (${count} entries)`);
         } else {
-            // Flat format: { "Aatrox": 0.52, ... }
+            // Flat format unsupported
             queueData = {};
             dataSource = 'static';
-            // Store as static override
-            for (const [name, val] of Object.entries(externalData)) {
-                STATIC_WIN_RATES[name] = typeof val === 'object' ? (val.winRate || 0.50) : val;
-            }
-            console.log(`[WinRate] Loaded ${Object.keys(externalData).length} static win rates`);
+            console.log(`[WinRate] Loaded 0 static win rates (flat format unsupported)`);
         }
     } else {
         queueData = {};
         dataSource = 'static';
-        console.log(`[WinRate] Loaded ${Object.keys(STATIC_WIN_RATES).length} champion win rates (source: static)`);
+        console.log(`[WinRate] Loaded 0 champion win rates (source: static)`);
     }
 }
 
@@ -132,14 +125,6 @@ function getChampionStats(championName, role = null, queue = 'soloq') {
             }
         }
     }
-
-    // Fallback to static - REMOVED per user request
-    // if (!entry) {
-    //     const staticVal = STATIC_WIN_RATES[championName];
-    //     if (staticVal) {
-    //         entry = staticVal;
-    //     }
-    // }
 
     if (!entry) return { winRate: 0.50, pickRate: 0, banRate: 0, tier: '', matches: 0, hasData };
 

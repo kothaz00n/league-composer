@@ -17,10 +17,13 @@ const { LcuWebSocket } = require('./lcu/lcuWebSocket');
 const { getRecommendations, initializeEngine } = require('../engine/recommend');
 const { loadChampionData, getIdToNameMap, getNameToIdMap, getChampionTags,
     getLatestVersion,
+    getAllChampions,
 } = require('../data/champions');
-const { loadWinRates, getChampionStats, getImportedChampions, getAvailableQueues } = require('../data/winRateProvider');
+const { loadWinRates, getChampionStats, getAllWinRates, getImportedChampions, getAvailableQueues } = require('../data/winRateProvider');
+const { validateWinRateData } = require('./inputValidation');
 const { scrapeUGGChampions } = require('./scrapers/ugg');
 const { validateRosterData } = require('./validators');
+const { IPC_CHANNELS } = require('../common/ipcChannels');
 
 // ─── State ──────────────────────────────────────────────────────────────
 let mainWindow = null;
@@ -95,17 +98,17 @@ function reloadWinRates(initialData = {}, skipFileRead = false) {
 // ─── IPC Handlers ───────────────────────────────────────────────────────
 function setupIPC() {
     // Window controls (frameless window)
-    ipcMain.on('window:minimize', () => mainWindow?.minimize());
-    ipcMain.on('window:close', () => mainWindow?.close());
+    ipcMain.on(IPC_CHANNELS.WINDOW_MINIMIZE, () => mainWindow?.minimize());
+    ipcMain.on(IPC_CHANNELS.WINDOW_CLOSE, () => mainWindow?.close());
 
     // Manual connection retry
-    ipcMain.on('lcu:connect', () => {
+    ipcMain.on(IPC_CHANNELS.LCU_CONNECT, () => {
         if (!isConnected) {
             startPolling();
         }
     });
 
-    ipcMain.on('draft:updatePreferences', (event, prefs) => {
+    ipcMain.on(IPC_CHANNELS.DRAFT_UPDATE_PREFERENCES, (event, prefs) => {
         console.log('[Main] Updated draft preferences:', prefs);
         draftPreferences = { ...draftPreferences, ...prefs };
         // If we have an active session, re-run analysis immediately
@@ -114,7 +117,7 @@ function setupIPC() {
         }
     });
 
-    ipcMain.on('winrate:save', async (event, data) => {
+    ipcMain.on(IPC_CHANNELS.WINRATE_SAVE, async (event, data) => {
         try {
             validateWinRateData(data);
 
@@ -150,16 +153,16 @@ function setupIPC() {
             reloadWinRates(existing, true);
 
             if (sessionState.current) handleChampSelectUpdate(sessionState.current);
-            event.reply('winrate:save-success', { count: Object.keys(data).length });
+            event.reply(IPC_CHANNELS.WINRATE_SAVE_SUCCESS, { count: Object.keys(data).length });
         } catch (err) {
             console.error('[Main] Failed to save winrates:', err);
-            event.reply('winrate:save-error', { message: err.message });
+            event.reply(IPC_CHANNELS.WINRATE_SAVE_ERROR, { message: err.message });
         }
     });
 
     // ─── Roster IPC ─────────────────────────────────────────────────────────
 
-    ipcMain.handle('roster:load', async () => {
+    ipcMain.handle(IPC_CHANNELS.ROSTER_LOAD, async () => {
         try {
             const data = await fs.promises.readFile(ROSTER_PATH, 'utf8');
             rosterConfig = JSON.parse(data); // Cache
@@ -173,11 +176,11 @@ function setupIPC() {
     });
 
 
-    ipcMain.on('roster:save', (event, data) => {
+    ipcMain.on(IPC_CHANNELS.ROSTER_SAVE, (event, data) => {
         try {
             if (!validateRosterData(data)) {
                 console.error('[Main] Invalid roster data received');
-                event.reply('roster:save-error', { message: 'Invalid data format' });
+                event.reply(IPC_CHANNELS.ROSTER_SAVE_ERROR, { message: 'Invalid data format' });
                 return;
             }
 
@@ -203,15 +206,15 @@ function setupIPC() {
             rosterConfig = cleanData; // Update cache with clean data
             // Trigger update if session active
             if (sessionState.current) handleChampSelectUpdate(sessionState.current);
-            event.reply('roster:save-success');
+            event.reply(IPC_CHANNELS.ROSTER_SAVE_SUCCESS);
         } catch (err) {
             console.error('[Main] Failed to save roster:', err);
-            event.reply('roster:save-error', { message: err.message });
+            event.reply(IPC_CHANNELS.ROSTER_SAVE_ERROR, { message: err.message });
         }
     });
 
     // ─── Compositions IPC ──────────────────────────────────────────────────
-    ipcMain.on('composition:save-archetype', (event, { name, composition }) => {
+    ipcMain.on(IPC_CHANNELS.COMPOSITION_SAVE_ARCHETYPE, (event, { name, composition }) => {
         try {
             console.log(`[Main] Saving new archetype "${name}" to ${COMPOSITIONS_PATH}`);
             let data = { archetypes: [] };
@@ -244,16 +247,16 @@ function setupIPC() {
             data.archetypes.push(newArchetype);
 
             fs.writeFileSync(COMPOSITIONS_PATH, JSON.stringify(data, null, 2));
-            event.reply('composition:save-success', { name });
+            event.reply(IPC_CHANNELS.COMPOSITION_SAVE_SUCCESS, { name });
             console.log('[Main] Archetype saved successfully.');
 
         } catch (err) {
             console.error('[Main] Failed to save archetype:', err);
-            event.reply('composition:save-error', { message: err.message });
+            event.reply(IPC_CHANNELS.COMPOSITION_SAVE_ERROR, { message: err.message });
         }
     });
 
-    ipcMain.handle('composition:get-all', async () => {
+    ipcMain.handle(IPC_CHANNELS.COMPOSITION_GET_ALL, async () => {
         try {
             if (fs.existsSync(COMPOSITIONS_PATH)) {
                 const data = JSON.parse(fs.readFileSync(COMPOSITIONS_PATH, 'utf8'));
@@ -266,7 +269,7 @@ function setupIPC() {
         }
     });
 
-    ipcMain.on('composition:save-comp', (event, { composition, index }) => {
+    ipcMain.on(IPC_CHANNELS.COMPOSITION_SAVE_COMP, (event, { composition, index }) => {
         try {
             console.log(`[Main] Saving composition to index ${index} in ${COMPOSITIONS_PATH}`);
             let data = { compositions: [], archetypes: [] };
@@ -288,16 +291,16 @@ function setupIPC() {
             }
 
             fs.writeFileSync(COMPOSITIONS_PATH, JSON.stringify(data, null, 2));
-            event.reply('composition:save-comp-success', { index });
+            event.reply(IPC_CHANNELS.COMPOSITION_SAVE_COMP_SUCCESS, { index });
             console.log('[Main] Composition saved successfully.');
 
         } catch (err) {
             console.error('[Main] Failed to save composition:', err);
-            event.reply('composition:save-comp-error', { message: err.message });
+            event.reply(IPC_CHANNELS.COMPOSITION_SAVE_COMP_ERROR, { message: err.message });
         }
     });
 
-    ipcMain.handle('composition:analyze', async (event, team, queue = 'soloq') => {
+    ipcMain.handle(IPC_CHANNELS.COMPOSITION_ANALYZE, async (event, team, queue = 'soloq') => {
         // team: { top: "Name", jungle: "Name", ... }
         try {
             // Lazy load engine if not initialized? It should be initialized by now if app is running.
@@ -312,7 +315,7 @@ function setupIPC() {
         }
     });
 
-    ipcMain.handle('champion:get-op-picks', async (event, queue = 'soloq') => {
+    ipcMain.handle(IPC_CHANNELS.CHAMPION_GET_OP_PICKS, async (event, queue = 'soloq') => {
         try {
             const { getOpPicks } = require('../engine/recommend');
             return getOpPicks(queue);
@@ -323,7 +326,7 @@ function setupIPC() {
     });
 
     // ─── Scraper ────────────────────────────────────────────────────────
-    ipcMain.on('scraper:run-ugg', async (event, force = false, queueType = 'soloq') => {
+    ipcMain.on(IPC_CHANNELS.SCRAPER_RUN_UGG, async (event, force = false, queueType = 'soloq') => {
         console.log(`[Main] Request to run U.GG scrape (${queueType})...`);
         try {
             // Check last updated time
@@ -346,7 +349,7 @@ function setupIPC() {
                 if (hours < 24) {
                     const remaining = Math.ceil(24 - hours);
                     console.log(`[Main] Scrape skipped: Data is fresh (${hours.toFixed(1)}h old).`);
-                    event.reply('scraper:complete', {
+                    event.reply(IPC_CHANNELS.SCRAPER_COMPLETE, {
                         success: false,
                         message: `Data for ${queueType} is recent (updated ${hours.toFixed(1)}h ago). Wait ${remaining}h or use Force Update.`
                     });
@@ -356,7 +359,7 @@ function setupIPC() {
 
             console.log(`[Main] Starting U.GG scrape for ${queueType}...`);
 
-            const onProgress = (msg) => event.reply('scraper:progress', msg);
+            const onProgress = (msg) => event.reply(IPC_CHANNELS.SCRAPER_PROGRESS, msg);
             // Get name map for normalization
             const { getChampionNameMap } = require('../data/champions');
             const nameMap = getChampionNameMap();
@@ -379,12 +382,12 @@ function setupIPC() {
             console.log('[Main] Scrape complete and saved.');
 
             // Reload in memory
-            reloadWinRates();
+            loadWinRates();
 
             // Create summary stats
             const totalChamps = Object.values(rawData[queueType]).reduce((acc, roleObj) => acc + Object.keys(roleObj).length, 0);
 
-            event.reply('scraper:complete', {
+            event.reply(IPC_CHANNELS.SCRAPER_COMPLETE, {
                 success: true,
                 message: `Scrape complete! Updated ${totalChamps} champion entries for ${queueType}.`,
                 count: totalChamps
@@ -395,7 +398,7 @@ function setupIPC() {
 
         } catch (error) {
             console.error('[Main] Scraper failed:', error);
-            event.reply('scraper:complete', {
+            event.reply(IPC_CHANNELS.SCRAPER_COMPLETE, {
                 success: false,
                 message: `Scraping failed: ${error.message}`
             });
@@ -413,7 +416,7 @@ function sendToRenderer(channel, data) {
 
 // ─── Champion Data IPC ──────────────────────────────────────────────────
 
-ipcMain.handle('champion:get-data', () => {
+ipcMain.handle(IPC_CHANNELS.CHAMPION_GET_DATA, () => {
     const idToName = getIdToNameMap();
     if (!idToName) return null;
 
@@ -428,15 +431,15 @@ ipcMain.handle('champion:get-data', () => {
     return { idToName, nameToId, tagsMap, version: getLatestVersion() };
 });
 
-ipcMain.handle('champion:get-stats', (_, name, role, queue) => {
+ipcMain.handle(IPC_CHANNELS.CHAMPION_GET_STATS, (_, name, role, queue) => {
     return getChampionStats(name, role, queue);
 });
 
-ipcMain.handle('champion:get-imported-list', (_, queue, role) => {
+ipcMain.handle(IPC_CHANNELS.CHAMPION_GET_IMPORTED_LIST, (_, queue, role) => {
     return getImportedChampions(queue, role);
 });
 
-ipcMain.handle('champion:get-available-queues', () => {
+ipcMain.handle(IPC_CHANNELS.CHAMPION_GET_AVAILABLE_QUEUES, () => {
     return getAvailableQueues();
 });
 
@@ -445,7 +448,7 @@ async function tryConnect() {
     try {
         const credentials = await readLockfile();
         if (!credentials) {
-            sendToRenderer('lcu:status', { status: 'disconnected', message: 'League Client not detected' });
+            sendToRenderer(IPC_CHANNELS.LCU_STATUS, { status: 'disconnected', message: 'League Client not detected' });
             return;
         }
 
@@ -456,13 +459,13 @@ async function tryConnect() {
         try {
             const summoner = await getCurrentSummoner(lcuClient);
             console.log(`[Main] Connected as: ${summoner.displayName}`);
-            sendToRenderer('lcu:status', {
+            sendToRenderer(IPC_CHANNELS.LCU_STATUS, {
                 status: 'connected',
                 message: `Connected as ${summoner.displayName}`,
                 summoner,
             });
         } catch (err) {
-            sendToRenderer('lcu:status', { status: 'connected', message: 'Connected to League Client' });
+            sendToRenderer(IPC_CHANNELS.LCU_STATUS, { status: 'connected', message: 'Connected to League Client' });
         }
 
         isConnected = true;
@@ -483,7 +486,7 @@ async function tryConnect() {
 
     } catch (err) {
         console.error('[Main] Connection attempt failed:', err.message);
-        sendToRenderer('lcu:status', { status: 'disconnected', message: 'Connection failed' });
+        sendToRenderer(IPC_CHANNELS.LCU_STATUS, { status: 'disconnected', message: 'Connection failed' });
     }
 }
 
@@ -492,12 +495,12 @@ function connectWebSocket(credentials) {
 
     lcuWebSocket.on('connected', () => {
         console.log('[Main] WebSocket connected — listening for Champ Select');
-        sendToRenderer('lcu:status', { status: 'waiting', message: 'Waiting for Champ Select...' });
+        sendToRenderer(IPC_CHANNELS.LCU_STATUS, { status: 'waiting', message: 'Waiting for Champ Select...' });
     });
 
     lcuWebSocket.on('champSelectStarted', (data) => {
         console.log('[Main] Champ Select STARTED');
-        sendToRenderer('lcu:status', { status: 'inChampSelect', message: 'In Champ Select!' });
+        sendToRenderer(IPC_CHANNELS.LCU_STATUS, { status: 'inChampSelect', message: 'In Champ Select!' });
         handleChampSelectUpdate(data);
     });
 
@@ -507,15 +510,15 @@ function connectWebSocket(credentials) {
 
     lcuWebSocket.on('champSelectEnded', () => {
         console.log('[Main] Champ Select ENDED');
-        sendToRenderer('lcu:status', { status: 'waiting', message: 'Waiting for Champ Select...' });
-        sendToRenderer('champSelect:ended', {});
+        sendToRenderer(IPC_CHANNELS.LCU_STATUS, { status: 'waiting', message: 'Waiting for Champ Select...' });
+        sendToRenderer(IPC_CHANNELS.CHAMP_SELECT_ENDED, {});
     });
 
     lcuWebSocket.on('disconnected', () => {
         console.log('[Main] WebSocket disconnected — resuming polling');
         isConnected = false;
         lcuClient = null;
-        sendToRenderer('lcu:status', { status: 'disconnected', message: 'League Client disconnected' });
+        sendToRenderer(IPC_CHANNELS.LCU_STATUS, { status: 'disconnected', message: 'League Client disconnected' });
         startPolling();
     });
 
@@ -635,7 +638,7 @@ function handleChampSelectUpdate(session) {
             ddragonVersion: getLatestVersion(),
         };
 
-        sendToRenderer('champSelect:update', draftState);
+        sendToRenderer(IPC_CHANNELS.CHAMP_SELECT_UPDATE, draftState);
 
     } catch (err) {
         console.error('[Main] Error processing champ select update:', err);

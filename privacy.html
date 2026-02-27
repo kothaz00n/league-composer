@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Política de Privacidad - Parser PDF</title>
+    <link rel="stylesheet" href="index.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        .privacy-container {
+            max-width: 800px;
+            margin: 4rem auto;
+            background: var(--bg-card);
+            padding: 3rem;
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border-color);
+            line-height: 1.6;
+        }
+
+        h1 {
+            margin-bottom: 2rem;
+            color: var(--text-primary);
+        }
+
+        h2 {
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        p {
+            margin-bottom: 1rem;
+            color: var(--text-secondary);
+        }
+
+        ul {
+            margin-bottom: 1rem;
+            padding-left: 1.5rem;
+            color: var(--text-secondary);
+        }
+
+        li {
+            margin-bottom: 0.5rem;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-bottom: 2rem;
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="privacy-container">
+            <a href="index.html" class="back-link">← Volver al Inicio</a>
+            <h1>Política de Privacidad</h1>
+
+            <p>Última actualización: 9 de febrero de 2026</p>
+
+            <p>Esta Política de Privacidad describe cómo "Parser PDF" (en adelante, "la Aplicación") recopila, utiliza y
+                protege su información cuando utiliza nuestro servicio.</p>
+
+            <h2>1. Información que Recopilamos</h2>
+            <p>Nuestra aplicación no almacena datos personales de los usuarios en servidores externos. La información
+                procesada se maneja de la siguiente manera:</p>
+            <ul>
+                <li><strong>Archivos PDF:</strong> Los archivos PDF cargados se procesan localmente en su navegador
+                    utilizando la librería PDF.js. No se envían a ningún servidor externo para su procesamiento.</li>
+                <li><strong>Datos de Google Sheets:</strong> Cuando utiliza la integración con Google Sheets, la
+                    aplicación solicita acceso a sus hojas de cálculo para leer y escribir los datos de precios y
+                    promociones.</li>
+            </ul>
+
+            <h2>2. Uso de los Servicios de Google API</h2>
+            <p>El uso y la transferencia por parte de la Aplicación a cualquier otra aplicación de la información
+                recibida de las API de Google se ajustarán a la <a
+                    href="https://developers.google.com/terms/api-services-user-data-policy#additional_requirements_for_specific_api_scopes"
+                    target="_blank">Política de datos del usuario de los servicios de API de Google</a>, incluidos los
+                requisitos de Uso limitado.</p>
+            <p>Utilizamos los permisos de Google Sheets específicamente para:</p>
+            <ul>
+                <li>Actualizar la base de datos de precios desde los PDFs procesados.</li>
+                <li>Cargar y guardar la configuración de promociones.</li>
+            </ul>
+
+            <h2>3. Seguridad de los Datos</h2>
+            <p>Nos comprometemos a proteger la seguridad de su información. El acceso a su cuenta de Google se realiza a
+                través de OAuth 2.0, lo que significa que la Aplicación nunca tiene acceso a su contraseña de Google.
+            </p>
+
+            <h2>4. Cookies</h2>
+            <p>La aplicación puede utilizar almacenamiento local (localStorage) para mantener su sesión activa o
+                preferencias de usuario, pero no utiliza cookies de seguimiento de terceros.</p>
+
+            <h2>5. Cambios en esta Política</h2>
+            <p>Podemos actualizar nuestra Política de Privacidad de vez en cuando. Se le notificará cualquier cambio
+                publicando la nueva Política de Privacidad en esta página.</p>
+
+            <h2>6. Contacto</h2>
+            <p>Si tiene alguna pregunta sobre esta Política de Privacidad, puede contactarnos a través de los canales de
+                comunicación establecidos en el proyecto.</p>
+        </div>
+    </div>
+</body>
+
+</html>
