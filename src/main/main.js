@@ -32,6 +32,7 @@ let lcuWebSocket = null;
 let pollingInterval = null;
 let draftPreferences = { targetArchetype: 'auto', overrideRole: null };
 let rosterConfig = null; // Store roster data in memory
+let compositionsConfig = null; // Store compositions data in memory
 const sessionState = { current: null };
 
 // ─── Constants ──────────────────────────────────────────────────────────
@@ -244,6 +245,7 @@ function setupIPC() {
             data.archetypes.push(newArchetype);
 
             fs.writeFileSync(COMPOSITIONS_PATH, JSON.stringify(data, null, 2));
+            compositionsConfig = data; // Update memory cache
             event.reply('composition:save-success', { name });
             console.log('[Main] Archetype saved successfully.');
 
@@ -288,6 +290,7 @@ function setupIPC() {
             }
 
             fs.writeFileSync(COMPOSITIONS_PATH, JSON.stringify(data, null, 2));
+            compositionsConfig = data; // Update memory cache
             event.reply('composition:save-comp-success', { index });
             console.log('[Main] Composition saved successfully.');
 
@@ -580,18 +583,10 @@ function handleChampSelectUpdate(session) {
         // Resolve Target Archetype Definition (for Custom Flex Picks)
         let targetArchetypeDef = null;
         if (draftPreferences.targetArchetype && draftPreferences.targetArchetype !== 'auto') {
-            // Check if it's a custom archetype from JSON
-            if (fs.existsSync(COMPOSITIONS_PATH)) {
-                try {
-                    const compData = JSON.parse(fs.readFileSync(COMPOSITIONS_PATH, 'utf8'));
-                    if (compData.archetypes) {
-                        const custom = compData.archetypes.find(a => a.name === draftPreferences.targetArchetype);
-                        if (custom) {
-                            targetArchetypeDef = custom;
-                        }
-                    }
-                } catch (e) {
-                    console.error('[Main] Error reading custom archetypes:', e);
+            if (compositionsConfig && compositionsConfig.archetypes) {
+                const custom = compositionsConfig.archetypes.find(a => a.name === draftPreferences.targetArchetype);
+                if (custom) {
+                    targetArchetypeDef = custom;
                 }
             }
         }
@@ -676,6 +671,17 @@ app.whenReady().then(async () => {
             const rData = fs.readFileSync(ROSTER_PATH, 'utf8');
             rosterConfig = JSON.parse(rData);
             console.log('[Main] Roster config loaded');
+        }
+
+        // Load compositions
+        if (fs.existsSync(COMPOSITIONS_PATH)) {
+            try {
+                const cData = fs.readFileSync(COMPOSITIONS_PATH, 'utf8');
+                compositionsConfig = JSON.parse(cData);
+                console.log('[Main] Compositions config loaded');
+            } catch (err) {
+                console.error('[Main] Failed to load compositions config:', err.message);
+            }
         }
 
         // Initialize the recommendation engine with Data Dragon data
