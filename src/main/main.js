@@ -15,6 +15,7 @@ const { readLockfile } = require('./lcu/lockfileReader');
 const { createLcuClient, getCurrentSummoner, getChampSelectSession } = require('./lcu/lcuClient');
 const { LcuWebSocket } = require('./lcu/lcuWebSocket');
 const { getRecommendations, initializeEngine } = require('../engine/recommend');
+const logger = require('./logger');
 const { loadChampionData, getIdToNameMap, getNameToIdMap, getChampionTags,
     getLatestVersion,
 } = require('../data/champions');
@@ -84,9 +85,9 @@ function reloadWinRates(initialData = {}, skipFileRead = false) {
             const raw = fs.readFileSync(WINRATES_PATH, 'utf8');
             const fileData = JSON.parse(raw);
             winRateData = { ...winRateData, ...fileData }; // Merge file data
-            console.log(`[Main] Loaded ${Object.keys(fileData).length} win rates from local file`);
+            logger.log(`[Main] Loaded ${Object.keys(fileData).length} win rates from local file`);
         } catch (e) {
-            console.error('[Main] Error reading local winrates.json:', e);
+            logger.error('[Main] Error reading local winrates.json:', e);
         }
     }
     loadWinRates(winRateData); // Pass the combined data to the provider
@@ -106,7 +107,7 @@ function setupIPC() {
     });
 
     ipcMain.on('draft:updatePreferences', (event, prefs) => {
-        console.log('[Main] Updated draft preferences:', prefs);
+        logger.log('[Main] Updated draft preferences:', prefs);
         draftPreferences = { ...draftPreferences, ...prefs };
         // If we have an active session, re-run analysis immediately
         if (sessionState.current) {
@@ -145,14 +146,14 @@ function setupIPC() {
                 existing = { soloq: data };
             }
 
-            console.log(`[Main] Saving win rates to ${WINRATES_PATH}`);
+            logger.log(`[Main] Saving win rates to ${WINRATES_PATH}`);
             await fs.promises.writeFile(WINRATES_PATH, JSON.stringify(existing, null, 2));
             reloadWinRates(existing, true);
 
             if (sessionState.current) handleChampSelectUpdate(sessionState.current);
             event.reply('winrate:save-success', { count: Object.keys(data).length });
         } catch (err) {
-            console.error('[Main] Failed to save winrates:', err);
+            logger.error('[Main] Failed to save winrates:', err);
             event.reply('winrate:save-error', { message: err.message });
         }
     });
@@ -166,7 +167,7 @@ function setupIPC() {
             return rosterConfig;
         } catch (err) {
             if (err.code !== 'ENOENT') {
-                console.error('[Main] Failed to load roster:', err);
+                logger.error('[Main] Failed to load roster:', err);
             }
             return null;
         }
@@ -176,7 +177,7 @@ function setupIPC() {
     ipcMain.on('roster:save', (event, data) => {
         try {
             if (!validateRosterData(data)) {
-                console.error('[Main] Invalid roster data received');
+                logger.error('[Main] Invalid roster data received');
                 event.reply('roster:save-error', { message: 'Invalid data format' });
                 return;
             }
@@ -198,14 +199,14 @@ function setupIPC() {
                 }
             }
 
-            console.log(`[Main] Saving roster config to ${ROSTER_PATH}`);
+            logger.log(`[Main] Saving roster config to ${ROSTER_PATH}`);
             fs.writeFileSync(ROSTER_PATH, JSON.stringify(cleanData, null, 2));
             rosterConfig = cleanData; // Update cache with clean data
             // Trigger update if session active
             if (sessionState.current) handleChampSelectUpdate(sessionState.current);
             event.reply('roster:save-success');
         } catch (err) {
-            console.error('[Main] Failed to save roster:', err);
+            logger.error('[Main] Failed to save roster:', err);
             event.reply('roster:save-error', { message: err.message });
         }
     });
@@ -213,7 +214,7 @@ function setupIPC() {
     // ─── Compositions IPC ──────────────────────────────────────────────────
     ipcMain.on('composition:save-archetype', (event, { name, composition }) => {
         try {
-            console.log(`[Main] Saving new archetype "${name}" to ${COMPOSITIONS_PATH}`);
+            logger.log(`[Main] Saving new archetype "${name}" to ${COMPOSITIONS_PATH}`);
             let data = { archetypes: [] };
             if (fs.existsSync(COMPOSITIONS_PATH)) {
                 data = JSON.parse(fs.readFileSync(COMPOSITIONS_PATH, 'utf8'));
@@ -245,10 +246,10 @@ function setupIPC() {
 
             fs.writeFileSync(COMPOSITIONS_PATH, JSON.stringify(data, null, 2));
             event.reply('composition:save-success', { name });
-            console.log('[Main] Archetype saved successfully.');
+            logger.log('[Main] Archetype saved successfully.');
 
         } catch (err) {
-            console.error('[Main] Failed to save archetype:', err);
+            logger.error('[Main] Failed to save archetype:', err);
             event.reply('composition:save-error', { message: err.message });
         }
     });
@@ -261,14 +262,14 @@ function setupIPC() {
             }
             return { compositions: [], archetypes: [] };
         } catch (err) {
-            console.error('[Main] Failed to load compositions:', err);
+            logger.error('[Main] Failed to load compositions:', err);
             return { compositions: [], archetypes: [] };
         }
     });
 
     ipcMain.on('composition:save-comp', (event, { composition, index }) => {
         try {
-            console.log(`[Main] Saving composition to index ${index} in ${COMPOSITIONS_PATH}`);
+            logger.log(`[Main] Saving composition to index ${index} in ${COMPOSITIONS_PATH}`);
             let data = { compositions: [], archetypes: [] };
             if (fs.existsSync(COMPOSITIONS_PATH)) {
                 data = JSON.parse(fs.readFileSync(COMPOSITIONS_PATH, 'utf8'));
@@ -289,10 +290,10 @@ function setupIPC() {
 
             fs.writeFileSync(COMPOSITIONS_PATH, JSON.stringify(data, null, 2));
             event.reply('composition:save-comp-success', { index });
-            console.log('[Main] Composition saved successfully.');
+            logger.log('[Main] Composition saved successfully.');
 
         } catch (err) {
-            console.error('[Main] Failed to save composition:', err);
+            logger.error('[Main] Failed to save composition:', err);
             event.reply('composition:save-comp-error', { message: err.message });
         }
     });
@@ -307,7 +308,7 @@ function setupIPC() {
             const result = getCompositionAnalysis(team, queue);
             return result;
         } catch (err) {
-            console.error('[Main] Analysis failed:', err);
+            logger.error('[Main] Analysis failed:', err);
             return null;
         }
     });
@@ -317,14 +318,14 @@ function setupIPC() {
             const { getOpPicks } = require('../engine/recommend');
             return getOpPicks(queue);
         } catch (err) {
-            console.error('[Main] Failed to get OP picks:', err);
+            logger.error('[Main] Failed to get OP picks:', err);
             return [];
         }
     });
 
     // ─── Scraper ────────────────────────────────────────────────────────
     ipcMain.on('scraper:run-ugg', async (event, force = false, queueType = 'soloq') => {
-        console.log(`[Main] Request to run U.GG scrape (${queueType})...`);
+        logger.log(`[Main] Request to run U.GG scrape (${queueType})...`);
         try {
             // Check last updated time
             let existing = {};
@@ -345,7 +346,7 @@ function setupIPC() {
 
                 if (hours < 24) {
                     const remaining = Math.ceil(24 - hours);
-                    console.log(`[Main] Scrape skipped: Data is fresh (${hours.toFixed(1)}h old).`);
+                    logger.log(`[Main] Scrape skipped: Data is fresh (${hours.toFixed(1)}h old).`);
                     event.reply('scraper:complete', {
                         success: false,
                         message: `Data for ${queueType} is recent (updated ${hours.toFixed(1)}h ago). Wait ${remaining}h or use Force Update.`
@@ -354,7 +355,7 @@ function setupIPC() {
                 }
             }
 
-            console.log(`[Main] Starting U.GG scrape for ${queueType}...`);
+            logger.log(`[Main] Starting U.GG scrape for ${queueType}...`);
 
             const onProgress = (msg) => event.reply('scraper:progress', msg);
             // Get name map for normalization
@@ -376,7 +377,7 @@ function setupIPC() {
             };
 
             fs.writeFileSync(WINRATES_PATH, JSON.stringify(merged, null, 2));
-            console.log('[Main] Scrape complete and saved.');
+            logger.log('[Main] Scrape complete and saved.');
 
             // Reload in memory
             reloadWinRates();
@@ -394,7 +395,7 @@ function setupIPC() {
             if (sessionState.current) handleChampSelectUpdate(sessionState.current);
 
         } catch (error) {
-            console.error('[Main] Scraper failed:', error);
+            logger.error('[Main] Scraper failed:', error);
             event.reply('scraper:complete', {
                 success: false,
                 message: `Scraping failed: ${error.message}`
@@ -455,7 +456,7 @@ async function tryConnect() {
         // Test the connection by fetching summoner info
         try {
             const summoner = await getCurrentSummoner(lcuClient);
-            console.log(`[Main] Connected as: ${summoner.displayName}`);
+            logger.log(`[Main] Connected as: ${summoner.displayName}`);
             sendToRenderer('lcu:status', {
                 status: 'connected',
                 message: `Connected as ${summoner.displayName}`,
@@ -482,7 +483,7 @@ async function tryConnect() {
         }
 
     } catch (err) {
-        console.error('[Main] Connection attempt failed:', err.message);
+        logger.error('[Main] Connection attempt failed:', err.message);
         sendToRenderer('lcu:status', { status: 'disconnected', message: 'Connection failed' });
     }
 }
@@ -491,12 +492,12 @@ function connectWebSocket(credentials) {
     lcuWebSocket = new LcuWebSocket();
 
     lcuWebSocket.on('connected', () => {
-        console.log('[Main] WebSocket connected — listening for Champ Select');
+        logger.log('[Main] WebSocket connected — listening for Champ Select');
         sendToRenderer('lcu:status', { status: 'waiting', message: 'Waiting for Champ Select...' });
     });
 
     lcuWebSocket.on('champSelectStarted', (data) => {
-        console.log('[Main] Champ Select STARTED');
+        logger.log('[Main] Champ Select STARTED');
         sendToRenderer('lcu:status', { status: 'inChampSelect', message: 'In Champ Select!' });
         handleChampSelectUpdate(data);
     });
@@ -506,13 +507,13 @@ function connectWebSocket(credentials) {
     });
 
     lcuWebSocket.on('champSelectEnded', () => {
-        console.log('[Main] Champ Select ENDED');
+        logger.log('[Main] Champ Select ENDED');
         sendToRenderer('lcu:status', { status: 'waiting', message: 'Waiting for Champ Select...' });
         sendToRenderer('champSelect:ended', {});
     });
 
     lcuWebSocket.on('disconnected', () => {
-        console.log('[Main] WebSocket disconnected — resuming polling');
+        logger.log('[Main] WebSocket disconnected — resuming polling');
         isConnected = false;
         lcuClient = null;
         sendToRenderer('lcu:status', { status: 'disconnected', message: 'League Client disconnected' });
@@ -574,7 +575,7 @@ function handleChampSelectUpdate(session) {
         }
 
         if (allBans.length > 0) {
-            console.log(`[Main] Bans detected: ${allBans.map(id => getIdToNameMap()[id] || id).join(', ')}`);
+            logger.log(`[Main] Bans detected: ${allBans.map(id => getIdToNameMap()[id] || id).join(', ')}`);
         }
 
         // Resolve Target Archetype Definition (for Custom Flex Picks)
@@ -591,7 +592,7 @@ function handleChampSelectUpdate(session) {
                         }
                     }
                 } catch (e) {
-                    console.error('[Main] Error reading custom archetypes:', e);
+                    logger.error('[Main] Error reading custom archetypes:', e);
                 }
             }
         }
@@ -638,14 +639,14 @@ function handleChampSelectUpdate(session) {
         sendToRenderer('champSelect:update', draftState);
 
     } catch (err) {
-        console.error('[Main] Error processing champ select update:', err);
+        logger.error('[Main] Error processing champ select update:', err);
     }
 }
 
 // ─── Polling ────────────────────────────────────────────────────────────
 function startPolling() {
     if (pollingInterval) return;
-    console.log('[Main] Polling for League Client every 5s...');
+    logger.log('[Main] Polling for League Client every 5s...');
     pollingInterval = setInterval(tryConnect, POLL_INTERVAL_MS);
     // Also try immediately
     tryConnect();
@@ -666,7 +667,7 @@ app.whenReady().then(async () => {
     // Load data
     try {
         await loadChampionData();
-        console.log(`[Champions] Loaded ${Object.keys(getIdToNameMap()).length} champions with tags (${getLatestVersion()})`);
+        logger.log(`[Champions] Loaded ${Object.keys(getIdToNameMap()).length} champions with tags (${getLatestVersion()})`);
 
         // Load win rates
         reloadWinRates();
@@ -675,7 +676,7 @@ app.whenReady().then(async () => {
         if (fs.existsSync(ROSTER_PATH)) {
             const rData = fs.readFileSync(ROSTER_PATH, 'utf8');
             rosterConfig = JSON.parse(rData);
-            console.log('[Main] Roster config loaded');
+            logger.log('[Main] Roster config loaded');
         }
 
         // Initialize the recommendation engine with Data Dragon data
@@ -687,9 +688,9 @@ app.whenReady().then(async () => {
         }
 
         initializeEngine({ idToName, nameToId, tagsMap });
-        console.log('[Main] Data Dragon + Win Rates loaded successfully');
+        logger.log('[Main] Data Dragon + Win Rates loaded successfully');
     } catch (err) {
-        console.error('[Main] Failed to load champion data:', err.message);
+        logger.error('[Main] Failed to load champion data:', err.message);
     }
 
     startPolling();

@@ -2,6 +2,7 @@
  * ugg.js - Scraper for U.GG champion data
  */
 const puppeteer = require('puppeteer');
+const logger = require('../logger');
 
 /**
  * Scrapes U.GG for champion win rates and stats for all roles.
@@ -16,7 +17,7 @@ const puppeteer = require('puppeteer');
  * 
  * @param {function} onProgress - Callback for logging progress messages
  */
-async function scrapeUGGChampions(onProgress = (msg) => console.log(msg), queueType = 'soloq', nameMap = {}) {
+async function scrapeUGGChampions(onProgress = (msg) => logger.log(msg), queueType = 'soloq', nameMap = {}) {
     onProgress(`Launching browser for ${queueType}...`);
     const browser = await puppeteer.launch({
         headless: true, // Run invisibly in background

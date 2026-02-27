@@ -15,6 +15,7 @@
 
 const WebSocket = require('ws');
 const { EventEmitter } = require('events');
+const logger = require('../logger');
 
 const CHAMP_SELECT_EVENT = 'OnJsonApiEvent_lol-champ-select_v1_session';
 
@@ -38,7 +39,7 @@ class LcuWebSocket extends EventEmitter {
         const authString = Buffer.from(`riot:${token}`).toString('base64');
         const url = `wss://127.0.0.1:${port}/`;
 
-        console.log(`[LCU WS] Connecting to ${url}...`);
+        logger.log(`[LCU WS] Connecting to ${url}...`);
 
         this.ws = new WebSocket(url, {
             headers: {
@@ -48,7 +49,7 @@ class LcuWebSocket extends EventEmitter {
         });
 
         this.ws.on('open', () => {
-            console.log('[LCU WS] Connected successfully');
+            logger.log('[LCU WS] Connected successfully');
             this.connected = true;
             this.emit('connected');
 
@@ -62,7 +63,7 @@ class LcuWebSocket extends EventEmitter {
         });
 
         this.ws.on('close', (code, reason) => {
-            console.log(`[LCU WS] Disconnected (code: ${code})`);
+            logger.log(`[LCU WS] Disconnected (code: ${code})`);
             this.connected = false;
             this.emit('disconnected');
         });
@@ -70,7 +71,7 @@ class LcuWebSocket extends EventEmitter {
         this.ws.on('error', (err) => {
             // ECONNREFUSED is expected when League Client is not running
             if (err.code !== 'ECONNREFUSED') {
-                console.error('[LCU WS] Error:', err.message);
+                logger.error('[LCU WS] Error:', err.message);
             }
             this.connected = false;
             this.emit('error', err);
@@ -85,7 +86,7 @@ class LcuWebSocket extends EventEmitter {
         if (this.ws && this.ws.readyState === WebSocket.OPEN) {
             const msg = JSON.stringify([5, eventName]);
             this.ws.send(msg);
-            console.log(`[LCU WS] Subscribed to: ${eventName}`);
+            logger.log(`[LCU WS] Subscribed to: ${eventName}`);
         }
     }
 
@@ -109,7 +110,7 @@ class LcuWebSocket extends EventEmitter {
 
                 switch (eventType) {
                     case 'Create':
-                        console.log('[LCU WS] Champ Select STARTED');
+                        logger.log('[LCU WS] Champ Select STARTED');
                         this.emit('champSelectStarted', data);
                         break;
 
@@ -118,12 +119,12 @@ class LcuWebSocket extends EventEmitter {
                         break;
 
                     case 'Delete':
-                        console.log('[LCU WS] Champ Select ENDED');
+                        logger.log('[LCU WS] Champ Select ENDED');
                         this.emit('champSelectEnded');
                         break;
 
                     default:
-                        console.log(`[LCU WS] Unknown eventType: ${eventType}`);
+                        logger.log(`[LCU WS] Unknown eventType: ${eventType}`);
                 }
             }
         } catch (err) {

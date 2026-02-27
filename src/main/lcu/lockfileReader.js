@@ -14,6 +14,7 @@
 const fs = require('fs');
 const path = require('path');
 const { exec } = require('child_process');
+const logger = require('../logger');
 
 // Common install paths to try (fallbacks)
 const COMMON_LOCKFILE_PATHS = [
@@ -53,7 +54,7 @@ function tryReadFile(filePath) {
     try {
         const content = fs.readFileSync(filePath, { encoding: 'utf-8', flag: 'r' });
         const data = parseLockfile(content);
-        console.log(`[LCU] Lockfile found at ${filePath} — PID: ${data.pid}, Port: ${data.port}`);
+        logger.log(`[LCU] Lockfile found at ${filePath} — PID: ${data.pid}, Port: ${data.port}`);
         return {
             port: data.port,
             token: data.token,
@@ -83,7 +84,7 @@ function getLeagueInstallDir() {
             // processPath = "B:\Riot Games\League of Legends\LeagueClientUx.exe"
             // We want the directory: "B:\Riot Games\League of Legends"
             const installDir = path.dirname(processPath);
-            console.log(`[LCU] Detected install directory: ${installDir}`);
+            logger.log(`[LCU] Detected install directory: ${installDir}`);
             resolve(installDir);
         });
     });
@@ -107,7 +108,7 @@ function readFromProcessArgs() {
             const tokenMatch = stdout.match(/--remoting-auth-token=([\w_-]+)/);
 
             if (portMatch && tokenMatch) {
-                console.log(`[LCU] Extracted from process args — Port: ${portMatch[1]}`);
+                logger.log(`[LCU] Extracted from process args — Port: ${portMatch[1]}`);
                 resolve({
                     port: portMatch[1],
                     token: tokenMatch[1],

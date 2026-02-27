@@ -10,6 +10,7 @@
 
 const axios = require('axios');
 const https = require('https');
+const logger = require('../logger');
 
 /**
  * Creates an HTTPS agent specifically configured for the LCU API.
@@ -64,9 +65,9 @@ function createLcuClient({ port, token, protocol }) {
         (response) => response,
         (error) => {
             if (error.response) {
-                console.error(`[LCU HTTP] ${error.response.status} — ${error.config?.url}`);
+                logger.error(`[LCU HTTP] ${error.response.status} — ${error.config?.url}`);
             } else {
-                console.error(`[LCU HTTP] Request failed — ${error.message}`);
+                logger.error(`[LCU HTTP] Request failed — ${error.message}`);
             }
             return Promise.reject(error);
         }
