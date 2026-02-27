@@ -173,7 +173,7 @@ function setupIPC() {
     });
 
 
-    ipcMain.on('roster:save', (event, data) => {
+    ipcMain.on('roster:save', async (event, data) => {
         try {
             if (!validateRosterData(data)) {
                 console.error('[Main] Invalid roster data received');
@@ -199,7 +199,7 @@ function setupIPC() {
             }
 
             console.log(`[Main] Saving roster config to ${ROSTER_PATH}`);
-            fs.writeFileSync(ROSTER_PATH, JSON.stringify(cleanData, null, 2));
+            await fs.promises.writeFile(ROSTER_PATH, JSON.stringify(cleanData, null, 2));
             rosterConfig = cleanData; // Update cache with clean data
             // Trigger update if session active
             if (sessionState.current) handleChampSelectUpdate(sessionState.current);
