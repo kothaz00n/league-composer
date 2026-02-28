@@ -188,6 +188,88 @@ function getArchetypeFitBonus(championTags, archetypeKey) {
     return Math.min(bonus, 5); // Cap at 5
 }
 
+/**
+ * Analyze a team composition for gaps relative to a target archetype.
+ * @param {{ top: string|null, jungle: string|null, mid: string|null, adc: string|null, support: string|null }} teamRoles
+ * @param {string} archetypeKey - e.g. 'hardEngage'
+ * @param {Object} tagsMap - champion name → Riot tags array
+ * @returns {{ gaps: string[], strengths: string[], coverage: number }}
+ */
+function detectCompositionGaps(teamRoles, archetypeKey, tagsMap = {}) {
+    const archetype = COMP_ARCHETYPES[archetypeKey];
+
+    // Collect all comp roles present in the team
+    const teamCompRoles = new Set();
+    for (const [, champName] of Object.entries(teamRoles)) {
+        if (!champName) continue;
+        const tags = tagsMap[champName] || [];
+        const compRoles = getCompositionRoles(tags);
+        compRoles.forEach(r => teamCompRoles.add(r));
+    }
+
+    const gaps = [];
+    const strengths = [];
+
+    if (!archetype) {
+        // Generic gap detection without a target archetype
+        if (!teamCompRoles.has('frontline') && !teamCompRoles.has('engage')) {
+            gaps.push('No frontline or engage tool');
+        }
+        if (!teamCompRoles.has('hypercarry') && !teamCompRoles.has('dps')) {
+            gaps.push('No primary damage dealer');
+        }
+        if (!teamCompRoles.has('protect') && !teamCompRoles.has('anti-engage')) {
+            gaps.push('No peel for carries');
+        }
+    } else {
+        // Archetype-specific gap detection
+        for (const req of archetype.requiredRoles) {
+            if (!teamCompRoles.has(req)) {
+                const roleLabel = {
+                    engage: 'No engage tool',
+                    frontline: 'No frontline/tank',
+                    protect: 'No peel support',
+                    hypercarry: 'No hypercarry',
+                    dive: 'No diver/assassin',
+                    poke: 'No poke/ranged damage',
+                    dps: 'No primary DPS',
+                    bruiser: 'No bruiser for sidelane',
+                    teamfight: 'No AoE teamfight champion',
+                    pick: 'No pick/catch tool',
+                    'anti-engage': 'No anti-engage',
+                }[req] || `Missing: ${req}`;
+                gaps.push(roleLabel);
+            }
+        }
+        // Strengths: bonus roles that are present
+        for (const bonus of archetype.bonusRoles) {
+            if (teamCompRoles.has(bonus)) {
+                const roleLabel = {
+                    teamfight: 'Strong teamfight',
+                    dps: 'Good damage output',
+                    frontline: 'Solid frontline',
+                    'anti-engage': 'Good peel',
+                    pick: 'Pick potential',
+                    bruiser: 'Bruiser pressure',
+                    hypercarry: 'Hypercarry presence',
+                    poke: 'Poke presence',
+                    engage: 'Engage synergy',
+                    protect: 'Protection layer',
+                    dive: 'Dive capability',
+                }[bonus] || bonus;
+                strengths.push(roleLabel);
+            }
+        }
+    }
+
+    // Coverage: how many of the required roles are covered
+    const requiredRoles = archetype ? archetype.requiredRoles : ['frontline', 'dps', 'protect'];
+    const covered = requiredRoles.filter(r => teamCompRoles.has(r)).length;
+    const coverage = requiredRoles.length > 0 ? Math.round((covered / requiredRoles.length) * 100) : 0;
+
+    return { gaps, strengths, coverage };
+}
+
 module.exports = {
     TAG_TO_COMP_ROLES,
     COMP_ARCHETYPES,
@@ -195,4 +277,5 @@ module.exports = {
     detectTeamComposition,
     getCompositionTier,
     getArchetypeFitBonus,
+    detectCompositionGaps,
 };

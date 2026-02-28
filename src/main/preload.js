@@ -61,4 +61,10 @@ contextBridge.exposeInMainWorld('electronAPI', {
     runUggScrape: (force = false, queueType = 'soloq') => ipcRenderer.send(IPC_CHANNELS.SCRAPER_RUN_UGG, force, queueType),
     onScraperProgress: (callback) => ipcRenderer.on(IPC_CHANNELS.SCRAPER_PROGRESS, (_event, msg) => callback(msg)),
     onScraperComplete: (callback) => ipcRenderer.on(IPC_CHANNELS.SCRAPER_COMPLETE, (_event, result) => callback(result)),
+
+    // ─── Synergy Orchestrator ─────────────────────────────────────────────
+    analyzeTeamSynergy: (data) => ipcRenderer.invoke(IPC_CHANNELS.SYNERGY_ANALYZE, data),
+
+    // ─── Draft Preview (Sandbox Mode) ─────────────────────────────────────────
+    getDraftPreview: (scenario, role) => ipcRenderer.invoke(IPC_CHANNELS.DRAFT_PREVIEW, { scenario, role }),
 });

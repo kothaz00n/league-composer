@@ -44,9 +44,15 @@ const IPC_CHANNELS = {
     SCRAPER_PROGRESS: 'scraper:progress',
     SCRAPER_COMPLETE: 'scraper:complete',
 
+    // Synergy Orchestrator
+    SYNERGY_ANALYZE: 'synergy:analyze',
+
     // Champ Select
     CHAMP_SELECT_UPDATE: 'champSelect:update',
     CHAMP_SELECT_ENDED: 'champSelect:ended',
+
+    // Draft Preview (sandbox mode)
+    DRAFT_PREVIEW: 'draft:preview',
 };
 
 module.exports = { IPC_CHANNELS };

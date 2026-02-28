@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import CompAnalysis from './CompAnalysis';
+import SynergyHeatmap from './SynergyHeatmap';
 import { RoleIcon, IconSave } from './HextechIcons';
 import ViewHeader from './ViewHeader';
 
@@ -132,6 +133,16 @@ function SaveCompositionModal({ isOpen, onClose, onSaveArchetype, onSaveComposit
 // Role labels now use SVG icons rendered inline in JSX (see builder-slot-label below)
 const ROLE_NAMES = { top: 'Top', jungle: 'Jungle', mid: 'Mid', adc: 'Bottom', support: 'Support' };
 
+const ARCHETYPE_OPTIONS = [
+    { key: '', label: 'Auto Detect' },
+    { key: 'hardEngage', label: '⚔️ Hard Engage' },
+    { key: 'protect', label: '🛡️ Protect Carry' },
+    { key: 'dive', label: '🗡️ Dive / Pick' },
+    { key: 'poke', label: '🏹 Poke / Siege' },
+    { key: 'splitpush', label: '🔱 Splitpush' },
+    { key: 'teamfight', label: '💥 Wombo Combo' },
+];
+
 const TeamBuilder = ({ allChampions, championData, onBack }) => {
     const { tagsMap } = championData || {};
 
@@ -143,6 +154,10 @@ const TeamBuilder = ({ allChampions, championData, onBack }) => {
     const [showSaveModal, setShowSaveModal] = useState(false);
     const [existingCompositions, setExistingCompositions] = useState([]);
     const [opPicks, setOpPicks] = useState([]);
+    const [activeTab, setActiveTab] = useState('analysis'); // 'analysis' | 'synergy'
+    const [archetypeKey, setArchetypeKey] = useState('');
+    const [synergyData, setSynergyData] = useState(null);
+    const [synergyLoading, setSynergyLoading] = useState(false);
 
     useEffect(() => {
         if (window.electronAPI?.getAllCompositions) {
@@ -204,19 +219,31 @@ const TeamBuilder = ({ allChampions, championData, onBack }) => {
         });
     }, [team]);
 
-    // Update analysis when team changes
+    // Update analysis + synergy when team changes
     useEffect(() => {
         const hasChamps = Object.values(team).some(Boolean);
         if (hasChamps && window.electronAPI?.analyzeComposition) {
             window.electronAPI.analyzeComposition(team, 'flex').then(result => {
-                if (result) {
-                    setAnalysis(result);
-                }
+                if (result) setAnalysis(result);
             });
         } else {
             setAnalysis(null);
         }
-    }, [team]);
+
+        // Synergy analysis
+        const filledCount = Object.values(team).filter(Boolean).length;
+        if (filledCount >= 2 && window.electronAPI?.analyzeTeamSynergy) {
+            setSynergyLoading(true);
+            window.electronAPI.analyzeTeamSynergy({ teamRoles: team, archetypeKey })
+                .then(result => {
+                    if (result) setSynergyData(result);
+                    setSynergyLoading(false);
+                })
+                .catch(() => setSynergyLoading(false));
+        } else {
+            setSynergyData(null);
+        }
+    }, [team, archetypeKey]);
 
     const handleDragStart = (e, champName) => {
         e.dataTransfer.setData('text/plain', champName);
@@ -371,13 +398,87 @@ const TeamBuilder = ({ allChampions, championData, onBack }) => {
                         })}
                     </div>
 
-                    {/* Analysis & Details */}
+                    {/* Analysis & Synergy Tabs */}
+                    <div style={{ marginTop: '12px' }}>
+                        <div className="editor-tabs" style={{ marginBottom: '12px' }}>
+                            <button
+                                className={`editor-tab ${activeTab === 'analysis' ? 'editor-tab--active' : ''}`}
+                                onClick={() => setActiveTab('analysis')}
+                            >
+                                📊 Analysis
+                            </button>
+                            <button
+                                className={`editor-tab ${activeTab === 'synergy' ? 'editor-tab--active' : ''}`}
+                                onClick={() => setActiveTab('synergy')}
+                            >
+                                🔗 Synergy
+                            </button>
+                        </div>
+
+                        {activeTab === 'synergy' && (
+                            <div style={{ marginBottom: '12px' }}>
+                                <label style={{ fontSize: '11px', color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '6px', display: 'block' }}>
+                                    Target Archetype
+                                </label>
+                                <select
+                                    value={archetypeKey}
+                                    onChange={e => setArchetypeKey(e.target.value)}
+                                    style={{ width: '100%', padding: '7px 10px', background: 'var(--bg-secondary)', border: '1px solid var(--border)', color: 'var(--text-primary)', borderRadius: '4px', fontSize: '13px' }}
+                                >
+                                    {ARCHETYPE_OPTIONS.map(opt => (
+                                        <option key={opt.key} value={opt.key}>{opt.label}</option>
+                                    ))}
+                                </select>
+                            </div>
+                        )}
+                    </div>
+
+                    {/* Analysis & Details Panels */}
                     <div className="builder-analysis-grid">
                         <div className="builder-panel">
                             <h3 className="builder-panel-title">
-                                {analysis ? 'Composition Analysis' : 'Recommended Starters'}
+                                {activeTab === 'synergy' ? 'Synergy Matrix' : (analysis ? 'Composition Analysis' : 'Recommended Starters')}
                             </h3>
-                            {analysis ? (
+
+                            {activeTab === 'synergy' ? (
+                                <>
+                                    <SynergyHeatmap
+                                        matrix={synergyData?.matrix || []}
+                                        teamRoles={team}
+                                        avgScore={synergyData?.avgScore || 0}
+                                        label={synergyData?.label || ''}
+                                        loading={synergyLoading}
+                                    />
+                                    {synergyData && (synergyData.gaps?.length > 0 || synergyData.strengths?.length > 0) && (
+                                        <div style={{ marginTop: '16px' }}>
+                                            {synergyData.gaps?.length > 0 && (
+                                                <div style={{ marginBottom: '10px' }}>
+                                                    <div style={{ fontSize: '11px', color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '6px' }}>Gaps</div>
+                                                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
+                                                        {synergyData.gaps.map(gap => (
+                                                            <span key={gap} style={{ background: 'hsl(0,45%,18%)', border: '1px solid hsl(0,45%,30%)', color: '#c9736e', fontSize: '11px', padding: '3px 8px', borderRadius: '12px' }}>
+                                                                ⚠️ {gap}
+                                                            </span>
+                                                        ))}
+                                                    </div>
+                                                </div>
+                                            )}
+                                            {synergyData.strengths?.length > 0 && (
+                                                <div>
+                                                    <div style={{ fontSize: '11px', color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '6px' }}>Strengths</div>
+                                                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
+                                                        {synergyData.strengths.map(s => (
+                                                            <span key={s} style={{ background: 'hsl(142,45%,16%)', border: '1px solid hsl(142,45%,28%)', color: '#6ee087', fontSize: '11px', padding: '3px 8px', borderRadius: '12px' }}>
+                                                                ✅ {s}
+                                                            </span>
+                                                        ))}
+                                                    </div>
+                                                </div>
+                                            )}
+                                        </div>
+                                    )}
+                                </>
+                            ) : analysis ? (
                                 <CompAnalysis compositionAnalysis={analysis} />
                             ) : (
                                 <div className="animate-in">

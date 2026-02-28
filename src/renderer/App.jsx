@@ -61,6 +61,8 @@ import Dashboard from './components/Dashboard';
 import RosterManager from './components/RosterManager';
 import TeamBuilder from './components/TeamBuilder';
 import WinRateBrowser from './components/WinRateBrowser';
+import ClashPlan from './components/ClashPlan';
+import DraftPreview from './components/DraftPreview';
 
 // Moved into component to access championData state — see below
 
@@ -233,9 +235,22 @@ export default function App() {
                         allChampions={allChampions}
                     />
                 );
+            case 'clashplan':
+                return (
+                    <ClashPlan
+                        onBack={() => setCurrentView('dashboard')}
+                    />
+                );
+            case 'preview':
+                return (
+                    <DraftPreview
+                        onBack={() => setCurrentView('dashboard')}
+                        championData={championData}
+                    />
+                );
             case 'draft':
                 return (
-                    <>
+                    <div className="draft-shell">
                         {/* Frameless Titlebar */}
                         <div className="titlebar">
                             <span className="titlebar__title" style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
@@ -260,7 +275,7 @@ export default function App() {
                         {/* Connection Status */}
                         <StatusBar status={connectionStatus} onRetry={handleRetry} />
 
-                        {/* Main Content */}
+                        {/* Main Content — scrollable */}
                         <div className="main-content">
                             {draftState ? (
                                 <>
@@ -272,7 +287,9 @@ export default function App() {
                                         getChampionName={getChampionName}
                                         getChampionIcon={getChampionIcon}
                                     />
-                                    <CompAnalysis compositionAnalysis={compositionAnalysis} />
+                                    <div style={{ padding: '12px 16px 0' }}>
+                                        <CompAnalysis compositionAnalysis={compositionAnalysis} />
+                                    </div>
 
                                     {/* Draft Controls Bar */}
                                     <div className="draft-controls">
@@ -335,7 +352,7 @@ export default function App() {
                                 </div>
                             )}
                         </div>
-                    </>
+                    </div>
                 );
             default:
                 return null;

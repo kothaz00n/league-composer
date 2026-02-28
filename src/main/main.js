@@ -414,6 +414,110 @@ function setupIPC() {
             });
         }
     });
+
+    // ─── Synergy Analyzer ────────────────────────────────────────────────────
+    ipcMain.handle(IPC_CHANNELS.SYNERGY_ANALYZE, async (_event, { teamRoles, archetypeKey }) => {
+        try {
+            const { getTeamSynergyMatrix } = require('../engine/synergyMatrix');
+            const { detectCompositionGaps } = require('../data/archetypeMapping.cjs');
+            const { getChampionTags, getIdToNameMap } = require('../data/champions');
+
+            const idToName = getIdToNameMap();
+            const tagsMap = {};
+            for (const name of Object.values(idToName)) {
+                tagsMap[name] = getChampionTags(name);
+            }
+
+            const synergyResult = getTeamSynergyMatrix(teamRoles);
+            const gapResult = detectCompositionGaps(teamRoles, archetypeKey, tagsMap);
+            console.log(`[Main] Synergy analyzed: avgScore=${synergyResult.avgScore}, gaps=${gapResult.gaps.length}`);
+            return { ...synergyResult, ...gapResult };
+        } catch (err) {
+            console.error('[Main] Synergy analysis failed:', err);
+            return null;
+        }
+    });
+
+    // ─── Draft Preview (Sandbox Mode) ────────────────────────────────────────
+    // Simulates a champ select session from a predefined scenario
+    ipcMain.handle(IPC_CHANNELS.DRAFT_PREVIEW, async (_event, { scenario, role }) => {
+        try {
+            // Load compositions for scenario data
+            let compData = { compositions: [], archetypes: [] };
+            if (fs.existsSync(COMPOSITIONS_PATH)) {
+                compData = JSON.parse(fs.readFileSync(COMPOSITIONS_PATH, 'utf8'));
+            }
+
+            // Find the requested composition scenario
+            const comp = compData.compositions.find(c => c.name === scenario);
+            if (!comp) {
+                return { error: `Scenario "${scenario}" not found` };
+            }
+
+            const { nameToId } = require('../data/champions').getNameToIdMap
+                ? { nameToId: require('../data/champions').getNameToIdMap() }
+                : { nameToId: {} };
+
+            // Convert team names → champion IDs
+            function resolveId(name) {
+                if (!name) return 0;
+                const clean = name.split('/')[0].replace(/\*/g, '').trim();
+                return nameToId[clean] || 0;
+            }
+
+            const allies = [
+                { role: 'top', champName: comp.roles.top },
+                { role: 'jungle', champName: comp.roles.jungle },
+                { role: 'mid', champName: comp.roles.mid },
+                { role: 'adc', champName: comp.roles.adc },
+                { role: 'support', champName: comp.roles.support },
+            ].map((a, i) => ({
+                cellId: i,
+                championId: resolveId(a.champName),
+                role: a.role,
+                champName: a.champName,
+                isLocalPlayer: a.role === role,
+            }));
+
+            const allyPicks = allies.map(a => a.championId).filter(id => id > 0);
+
+            // Run recommendations
+            const { recommendations, compositionAnalysis } = getRecommendations({
+                role,
+                allyPicks,
+                enemyPicks: [],
+                bannedChampions: [],
+                targetArchetype: 'auto',
+                rosterConfig,
+                allies,
+            });
+
+            // Full composition analysis (detailed)
+            const { getCompositionAnalysis } = require('../engine/recommend');
+            const detailedAnalysis = getCompositionAnalysis(comp.roles, 'soloq');
+
+            return {
+                scenario,
+                allies,
+                enemies: [],
+                bans: [],
+                recommendations,
+                compositionAnalysis: detailedAnalysis || compositionAnalysis,
+                compMeta: {
+                    name: comp.name,
+                    good_against: comp.good_against,
+                    bad_against: comp.bad_against,
+                    difficulty: comp.difficulty,
+                    key_focus: comp.key_focus,
+                    best_in_meta: comp.best_in_meta,
+                },
+                ddragonVersion: getLatestVersion(),
+            };
+        } catch (err) {
+            console.error('[Main] Draft preview failed:', err);
+            return { error: err.message };
+        }
+    });
 }
 
 // ─── Send to Renderer ───────────────────────────────────────────────────

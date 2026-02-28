@@ -96,6 +96,40 @@ const Dashboard = ({ onViewChange, isClientReady }) => {
                             </p>
                         </div>
                     </div>
+
+                    {/* Clash Plan Card */}
+                    <div
+                        className="dashboard-card group"
+                        onClick={() => onViewChange('clashplan')}
+                        style={{ animationDelay: '400ms' }}
+                    >
+                        <div className="dashboard-card__icon">
+                            <span style={{ fontSize: '28px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>🗺️</span>
+                        </div>
+                        <div className="dashboard-card__content">
+                            <h2 className="dashboard-card__title">Clash Plan</h2>
+                            <p className="dashboard-card__desc">
+                                Build your full 5v5 plan. Analyze synergy, detect gaps, and get targeted ban recommendations.
+                            </p>
+                        </div>
+                    </div>
+
+                    {/* Draft Preview Card */}
+                    <div
+                        className="dashboard-card group"
+                        onClick={() => onViewChange('preview')}
+                        style={{ animationDelay: '500ms' }}
+                    >
+                        <div className="dashboard-card__icon">
+                            <span style={{ fontSize: '28px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>🎮</span>
+                        </div>
+                        <div className="dashboard-card__content">
+                            <h2 className="dashboard-card__title">Draft Preview</h2>
+                            <p className="dashboard-card__desc">
+                                Sandbox mode — explore predefined comps, see pick recommendations and analyze them without a live game.
+                            </p>
+                        </div>
+                    </div>
                 </div>
 
                 {/* Status Section */}
