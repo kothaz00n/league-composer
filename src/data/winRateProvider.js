@@ -28,7 +28,14 @@ function loadWinRates(externalData = null) {
 
         if (hasQueues) {
             // New format: { soloq: { top: {...} }, flex: { top: {...} } }
-            queueData = externalData;
+            // Normalize role keys to lowercase to avoid expensive runtime lookups
+            queueData = {};
+            for (const [queue, roles] of Object.entries(externalData)) {
+                queueData[queue] = {};
+                for (const [role, roleData] of Object.entries(roles || {})) {
+                    queueData[queue][role.toLowerCase()] = roleData;
+                }
+            }
             dataSource = 'imported';
             const queues = Object.keys(queueData).filter(q => VALID_QUEUES.includes(q));
             const totalChamps = queues.reduce((sum, q) => {
@@ -86,8 +93,7 @@ function getChampionStats(championName, role = null, queue = 'soloq') {
         if (role) {
             const qData = queueData[queue];
             if (qData) {
-                const roleKey = Object.keys(qData).find(k => k.toLowerCase() === role.toLowerCase());
-                const roleData = roleKey ? qData[roleKey] : null;
+                const roleData = qData[role.toLowerCase()];
                 if (roleData && roleData[championName]) {
                     entry = roleData[championName];
                     hasData = true;
@@ -155,8 +161,7 @@ function getImportedChampions(queue = 'soloq', role = null) {
     if (!qData) return [];
 
     if (role) {
-        const roleKey = Object.keys(qData).find(k => k.toLowerCase() === role.toLowerCase());
-        return roleKey ? Object.keys(qData[roleKey] || {}) : [];
+        return Object.keys(qData[role.toLowerCase()] || {});
     }
 
     // All roles: union

@@ -1,0 +1,4 @@
+
+## 2025-02-28 - [Performance: Direct dictionary lookup for role stats]
+**Learning:** During profiling of the draft recommendation engine, we found that during `getCompositionAnalysis` and `getRecommendations`, which evaluates hundreds of champions multiple times, looking up champion stats by role was a bottleneck. The lookup `Object.keys(qData).find(k => k.toLowerCase() === role.toLowerCase())` iterated over role strings dynamically, scaling with the number of calls, causing ~134ms overhead for 10k calls.
+**Action:** By normalizing keys (lowercasing them) when importing data (`loadWinRates`) instead of normalizing dynamically upon every lookup (`getChampionStats` and `getImportedChampions`), we can convert an O(N) linear search over dictionary keys to an O(1) direct property access `qData[role.toLowerCase()]`. This brought the lookup time down to ~3ms per 10k calls.
