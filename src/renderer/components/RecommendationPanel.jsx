@@ -91,7 +91,7 @@ export default function RecommendationPanel({ recommendations, role, getChampion
                     const barWidth = maxScore > 0 ? (rec.score / maxScore) * 100 : 0;
 
                     return (
-                        <div key={rec.name} className="rec-card animate-in">
+                        <div key={rec.name} className="rec-card animate-entry">
                             {/* Rank badge */}
                             <div className={`rec-card__rank rec-card__rank--${idx + 1}`}>
                                 {idx + 1}

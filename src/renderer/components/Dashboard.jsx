@@ -5,6 +5,8 @@ import {
     IconRoster,
     IconWinRate,
     IconCompositions,
+    IconClashPlan,
+    IconDraftPreview,
 } from './HextechIcons';
 
 const Dashboard = ({ onViewChange, isClientReady }) => {
@@ -104,7 +106,7 @@ const Dashboard = ({ onViewChange, isClientReady }) => {
                         style={{ animationDelay: '400ms' }}
                     >
                         <div className="dashboard-card__icon">
-                            <span style={{ fontSize: '28px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>🗺️</span>
+                            <IconClashPlan size={28} />
                         </div>
                         <div className="dashboard-card__content">
                             <h2 className="dashboard-card__title">Clash Plan</h2>
@@ -121,7 +123,7 @@ const Dashboard = ({ onViewChange, isClientReady }) => {
                         style={{ animationDelay: '500ms' }}
                     >
                         <div className="dashboard-card__icon">
-                            <span style={{ fontSize: '28px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>🎮</span>
+                            <IconDraftPreview size={28} />
                         </div>
                         <div className="dashboard-card__content">
                             <h2 className="dashboard-card__title">Draft Preview</h2>

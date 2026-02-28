@@ -561,6 +561,45 @@ export function IconEmptyInbox({ size = 16, className = '', style = {} }) {
     );
 }
 
+/** CLASH PLAN — Shield with crossed swords (tournament strategy) */
+export function IconClashPlan({ size = 16, className = '', style = {} }) {
+    return (
+        <svg width={size} height={size} viewBox="0 0 20 20" fill="none"
+            xmlns="http://www.w3.org/2000/svg" className={className} style={style}>
+            {/* Angular shield (clash tournament) */}
+            <path d="M10 2 L17 5 L17 12 Q17 17 10 19 Q3 17 3 12 L3 5 Z"
+                stroke="currentColor" strokeWidth="1.5" fill="none" opacity="0.5" />
+            {/* Crossed swords inside */}
+            <line x1="6" y1="7" x2="14" y2="15" stroke="currentColor" strokeWidth="1.8" strokeLinecap="square" />
+            <line x1="14" y1="7" x2="6" y2="15" stroke="currentColor" strokeWidth="1.8" strokeLinecap="square" />
+            {/* Guards (Art Deco crossguards) */}
+            <line x1="5" y1="9" x2="8" y2="6" stroke="currentColor" strokeWidth="1" strokeLinecap="square" opacity="0.6" />
+            <line x1="15" y1="9" x2="12" y2="6" stroke="currentColor" strokeWidth="1" strokeLinecap="square" opacity="0.6" />
+            {/* Corner accents */}
+            <rect x="9" y="9" width="2" height="2" transform="rotate(45 10 10)" fill="currentColor" opacity="0.4" />
+        </svg>
+    );
+}
+
+/** DRAFT PREVIEW — Magnifying glass with Art Deco crosshair (sandbox / analysis) */
+export function IconDraftPreview({ size = 16, className = '', style = {} }) {
+    return (
+        <svg width={size} height={size} viewBox="0 0 20 20" fill="none"
+            xmlns="http://www.w3.org/2000/svg" className={className} style={style}>
+            {/* Lens */}
+            <circle cx="8" cy="8" r="6" stroke="currentColor" strokeWidth="1.5" fill="none" />
+            {/* Inner crosshair */}
+            <line x1="5" y1="8" x2="11" y2="8" stroke="currentColor" strokeWidth="1" strokeLinecap="square" opacity="0.5" />
+            <line x1="8" y1="5" x2="8" y2="11" stroke="currentColor" strokeWidth="1" strokeLinecap="square" opacity="0.5" />
+            {/* Center pip (focal point) */}
+            <circle cx="8" cy="8" r="1.5" fill="currentColor" opacity="0.8" />
+            {/* Handle — square cap Art Deco */}
+            <line x1="13" y1="13" x2="18" y2="18" stroke="currentColor" strokeWidth="2.5" strokeLinecap="square" />
+            <rect x="12" y="12" width="2" height="2" fill="currentColor" opacity="0.4" />
+        </svg>
+    );
+}
+
 /** WARNING — Triangle with inner exclamation (danger / out-of-meta) */
 export function IconWarning({ size = 16, className = '', style = {} }) {
     return (

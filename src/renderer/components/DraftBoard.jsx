@@ -12,13 +12,19 @@ const ROLE_LABELS = {
     utility: 'SUP',
 };
 
-function PickSlot({ player, isAlly, getChampionName, getChampionIcon }) {
+function PickSlot({ player, side, getChampionName, getChampionIcon }) {
     const champName = player.championId > 0 ? getChampionName(player.championId) : null;
     const champIcon = champName ? getChampionIcon(champName) : null;
     const roleLabel = ROLE_LABELS[player.role?.toLowerCase()] || '?';
 
+    const classes = [
+        'pick-slot',
+        side === 'red' ? 'pick-slot--red' : 'pick-slot--blue',
+        player.isLocalPlayer ? 'pick-slot--local' : '',
+    ].filter(Boolean).join(' ');
+
     return (
-        <div className={`pick-slot ${player.isLocalPlayer ? 'pick-slot--local' : ''}`}>
+        <div className={classes}>
             <div className="pick-slot__avatar">
                 {champIcon ? (
                     <img src={champIcon} alt={champName} loading="lazy" />
@@ -27,9 +33,7 @@ function PickSlot({ player, isAlly, getChampionName, getChampionIcon }) {
                 )}
             </div>
             <div className="pick-slot__info">
-                <span className="pick-slot__name">
-                    {champName || 'Picking...'}
-                </span>
+                <span className="pick-slot__name">{champName || 'Picking...'}</span>
                 <span className="pick-slot__role">{roleLabel}</span>
             </div>
         </div>
@@ -52,12 +56,13 @@ function BanSlot({ championId, getChampionName, getChampionIcon }) {
 }
 
 export default function DraftBoard({ allies, enemies, bans, localPlayer, getChampionName, getChampionIcon }) {
-    // Ensure we always show 5 slots per team
-    const allySlots = Array.from({ length: 5 }, (_, i) => allies?.[i] || { cellId: i, championId: 0, role: '' });
+    const allySlots  = Array.from({ length: 5 }, (_, i) => allies?.[i]  || { cellId: i,     championId: 0, role: '' });
     const enemySlots = Array.from({ length: 5 }, (_, i) => enemies?.[i] || { cellId: i + 5, championId: 0, role: '' });
 
-    // Show up to 10 ban slots
-    const banSlots = Array.from({ length: 10 }, (_, i) => bans?.[i] || 0);
+    // First 5 bans belong to blue/ally side, next 5 to red/enemy side
+    const allBans  = Array.from({ length: 10 }, (_, i) => bans?.[i] || 0);
+    const blueBans = allBans.slice(0, 5);
+    const redBans  = allBans.slice(5, 10);
 
     return (
         <div className="draft-board">
@@ -72,42 +77,42 @@ export default function DraftBoard({ allies, enemies, bans, localPlayer, getCham
                 )}
             </div>
 
-            {/* Bans Row */}
-            <div className="bans-row">
-                {banSlots.map((banId, idx) => (
-                    <BanSlot
-                        key={idx}
-                        championId={banId}
-                        getChampionName={getChampionName}
-                        getChampionIcon={getChampionIcon}
-                    />
-                ))}
-            </div>
-
-            {/* Teams */}
-            <div className="teams-container">
-                <div className="team">
-                    <div className="team__label team__label--ally">ALLY TEAM</div>
-                    {allySlots.map((player, idx) => (
-                        <PickSlot
-                            key={`ally-${idx}`}
-                            player={player}
-                            isAlly={true}
+            {/* Bans row — blue side left, VS center, red side right */}
+            <div className="draft-header">
+                <div className="draft-bans draft-bans--blue">
+                    {blueBans.map((banId, idx) => (
+                        <BanSlot key={idx} championId={banId}
                             getChampionName={getChampionName}
-                            getChampionIcon={getChampionIcon}
-                        />
+                            getChampionIcon={getChampionIcon} />
                     ))}
                 </div>
-                <div className="team">
-                    <div className="team__label team__label--enemy">ENEMY TEAM</div>
-                    {enemySlots.map((player, idx) => (
-                        <PickSlot
-                            key={`enemy-${idx}`}
-                            player={player}
-                            isAlly={false}
+                <div className="draft-vs">VS</div>
+                <div className="draft-bans draft-bans--red">
+                    {redBans.map((banId, idx) => (
+                        <BanSlot key={idx} championId={banId}
                             getChampionName={getChampionName}
-                            getChampionIcon={getChampionIcon}
-                        />
+                            getChampionIcon={getChampionIcon} />
+                    ))}
+                </div>
+            </div>
+
+            {/* Picks — blue side left, red side right */}
+            <div className="draft-picks">
+                <div className="draft-side draft-side--blue">
+                    <div className="draft-side__label">BLUE SIDE</div>
+                    {allySlots.map((player, idx) => (
+                        <PickSlot key={`ally-${idx}`} player={player} side="blue"
+                            getChampionName={getChampionName}
+                            getChampionIcon={getChampionIcon} />
+                    ))}
+                </div>
+
+                <div className="draft-side draft-side--red">
+                    <div className="draft-side__label">RED SIDE</div>
+                    {enemySlots.map((player, idx) => (
+                        <PickSlot key={`enemy-${idx}`} player={player} side="red"
+                            getChampionName={getChampionName}
+                            getChampionIcon={getChampionIcon} />
                     ))}
                 </div>
             </div>
