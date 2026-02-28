@@ -162,6 +162,14 @@ function getRecommendations({
     const compAnalysis = analyzeTeamComposition(allyPicks);
     const allyCount = allyPicks.length;
 
+    // ─── Draft phase multipliers ─────────────────────────────────────────
+    // As more picks are revealed, counter/synergy data becomes more reliable
+    // and should weigh more. Archetype fit is most important early in the draft.
+    const totalPicks = allyPicks.length + enemyPicks.length;
+    const phaseRatio = Math.min(totalPicks / 10, 1); // 0.0 (no picks) → 1.0 (full draft)
+    const counterSynergyMult = 0.5 + phaseRatio * 0.5; // 0.50 → 1.00
+    const archetypeMult = 1.5 - phaseRatio * 0.5;      // 1.50 → 1.00
+
     const results = [];
     const allChampions = championIdMap; // Use internal map (injected or loaded)
 
@@ -198,6 +206,12 @@ function getRecommendations({
             continue;
         }
 
+        // Skip champions with imported data but insufficient sample size
+        const MIN_MATCHES = 75;
+        if (stats.hasData && stats.matches > 0 && stats.matches < MIN_MATCHES) {
+            continue;
+        }
+
         const champWinRate = stats.winRate;
         const champTier = stats.tier || '';
         const champPickRate = stats.pickRate || 0;
@@ -210,7 +224,7 @@ function getRecommendations({
         for (const enemyName of enemyNames) {
             if (mergedCounters[enemyName]) {
                 const winrate = mergedCounters[enemyName];
-                const bonus = (winrate - 0.50) * 100; // e.g. 0.55 → +5 points
+                const bonus = (winrate - 0.50) * 100 * counterSynergyMult;
                 score += bonus;
                 counterScore += bonus;
                 const verb = winrate < 0.50 ? 'Countered by' : 'Counters';
@@ -218,11 +232,18 @@ function getRecommendations({
             }
         }
 
-        // ─── Synergy bonus ──────────────────────────────────────
+        // ─── Synergy bonus (bidirectional) ──────────────────────
         for (const allyName of allyNames) {
-            if (champData.synergies && champData.synergies[allyName]) {
-                const winrate = champData.synergies[allyName];
-                const bonus = (winrate - 0.50) * 100;
+            const ownSyn = champData.synergies?.[allyName];
+            const reverseSyn = countersDB[allyName]?.synergies?.[champName];
+
+            let winrate = null;
+            if (ownSyn && reverseSyn) winrate = (ownSyn + reverseSyn) / 2;
+            else if (ownSyn) winrate = ownSyn;
+            else if (reverseSyn) winrate = reverseSyn;
+
+            if (winrate !== null) {
+                const bonus = (winrate - 0.50) * 100 * counterSynergyMult;
                 score += bonus;
                 synergyScore += bonus;
                 scoreDetails.push(`Synergy with ${allyName} (${(winrate * 100).toFixed(0)}% WR)`);
@@ -239,9 +260,6 @@ function getRecommendations({
         else if (champTier === 'S') score += 8;
         else if (champTier === 'A') score += 5;
         else if (champTier === 'B') score += 2;
-
-        // Pick Rate Bonus
-        score += (champPickRate * 10);
 
         if (champWinRate > 0.52) {
             scoreDetails.push(`High Win Rate (${(champWinRate * 100).toFixed(1)}%)`);
@@ -292,8 +310,9 @@ function getRecommendations({
                 scoreDetails.push(`Fits ${compAnalysis.name} comp`);
             }
         }
-        score += fitBonus;
-        archetypeScore += fitBonus;
+        const scaledFitBonus = fitBonus * archetypeMult;
+        score += scaledFitBonus;
+        archetypeScore += scaledFitBonus;
 
         // ─── Base role bonus ────────────────────────────────────
         if (normalizedRole && champData.roles?.includes(normalizedRole)) {
