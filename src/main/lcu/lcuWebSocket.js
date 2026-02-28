@@ -151,4 +151,4 @@ class LcuWebSocket extends EventEmitter {
     }
 }
 
-module.exports = { LcuWebSocket };
+module.exports = { LcuWebSocket, CHAMP_SELECT_EVENT };
