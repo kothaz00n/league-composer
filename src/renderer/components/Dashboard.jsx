@@ -26,7 +26,7 @@ const Dashboard = ({ onViewChange, isClientReady }) => {
 
             <div className="dashboard-page">
                 <header className="dashboard-header">
-                    <h1 className="dashboard-title">League Team Comp</h1>
+                    <h1 className="dashboard-title">League Composer</h1>
                     <p className="dashboard-subtitle">MASTER YOUR DRAFT. DOMINATE THE RIFT.</p>
                 </header>
 
@@ -35,7 +35,7 @@ const Dashboard = ({ onViewChange, isClientReady }) => {
                     <div
                         className="dashboard-card group"
                         onClick={() => onViewChange('builder')}
-                        style={{ animationDelay: '0ms' }}
+                        style={{ '--card-delay': '0ms' }}
                     >
                         <div className="dashboard-card__icon">
                             <IconTeamBuilder size={28} />
@@ -52,7 +52,7 @@ const Dashboard = ({ onViewChange, isClientReady }) => {
                     <div
                         className="dashboard-card group"
                         onClick={() => onViewChange('roster')}
-                        style={{ animationDelay: '100ms' }}
+                        style={{ '--card-delay': '80ms' }}
                     >
                         <div className="dashboard-card__icon">
                             <IconRoster size={28} />
@@ -69,7 +69,7 @@ const Dashboard = ({ onViewChange, isClientReady }) => {
                     <div
                         className="dashboard-card group"
                         onClick={() => onViewChange('winrates')}
-                        style={{ animationDelay: '200ms' }}
+                        style={{ '--card-delay': '160ms' }}
                     >
                         <div className="dashboard-card__icon">
                             <IconWinRate size={28} />
@@ -86,7 +86,7 @@ const Dashboard = ({ onViewChange, isClientReady }) => {
                     <div
                         className="dashboard-card group"
                         onClick={() => onViewChange('editor')}
-                        style={{ animationDelay: '300ms' }}
+                        style={{ '--card-delay': '240ms' }}
                     >
                         <div className="dashboard-card__icon">
                             <IconCompositions size={28} />
@@ -103,7 +103,7 @@ const Dashboard = ({ onViewChange, isClientReady }) => {
                     <div
                         className="dashboard-card group"
                         onClick={() => onViewChange('clashplan')}
-                        style={{ animationDelay: '400ms' }}
+                        style={{ '--card-delay': '320ms' }}
                     >
                         <div className="dashboard-card__icon">
                             <IconClashPlan size={28} />
@@ -120,7 +120,7 @@ const Dashboard = ({ onViewChange, isClientReady }) => {
                     <div
                         className="dashboard-card group"
                         onClick={() => onViewChange('preview')}
-                        style={{ animationDelay: '500ms' }}
+                        style={{ '--card-delay': '400ms' }}
                     >
                         <div className="dashboard-card__icon">
                             <IconDraftPreview size={28} />
