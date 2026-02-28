@@ -6,58 +6,59 @@
  */
 
 const { contextBridge, ipcRenderer } = require('electron');
+const { IPC_CHANNELS } = require('../common/ipcChannels');
 
 contextBridge.exposeInMainWorld('electronAPI', {
     // ─── LCU Status ─────────────────────────────────────────────
     onConnectionStatus: (callback) => {
-        ipcRenderer.on('lcu:status', (_event, data) => callback(data));
+        ipcRenderer.on(IPC_CHANNELS.LCU_STATUS, (_event, data) => callback(data));
     },
 
     // ─── Champ Select Events ───────────────────────────────────
     onChampSelectUpdate: (callback) => {
-        ipcRenderer.on('champSelect:update', (_event, data) => callback(data));
+        ipcRenderer.on(IPC_CHANNELS.CHAMP_SELECT_UPDATE, (_event, data) => callback(data));
     },
 
     onChampSelectEnded: (callback) => {
-        ipcRenderer.on('champSelect:ended', (_event, data) => callback(data));
+        ipcRenderer.on(IPC_CHANNELS.CHAMP_SELECT_ENDED, (_event, data) => callback(data));
     },
 
     // ─── Window Controls (frameless) ───────────────────────────
-    minimizeWindow: () => ipcRenderer.send('window:minimize'),
-    closeWindow: () => ipcRenderer.send('window:close'),
+    minimizeWindow: () => ipcRenderer.send(IPC_CHANNELS.WINDOW_MINIMIZE),
+    closeWindow: () => ipcRenderer.send(IPC_CHANNELS.WINDOW_CLOSE),
 
     // ─── Actions ───────────────────────────────────────────────
     // ─── Actions ───────────────────────────────────────────────
-    retryConnection: () => ipcRenderer.send('lcu:retry'),
+    retryConnection: () => ipcRenderer.send(IPC_CHANNELS.LCU_RETRY),
 
     // Send updated preferences (role override, target archetype) to main process
-    updateDraftPreferences: (prefs) => ipcRenderer.send('draft:updatePreferences', prefs),
+    updateDraftPreferences: (prefs) => ipcRenderer.send(IPC_CHANNELS.DRAFT_UPDATE_PREFERENCES, prefs),
 
     // Save imported win rates
-    saveWinRates: (data) => ipcRenderer.send('winrate:save', data),
+    saveWinRates: (data) => ipcRenderer.send(IPC_CHANNELS.WINRATE_SAVE, data),
 
     // Roster
-    loadRoster: () => ipcRenderer.invoke('roster:load'),
-    saveRoster: (data) => ipcRenderer.send('roster:save', data),
-    onRosterSaveSuccess: (callback) => ipcRenderer.on('roster:save-success', () => callback()),
+    loadRoster: () => ipcRenderer.invoke(IPC_CHANNELS.ROSTER_LOAD),
+    saveRoster: (data) => ipcRenderer.send(IPC_CHANNELS.ROSTER_SAVE, data),
+    onRosterSaveSuccess: (callback) => ipcRenderer.on(IPC_CHANNELS.ROSTER_SAVE_SUCCESS, () => callback()),
 
     // Champions
-    getChampionData: () => ipcRenderer.invoke('champion:get-data'),
-    saveWinRates: (data) => ipcRenderer.send('winrate:save', data),
-    getChampionStats: (name, role, queue) => ipcRenderer.invoke('champion:get-stats', name, role, queue),
-    saveArchetype: (data) => ipcRenderer.send('composition:save-archetype', data),
-    onSaveArchetypeSuccess: (callback) => ipcRenderer.on('composition:save-success', (_, data) => callback(data)),
+    getChampionData: () => ipcRenderer.invoke(IPC_CHANNELS.CHAMPION_GET_DATA),
+    saveWinRates: (data) => ipcRenderer.send(IPC_CHANNELS.WINRATE_SAVE, data),
+    getChampionStats: (name, role, queue) => ipcRenderer.invoke(IPC_CHANNELS.CHAMPION_GET_STATS, name, role, queue),
+    saveArchetype: (data) => ipcRenderer.send(IPC_CHANNELS.COMPOSITION_SAVE_ARCHETYPE, data),
+    onSaveArchetypeSuccess: (callback) => ipcRenderer.on(IPC_CHANNELS.COMPOSITION_SAVE_SUCCESS, (_, data) => callback(data)),
 
-    getAllCompositions: () => ipcRenderer.invoke('composition:get-all'),
-    saveComposition: (data) => ipcRenderer.send('composition:save-comp', data),
-    onSaveCompositionSuccess: (callback) => ipcRenderer.on('composition:save-comp-success', (_, data) => callback(data)),
-    analyzeComposition: (team, queue) => ipcRenderer.invoke('composition:analyze', team, queue),
-    getOpPicks: (queue) => ipcRenderer.invoke('champion:get-op-picks', queue),
-    getImportedChampions: (queue, role) => ipcRenderer.invoke('champion:get-imported-list', queue, role),
-    getAvailableQueues: () => ipcRenderer.invoke('champion:get-available-queues'),
+    getAllCompositions: () => ipcRenderer.invoke(IPC_CHANNELS.COMPOSITION_GET_ALL),
+    saveComposition: (data) => ipcRenderer.send(IPC_CHANNELS.COMPOSITION_SAVE_COMP, data),
+    onSaveCompositionSuccess: (callback) => ipcRenderer.on(IPC_CHANNELS.COMPOSITION_SAVE_COMP_SUCCESS, (_, data) => callback(data)),
+    analyzeComposition: (team, queue) => ipcRenderer.invoke(IPC_CHANNELS.COMPOSITION_ANALYZE, team, queue),
+    getOpPicks: (queue) => ipcRenderer.invoke(IPC_CHANNELS.CHAMPION_GET_OP_PICKS, queue),
+    getImportedChampions: (queue, role) => ipcRenderer.invoke(IPC_CHANNELS.CHAMPION_GET_IMPORTED_LIST, queue, role),
+    getAvailableQueues: () => ipcRenderer.invoke(IPC_CHANNELS.CHAMPION_GET_AVAILABLE_QUEUES),
 
     // ─── Scraper ──────────────────────────────────────────────
-    runUggScrape: (force = false, queueType = 'soloq') => ipcRenderer.send('scraper:run-ugg', force, queueType),
-    onScraperProgress: (callback) => ipcRenderer.on('scraper:progress', (_event, msg) => callback(msg)),
-    onScraperComplete: (callback) => ipcRenderer.on('scraper:complete', (_event, result) => callback(result)),
+    runUggScrape: (force = false, queueType = 'soloq') => ipcRenderer.send(IPC_CHANNELS.SCRAPER_RUN_UGG, force, queueType),
+    onScraperProgress: (callback) => ipcRenderer.on(IPC_CHANNELS.SCRAPER_PROGRESS, (_event, msg) => callback(msg)),
+    onScraperComplete: (callback) => ipcRenderer.on(IPC_CHANNELS.SCRAPER_COMPLETE, (_event, result) => callback(result)),
 });
