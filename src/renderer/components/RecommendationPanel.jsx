@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { IconInsight } from './HextechIcons';
 
 const ROLE_LABELS = {
@@ -56,6 +56,71 @@ function TagBadge({ tag }) {
     );
 }
 
+const RecCard = React.memo(function RecCard({ rec, idx, barWidth, role, getChampionIcon }) {
+    const iconUrl = getChampionIcon(rec.name);
+    return (
+        <div key={rec.name} className="rec-card animate-entry">
+            {/* Rank badge */}
+            <div className={`rec-card__rank rec-card__rank--${idx + 1}`}>
+                {idx + 1}
+            </div>
+
+            {/* Champion avatar */}
+            <div className="rec-card__avatar">
+                {iconUrl ? (
+                    <img src={iconUrl} alt={rec.name} loading="lazy" />
+                ) : (
+                    <div style={{
+                        width: '100%', height: '100%',
+                        display: 'flex', alignItems: 'center', justifyContent: 'center',
+                        background: 'var(--bg-card)', color: 'var(--text-muted)', fontSize: '12px',
+                    }}>
+                        ?
+                    </div>
+                )}
+            </div>
+
+            {/* Champion info */}
+            <div className="rec-card__info">
+                <div className="rec-card__name-row">
+                    <span className="rec-card__name">{rec.name}</span>
+                    {rec.winRate && rec.winRate !== 0.50 && (
+                        <span className={`rec-card__wr ${rec.winRate >= 0.51 ? 'rec-card__wr--positive' : 'rec-card__wr--negative'}`}>
+                            {(rec.winRate * 100).toFixed(1)}%
+                        </span>
+                    )}
+                </div>
+                {/* Tags */}
+                {rec.tags && rec.tags.length > 0 && (
+                    <div className="rec-card__tags">
+                        {rec.tags.slice(0, 3).map((tag, i) => (
+                            <TagBadge key={i} tag={tag} />
+                        ))}
+                    </div>
+                )}
+                <div className="rec-card__reasons">
+                    {(rec.details || rec.reasons || []).length > 0 ? (
+                        (rec.details || rec.reasons || []).slice(0, 2).map((reason, i) => (
+                            <span key={i} className="rec-card__reason">{reason}</span>
+                        ))
+                    ) : (
+                        <span className="rec-card__reason">Good pick for {ROLE_LABELS[role?.toLowerCase()] || role}</span>
+                    )}
+                </div>
+            </div>
+
+            {/* Score */}
+            <div className="rec-card__score">
+                <div className="rec-card__score-value">{rec.score.toFixed(1)}</div>
+                <div className="rec-card__score-label">score</div>
+            </div>
+
+            {/* Score bar */}
+            <div className="rec-card__bar" style={{ width: `${barWidth}%` }} />
+        </div>
+    );
+});
+
 export default function RecommendationPanel({ recommendations, role, getChampionIcon }) {
     if (!recommendations || recommendations.length === 0) {
         return (
@@ -71,7 +136,10 @@ export default function RecommendationPanel({ recommendations, role, getChampion
         );
     }
 
-    const maxScore = Math.max(...recommendations.map(r => r.score), 1);
+    const maxScore = useMemo(
+        () => Math.max(...recommendations.map(r => r.score), 1),
+        [recommendations]
+    );
 
     return (
         <div className="recommendations">
@@ -87,69 +155,16 @@ export default function RecommendationPanel({ recommendations, role, getChampion
 
             <div className="rec-cards">
                 {recommendations.map((rec, idx) => {
-                    const iconUrl = getChampionIcon(rec.name);
                     const barWidth = maxScore > 0 ? (rec.score / maxScore) * 100 : 0;
-
                     return (
-                        <div key={rec.name} className="rec-card animate-entry">
-                            {/* Rank badge */}
-                            <div className={`rec-card__rank rec-card__rank--${idx + 1}`}>
-                                {idx + 1}
-                            </div>
-
-                            {/* Champion avatar */}
-                            <div className="rec-card__avatar">
-                                {iconUrl ? (
-                                    <img src={iconUrl} alt={rec.name} loading="lazy" />
-                                ) : (
-                                    <div style={{
-                                        width: '100%', height: '100%',
-                                        display: 'flex', alignItems: 'center', justifyContent: 'center',
-                                        background: 'var(--bg-card)', color: 'var(--text-muted)', fontSize: '12px',
-                                    }}>
-                                        ?
-                                    </div>
-                                )}
-                            </div>
-
-                            {/* Champion info */}
-                            <div className="rec-card__info">
-                                <div className="rec-card__name-row">
-                                    <span className="rec-card__name">{rec.name}</span>
-                                    {rec.winRate && rec.winRate !== 0.50 && (
-                                        <span className={`rec-card__wr ${rec.winRate >= 0.51 ? 'rec-card__wr--positive' : 'rec-card__wr--negative'}`}>
-                                            {(rec.winRate * 100).toFixed(1)}%
-                                        </span>
-                                    )}
-                                </div>
-                                {/* Tags */}
-                                {rec.tags && rec.tags.length > 0 && (
-                                    <div className="rec-card__tags">
-                                        {rec.tags.slice(0, 3).map((tag, i) => (
-                                            <TagBadge key={i} tag={tag} />
-                                        ))}
-                                    </div>
-                                )}
-                                <div className="rec-card__reasons">
-                                    {(rec.details || rec.reasons || []).length > 0 ? (
-                                        (rec.details || rec.reasons || []).slice(0, 2).map((reason, i) => (
-                                            <span key={i} className="rec-card__reason">{reason}</span>
-                                        ))
-                                    ) : (
-                                        <span className="rec-card__reason">Good pick for {ROLE_LABELS[role?.toLowerCase()] || role}</span>
-                                    )}
-                                </div>
-                            </div>
-
-                            {/* Score */}
-                            <div className="rec-card__score">
-                                <div className="rec-card__score-value">{rec.score.toFixed(1)}</div>
-                                <div className="rec-card__score-label">score</div>
-                            </div>
-
-                            {/* Score bar */}
-                            <div className="rec-card__bar" style={{ width: `${barWidth}%` }} />
-                        </div>
+                        <RecCard
+                            key={rec.name}
+                            rec={rec}
+                            idx={idx}
+                            barWidth={barWidth}
+                            role={role}
+                            getChampionIcon={getChampionIcon}
+                        />
                     );
                 })}
             </div>

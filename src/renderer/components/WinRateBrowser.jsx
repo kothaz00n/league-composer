@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { RoleIcon, IconGlobe, IconTrophy, IconFlex, IconImport, IconEmptyInbox } from './HextechIcons';
 import ViewHeader from './ViewHeader';
 
@@ -85,30 +85,35 @@ export default function WinRateBrowser({ allChampions, onBack, onOpenImporter })
         fetchAll();
     }, [allChampions, importedChamps, selectedQueue, selectedRole, showOnlyImported]);
 
-    // Build display data
+    // Build display data — memoized to avoid recomputing on unrelated re-renders
     const championsToShow = showOnlyImported && importedChamps.length > 0
         ? importedChamps
         : allChampions;
 
-    const champList = championsToShow
-        .filter(name => name.toLowerCase().includes(searchTerm.toLowerCase()))
-        .map(name => {
-            const key = `${name}-${selectedQueue}-${selectedRole}`;
-            const s = stats[key] || { winRate: 0.50, tier: '?', pickRate: 0, banRate: 0, hasData: false };
-            return { name, ...s };
+    const tierOrder = { 'S+': 0, 'S': 1, 'A': 2, 'B': 3, 'C': 4, 'D': 5, '?': 6 };
+
+    const champList = useMemo(() => {
+        const searchLower = searchTerm.toLowerCase();
+        const mapped = championsToShow
+            .filter(name => name.toLowerCase().includes(searchLower))
+            .map(name => {
+                const key = `${name}-${selectedQueue}-${selectedRole}`;
+                const s = stats[key] || { winRate: 0.50, tier: '?', pickRate: 0, banRate: 0, hasData: false };
+                return { name, ...s };
+            });
+
+        mapped.sort((a, b) => {
+            let cmp = 0;
+            if (sortBy === 'winRate') cmp = (a.winRate || 0) - (b.winRate || 0);
+            else if (sortBy === 'name') cmp = a.name.localeCompare(b.name);
+            else if (sortBy === 'tier') cmp = (tierOrder[a.tier] || 6) - (tierOrder[b.tier] || 6);
+            else if (sortBy === 'pickRate') cmp = (a.pickRate || 0) - (b.pickRate || 0);
+            else if (sortBy === 'banRate') cmp = (a.banRate || 0) - (b.banRate || 0);
+            return sortDir === 'desc' ? -cmp : cmp;
         });
 
-    // Sort
-    const tierOrder = { 'S+': 0, 'S': 1, 'A': 2, 'B': 3, 'C': 4, 'D': 5, '?': 6 };
-    champList.sort((a, b) => {
-        let cmp = 0;
-        if (sortBy === 'winRate') cmp = (a.winRate || 0) - (b.winRate || 0);
-        else if (sortBy === 'name') cmp = a.name.localeCompare(b.name);
-        else if (sortBy === 'tier') cmp = (tierOrder[a.tier] || 6) - (tierOrder[b.tier] || 6);
-        else if (sortBy === 'pickRate') cmp = (a.pickRate || 0) - (b.pickRate || 0);
-        else if (sortBy === 'banRate') cmp = (a.banRate || 0) - (b.banRate || 0);
-        return sortDir === 'desc' ? -cmp : cmp;
-    });
+        return mapped;
+    }, [championsToShow, stats, searchTerm, selectedQueue, selectedRole, sortBy, sortDir]);
 
     const toggleSort = (field) => {
         if (sortBy === field) {

@@ -28,6 +28,7 @@ const {
     detectTeamComposition,
     getCompositionTier,
     getArchetypeFitBonus,
+    COMP_ARCHETYPES,
 } = require('../data/archetypeMapping.cjs');
 
 // ─── Champion ID ↔ Name Mapping ─────────────────────────────────────────
@@ -101,6 +102,27 @@ function resolveChampionId(name) {
  */
 function getTagsForChampion(name) {
     return getChampionTags(cleanName(name));
+}
+
+/**
+ * Derive required/bonus composition roles from a custom archetype's champion pool.
+ * Roles appearing in ≥3 champions → required; 1-2 → bonus.
+ * @param {Object} championPool - { top: string[], jungle: string[], ... }
+ * @returns {{ required: string[], bonus: string[] }}
+ */
+function deriveRolesFromPool(championPool) {
+    const roleCounts = {};
+    for (const champNames of Object.values(championPool || {})) {
+        for (const rawName of (champNames || [])) {
+            const compRoles = getCompositionRoles(getTagsForChampion(rawName));
+            for (const role of compRoles) {
+                roleCounts[role] = (roleCounts[role] || 0) + 1;
+            }
+        }
+    }
+    const required = Object.entries(roleCounts).filter(([, c]) => c >= 3).map(([r]) => r);
+    const bonus = Object.entries(roleCounts).filter(([, c]) => c >= 1 && c < 3).map(([r]) => r);
+    return { required, bonus };
 }
 
 /**
@@ -296,11 +318,36 @@ function getRecommendations({
             }
         }
 
+        // ─── Champion Pool Bonus (custom archetypes) ────────────
+        if (targetArchetypeDef?.champion_pool?.[normalizedRole]) {
+            const pool = targetArchetypeDef.champion_pool[normalizedRole].map(n => cleanName(n));
+            if (pool.includes(champName)) {
+                score += 8;
+                scoreDetails.push('Champion Pool');
+            }
+        }
+
         // Standard Archetype Logic
-        if (targetArchetype) {
+        if (targetArchetype && COMP_ARCHETYPES[targetArchetype]) {
+            // Built-in archetype: use existing tag-based fit
             fitBonus = getArchetypeFitBonus(champTags, targetArchetype);
             if (fitBonus > 0) {
                 scoreDetails.push(`Fits target ${targetArchetype} comp`);
+            }
+        } else if (targetArchetypeDef?.champion_pool) {
+            // Custom archetype: derive roles from pool and score by tag fit
+            const derived = deriveRolesFromPool(targetArchetypeDef.champion_pool);
+            const champRoles = getCompositionRoles(champTags);
+            let customFit = 0;
+            for (const req of derived.required) {
+                if (champRoles.includes(req)) customFit += 3;
+            }
+            for (const bon of derived.bonus) {
+                if (champRoles.includes(bon)) customFit += 1;
+            }
+            fitBonus = Math.min(customFit, 5);
+            if (fitBonus > 0) {
+                scoreDetails.push(`Fits custom comp style`);
             }
         }
         // Otherwise use detected composition

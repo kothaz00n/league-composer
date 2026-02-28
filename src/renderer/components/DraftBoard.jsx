@@ -55,7 +55,7 @@ function BanSlot({ championId, getChampionName, getChampionIcon }) {
     );
 }
 
-export default function DraftBoard({ allies, enemies, bans, localPlayer, getChampionName, getChampionIcon }) {
+export default function DraftBoard({ allies, enemies, bans, localPlayer, enemyComposition, getChampionName, getChampionIcon }) {
     const allySlots  = Array.from({ length: 5 }, (_, i) => allies?.[i]  || { cellId: i,     championId: 0, role: '' });
     const enemySlots = Array.from({ length: 5 }, (_, i) => enemies?.[i] || { cellId: i + 5, championId: 0, role: '' });
 
@@ -63,6 +63,8 @@ export default function DraftBoard({ allies, enemies, bans, localPlayer, getCham
     const allBans  = Array.from({ length: 10 }, (_, i) => bans?.[i] || 0);
     const blueBans = allBans.slice(0, 5);
     const redBans  = allBans.slice(5, 10);
+
+    const hasEnemyPicks = enemies?.some(e => e.championId > 0);
 
     return (
         <div className="draft-board">
@@ -116,6 +118,33 @@ export default function DraftBoard({ allies, enemies, bans, localPlayer, getCham
                     ))}
                 </div>
             </div>
+
+            {/* Enemy Comp Badge */}
+            {hasEnemyPicks && enemyComposition && enemyComposition.archetype !== 'unknown' && (
+                <div style={{
+                    margin: '8px 0 0',
+                    padding: '8px 12px',
+                    background: 'rgba(200, 60, 60, 0.08)',
+                    border: '1px solid rgba(200, 60, 60, 0.25)',
+                    borderRadius: '4px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '8px',
+                    flexWrap: 'wrap',
+                }}>
+                    <span style={{ fontSize: '11px', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                        Enemy Comp:
+                    </span>
+                    <span style={{ fontSize: '13px', fontWeight: '700', color: '#e84057' }}>
+                        {enemyComposition.icon} {enemyComposition.name}
+                    </span>
+                    {enemyComposition.desc && (
+                        <span style={{ fontSize: '11px', color: 'var(--text-muted)' }}>
+                            — {enemyComposition.desc}
+                        </span>
+                    )}
+                </div>
+            )}
         </div>
     );
 }

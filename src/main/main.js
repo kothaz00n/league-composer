@@ -14,7 +14,7 @@ const fs = require('fs'); // Added fs import
 const { readLockfile } = require('./lcu/lockfileReader');
 const { createLcuClient, getCurrentSummoner, getChampSelectSession } = require('./lcu/lcuClient');
 const { LcuWebSocket } = require('./lcu/lcuWebSocket');
-const { getRecommendations, initializeEngine } = require('../engine/recommend');
+const { getRecommendations, initializeEngine, analyzeTeamComposition } = require('../engine/recommend');
 const { loadChampionData, getIdToNameMap, getNameToIdMap, getChampionTags,
     getLatestVersion,
     getAllChampions,
@@ -726,6 +726,9 @@ function handleChampSelectUpdate(session) {
             localPlayerCellId,
         });
 
+        // Compute enemy composition analysis for display
+        const enemyComposition = analyzeTeamComposition(enemyPicks);
+
         // Send full state update to renderer
         const draftState = {
             phase: timer?.phase || 'UNKNOWN',
@@ -749,6 +752,7 @@ function handleChampSelectUpdate(session) {
             bans: allBans,
             recommendations,
             compositionAnalysis,
+            enemyComposition,
             ddragonVersion: getLatestVersion(),
         };
 

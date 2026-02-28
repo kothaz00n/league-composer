@@ -5,6 +5,7 @@ import CompAnalysis from './components/CompAnalysis';
 import RecommendationPanel from './components/RecommendationPanel';
 import CompositionsEditor from './components/CompositionsEditor';
 import WinRateImporter from './components/WinRateImporter';
+import WelcomeModal from './components/WelcomeModal';
 import { IconSword, IconHome, IconCompositions, IconImport, IconGame } from './components/HextechIcons';
 
 // Data Dragon base URL for champion assets
@@ -80,8 +81,10 @@ export default function App() {
     const [draftState, setDraftState] = useState(null);
     const [recommendations, setRecommendations] = useState([]);
     const [compositionAnalysis, setCompositionAnalysis] = useState(null);
+    const [enemyComposition, setEnemyComposition] = useState(null);
     const [currentView, setCurrentView] = useState('dashboard');
     const [isImporterOpen, setIsImporterOpen] = useState(false);
+    const [showWelcome, setShowWelcome] = useState(() => !localStorage.getItem('lc_welcomed'));
 
     const [rosterData, setRosterData] = useState(null);
     const [championData, setChampionData] = useState(null);
@@ -111,6 +114,9 @@ export default function App() {
                 if (data.compositionAnalysis) {
                     setCompositionAnalysis(data.compositionAnalysis);
                 }
+                if (data.enemyComposition) {
+                    setEnemyComposition(data.enemyComposition);
+                }
                 if (data.ddragonVersion) {
                     currentDdragonVersion = data.ddragonVersion;
                 }
@@ -120,6 +126,7 @@ export default function App() {
                 setDraftState(null);
                 setRecommendations([]);
                 setCompositionAnalysis(null);
+                setEnemyComposition(null);
                 setCurrentView('dashboard');
             });
 
@@ -284,6 +291,7 @@ export default function App() {
                                         enemies={draftState.enemies}
                                         bans={draftState.bans}
                                         localPlayer={draftState.localPlayer}
+                                        enemyComposition={enemyComposition}
                                         getChampionName={getChampionName}
                                         getChampionIcon={getChampionIcon}
                                     />
@@ -364,6 +372,12 @@ export default function App() {
             <div className="app-content">
                 {renderView()}
                 {isImporterOpen && <WinRateImporter onClose={() => setIsImporterOpen(false)} />}
+                {showWelcome && (
+                    <WelcomeModal onClose={() => {
+                        localStorage.setItem('lc_welcomed', '1');
+                        setShowWelcome(false);
+                    }} />
+                )}
             </div>
         </div>
     );
