@@ -21,7 +21,14 @@ async function scrapeUGGChampions(onProgress = (msg) => console.log(msg), queueT
     const browser = await puppeteer.launch({
         headless: true, // Run invisibly in background
         defaultViewport: null, // Full page
-        args: ['--start-maximized', '--no-sandbox', '--disable-setuid-sandbox'],
+        args: [
+            '--start-maximized',
+            '--no-sandbox',
+            '--disable-setuid-sandbox',
+            '--disable-dev-shm-usage',
+            '--disable-gpu',
+            '--disable-features=IsolateOrigins,site-per-process'
+        ],
     });
 
     // Structure required by winRateProvider.js

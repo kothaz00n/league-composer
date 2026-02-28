@@ -59,7 +59,7 @@ function createWindow() {
             preload: path.join(__dirname, 'preload.js'),
             contextIsolation: true,
             nodeIntegration: false,
-            sandbox: true,
+            sandbox: false,
         },
     });
 
@@ -327,19 +327,23 @@ function setupIPC() {
 
     // ─── Scraper ────────────────────────────────────────────────────────
     ipcMain.on(IPC_CHANNELS.SCRAPER_RUN_UGG, async (event, force = false, queueType = 'soloq') => {
-        console.log(`[Main] Request to run U.GG scrape (${queueType})...`);
+        console.log(`[Main] Request to run U.GG scrape (queue=${queueType}, force=${force})...`);
+        const onProgress = (msg) => {
+            console.log(`[Main] Scraper Progress: ${msg}`);
+            event.reply(IPC_CHANNELS.SCRAPER_PROGRESS, msg);
+        };
+
         try {
+            onProgress('Checking local data status...');
             // Check last updated time
             let existing = {};
             if (fs.existsSync(WINRATES_PATH)) {
                 try {
                     existing = JSON.parse(fs.readFileSync(WINRATES_PATH, 'utf8'));
-                } catch (e) { /* ignore */ }
+                } catch (e) {
+                    console.error('[Main] Error parsing winrates.json:', e);
+                }
             }
-
-            // Check specific queue timestamp if it exists, otherwise check root
-            // We'll store metadata per queue now
-            const queueData = existing[queueType] || {};
 
             if (!force && existing.lastUpdated && existing.lastUpdatedQueue === queueType) {
                 const now = Date.now();
@@ -348,18 +352,20 @@ function setupIPC() {
 
                 if (hours < 24) {
                     const remaining = Math.ceil(24 - hours);
-                    console.log(`[Main] Scrape skipped: Data is fresh (${hours.toFixed(1)}h old).`);
+                    const skipMsg = `Data for ${queueType} is recent (updated ${hours.toFixed(1)}h ago). Wait ${remaining}h or use Force Update.`;
+                    console.log(`[Main] Scrape skipped: ${skipMsg}`);
+                    onProgress('[Skipped] ' + skipMsg);
                     event.reply(IPC_CHANNELS.SCRAPER_COMPLETE, {
                         success: false,
-                        message: `Data for ${queueType} is recent (updated ${hours.toFixed(1)}h ago). Wait ${remaining}h or use Force Update.`
+                        message: skipMsg
                     });
                     return;
                 }
             }
 
             console.log(`[Main] Starting U.GG scrape for ${queueType}...`);
+            onProgress(`Initializing scraper for ${queueType}...`);
 
-            const onProgress = (msg) => event.reply(IPC_CHANNELS.SCRAPER_PROGRESS, msg);
             // Get name map for normalization
             const { getChampionNameMap } = require('../data/champions');
             const nameMap = getChampionNameMap();
@@ -375,14 +381,18 @@ function setupIPC() {
                 ...existing,
                 [queueType]: rawData[queueType], // overwrite specific queue
                 lastUpdated: Date.now(),
-                lastUpdatedQueue: queueType // track which one was last updated for simple global cooldown
+                lastUpdatedQueue: queueType // track which one was last updated
             };
+
+            // Ensure directory exists
+            const dir = path.dirname(WINRATES_PATH);
+            if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
 
             fs.writeFileSync(WINRATES_PATH, JSON.stringify(merged, null, 2));
             console.log('[Main] Scrape complete and saved.');
 
             // Reload in memory
-            loadWinRates();
+            reloadWinRates();
 
             // Create summary stats
             const totalChamps = Object.values(rawData[queueType]).reduce((acc, roleObj) => acc + Object.keys(roleObj).length, 0);

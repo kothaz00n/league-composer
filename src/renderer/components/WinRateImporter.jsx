@@ -25,13 +25,20 @@ const WinRateImporter = ({ onClose }) => {
     const logsEndRef = useRef(null);
 
     useEffect(() => {
-        if (!window.electronAPI) return;
+        if (!window.electronAPI) {
+            console.error('[Importer] electronAPI not found!');
+            return;
+        }
+
+        console.log('[Importer] Registering scraper listeners...');
 
         const handleProgress = (msg) => {
+            console.log('[Importer] Scraper Progress:', msg);
             setScrapeLogs(prev => [...prev, msg]);
         };
 
         const handleComplete = (result) => {
+            console.log('[Importer] Scraper Complete:', result);
             setIsScraping(false);
             if (result.success) {
                 setSuccessMsg(result.message);
@@ -42,17 +49,11 @@ const WinRateImporter = ({ onClose }) => {
             }
         };
 
-        // Register listeners
-        // Note: In a real app we might need to unsubscribe, but Electron ipcRenderer.on is persistent usually unless removed.
-        // For now we assume this component stays mounted or we just leak a listener which is fine for this scale.
-        // Better: cleanup.
-        const cleanupProgress = window.electronAPI.onScraperProgress(handleProgress);
-        const cleanupComplete = window.electronAPI.onScraperComplete(handleComplete);
+        window.electronAPI.onScraperProgress(handleProgress);
+        window.electronAPI.onScraperComplete(handleComplete);
 
         return () => {
-            // Ideally existing preload doesn't return cleanup fn, so we might need to change preload or just accept it.
-            // Our preload wrapper returns the electron generic event usage, which doesn't return unsubscribe.
-            // We'll skip cleanup for this MVP step or just be careful not to mount/unmount rapidly.
+            console.log('[Importer] Component unmounting...');
         };
     }, []);
 
@@ -69,8 +70,9 @@ const WinRateImporter = ({ onClose }) => {
     };
 
     const handleAutoImport = (force = false) => {
+        console.log(`[Importer] Requesting scrape (force=${force}, queue=${selectedQueue})`);
         setIsScraping(true);
-        setScrapeLogs([force ? 'Forcing update...' : 'Checking data freshness...']);
+        setScrapeLogs(['[SYSTEM] Initializing request...', force ? 'Forcing update...' : 'Checking data freshness...']);
         setError(null);
         setSuccessMsg(null);
         window.electronAPI?.runUggScrape(force, selectedQueue);
