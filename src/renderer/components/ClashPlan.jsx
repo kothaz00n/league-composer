@@ -27,15 +27,9 @@ function ScoreRing({ value, max = 100, color = '#c8aa6e', size = 72 }) {
 // ─── Champion Slot ─────────────────────────────────────────────────────────────
 function ChampSlot({ role, name, winRate }) {
     const hasPick = Boolean(name);
-    const wrColor = !winRate ? '#aaa' : winRate > 0.52 ? '#6ee087' : winRate < 0.48 ? '#c9736e' : '#c8aa6e';
+    const wrColor = !winRate ? 'var(--text-muted)' : winRate > 0.52 ? 'var(--color-green-accent)' : winRate < 0.48 ? 'var(--color-red-accent)' : 'var(--hextech-gold)';
     return (
-        <div style={{
-            display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '6px',
-            padding: '14px 10px', background: hasPick ? 'var(--bg-secondary)' : 'rgba(255,255,255,0.03)',
-            border: `1px solid ${hasPick ? 'var(--border-active, #c8aa6e44)' : 'var(--border)'}`,
-            borderRadius: '6px', minWidth: '90px', flex: 1,
-            transition: 'all 0.2s',
-        }}>
+        <div className={`clash-champ-slot ${hasPick ? 'clash-champ-slot--filled' : 'clash-champ-slot--empty'}`}>
             <RoleIcon role={role} size={18} />
             <span style={{ fontSize: '10px', color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
                 {ROLE_LABELS[role]}
@@ -182,7 +176,7 @@ const ClashPlan = ({ onBack }) => {
     const synergyColor = !synergy?.avgScore ? '#aaa' : synergy.avgScore >= 7 ? '#6ee087' : synergy.avgScore >= 5 ? '#c8aa6e' : '#c9736e';
 
     return (
-        <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
+        <div className="clash-plan">
             <ViewHeader title="Clash Plan" onBack={onBack}>
                 <button
                     className="editor-btn editor-btn--primary"
@@ -193,16 +187,16 @@ const ClashPlan = ({ onBack }) => {
                 </button>
             </ViewHeader>
 
-            <div style={{ flex: 1, overflowY: 'auto', padding: '20px' }}>
+            <div className="clash-plan__content">
 
                 {/* Composition Loader */}
                 {compositions.length > 0 && (
-                    <div style={{ marginBottom: '20px' }}>
-                        <label style={s.label}>Load from saved composition</label>
+                    <div className="clash-plan__section">
+                        <label className="clash-label">Load from saved composition</label>
                         <select
                             value={selectedComp}
                             onChange={e => setSelectedComp(e.target.value)}
-                            style={s.select}
+                            className="clash-select"
                         >
                             <option value="">— Manual Entry —</option>
                             {compositions.map(c => (
@@ -213,27 +207,27 @@ const ClashPlan = ({ onBack }) => {
                 )}
 
                 {/* Archetype Selector */}
-                <div style={{ marginBottom: '20px', display: 'flex', gap: '12px', flexWrap: 'wrap', alignItems: 'flex-end' }}>
+                <div className="clash-plan__section" style={{ display: 'flex', gap: '12px', flexWrap: 'wrap', alignItems: 'flex-end' }}>
                     <div style={{ flex: 1, minWidth: '160px' }}>
-                        <label style={s.label}>Target Archetype</label>
-                        <select value={archetypeKey} onChange={e => setArchetypeKey(e.target.value)} style={s.select}>
+                        <label className="clash-label">Target Archetype</label>
+                        <select value={archetypeKey} onChange={e => setArchetypeKey(e.target.value)} className="clash-select">
                             {ARCHETYPE_OPTIONS.map(o => <option key={o.key} value={o.key}>{o.label}</option>)}
                         </select>
                     </div>
                 </div>
 
                 {/* Champion Slots */}
-                <div style={{ marginBottom: '20px' }}>
-                    <div style={s.section}>TEAM COMPOSITION</div>
+                <div className="clash-plan__section">
+                    <div className="clash-section-title">TEAM COMPOSITION</div>
                     <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
                         {ROLES.map(role => (
                             <div key={role} style={{ flex: '1 1 80px' }}>
-                                {/* Inline input for manual entry */}
                                 <input
                                     value={team[role]}
                                     onChange={e => setTeam(prev => ({ ...prev, [role]: e.target.value }))}
                                     placeholder={ROLE_LABELS[role]}
-                                    style={{ ...s.input, marginBottom: '6px' }}
+                                    className="clash-input"
+                                    style={{ marginBottom: '6px' }}
                                 />
                                 <ChampSlot
                                     role={role}
@@ -248,7 +242,7 @@ const ClashPlan = ({ onBack }) => {
                 {/* Score Summary */}
                 <div style={{ display: 'flex', gap: '16px', marginBottom: '20px', flexWrap: 'wrap' }}>
                     {/* Meta Score */}
-                    <div style={s.scoreCard}>
+                    <div className="clash-score-card">
                         <div style={{ position: 'relative', width: 72, height: 72 }}>
                             <ScoreRing value={metaScore ?? 0} max={100} color={tierColor} />
                             <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
@@ -256,14 +250,14 @@ const ClashPlan = ({ onBack }) => {
                             </div>
                         </div>
                         <div>
-                            <div style={s.scoreLabel}>Meta Score</div>
+                            <div className="clash-score-label">Meta Score</div>
                             <div style={{ fontSize: '22px', fontWeight: '700', color: tierColor }}>{metaScore ?? '—'}</div>
                             <div style={{ fontSize: '11px', color: 'var(--text-secondary)' }}>out of 100</div>
                         </div>
                     </div>
 
                     {/* Synergy Score */}
-                    <div style={s.scoreCard}>
+                    <div className="clash-score-card">
                         <div style={{ position: 'relative', width: 72, height: 72 }}>
                             <ScoreRing value={(synergy?.avgScore ?? 0) * 10} max={100} color={synergyColor} />
                             <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
@@ -273,7 +267,7 @@ const ClashPlan = ({ onBack }) => {
                             </div>
                         </div>
                         <div>
-                            <div style={s.scoreLabel}>Synergy</div>
+                            <div className="clash-score-label">Synergy</div>
                             <div style={{ fontSize: '15px', fontWeight: '600', color: synergyColor }}>{synergy?.label ?? 'No data'}</div>
                             <div style={{ fontSize: '11px', color: 'var(--text-secondary)' }}>{synergy?.pairCount ?? 0} pairs analyzed</div>
                         </div>
@@ -281,18 +275,18 @@ const ClashPlan = ({ onBack }) => {
 
                     {/* Avg Win Rate */}
                     {avgWR && (
-                        <div style={s.scoreCard}>
+                        <div className="clash-score-card">
                             <div style={{ position: 'relative', width: 72, height: 72 }}>
-                                <ScoreRing value={Math.round((avgWR - 0.45) / 0.10 * 100)} max={100} color="#c8aa6e" />
+                                <ScoreRing value={Math.round((avgWR - 0.45) / 0.10 * 100)} max={100} color="var(--hextech-gold)" />
                                 <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
-                                    <span style={{ fontSize: '13px', fontWeight: '800', color: '#c8aa6e', lineHeight: 1 }}>
+                                    <span style={{ fontSize: '13px', fontWeight: '800', color: 'var(--hextech-gold)', lineHeight: 1 }}>
                                         {(avgWR * 100).toFixed(1)}%
                                     </span>
                                 </div>
                             </div>
                             <div>
-                                <div style={s.scoreLabel}>Avg Win Rate</div>
-                                <div style={{ fontSize: '22px', fontWeight: '700', color: '#c8aa6e' }}>{(avgWR * 100).toFixed(1)}%</div>
+                                <div className="clash-score-label">Avg Win Rate</div>
+                                <div style={{ fontSize: '22px', fontWeight: '700', color: 'var(--hextech-gold)' }}>{(avgWR * 100).toFixed(1)}%</div>
                                 <div style={{ fontSize: '11px', color: 'var(--text-secondary)' }}>team average</div>
                             </div>
                         </div>
@@ -304,20 +298,20 @@ const ClashPlan = ({ onBack }) => {
                     <div style={{ display: 'flex', gap: '16px', marginBottom: '20px', flexWrap: 'wrap' }}>
                         {synergy.gaps?.length > 0 && (
                             <div style={{ flex: 1, minWidth: '200px' }}>
-                                <div style={s.section}>GAPS</div>
+                                <div className="clash-section-title">GAPS</div>
                                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
                                     {synergy.gaps.map(g => (
-                                        <span key={g} style={s.gapChip}>⚠️ {g}</span>
+                                        <span key={g} className="clash-gap-chip">⚠️ {g}</span>
                                     ))}
                                 </div>
                             </div>
                         )}
                         {synergy.strengths?.length > 0 && (
                             <div style={{ flex: 1, minWidth: '200px' }}>
-                                <div style={s.section}>STRENGTHS</div>
+                                <div className="clash-section-title">STRENGTHS</div>
                                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
                                     {synergy.strengths.map(str => (
-                                        <span key={str} style={s.strengthChip}>✅ {str}</span>
+                                        <span key={str} className="clash-strength-chip">✅ {str}</span>
                                     ))}
                                 </div>
                             </div>
@@ -327,21 +321,16 @@ const ClashPlan = ({ onBack }) => {
 
                 {/* Ban Recommendations */}
                 {banRecs.length > 0 && (
-                    <div style={{ marginBottom: '20px' }}>
-                        <div style={s.section}>TOP BAN TARGETS</div>
+                    <div className="clash-plan__section">
+                        <div className="clash-section-title">TOP BAN TARGETS</div>
                         <p style={{ fontSize: '12px', color: 'var(--text-secondary)', marginBottom: '10px' }}>
                             These champions exploit your composition's identified gaps.
                         </p>
                         <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
                             {banRecs.map((ban, idx) => (
-                                <div key={ban} style={{
-                                    display: 'flex', alignItems: 'center', gap: '10px',
-                                    padding: '10px 14px',
-                                    background: 'rgba(201,115,110,0.1)', border: '1px solid hsl(0,45%,30%)',
-                                    borderRadius: '6px', flex: '1 1 120px',
-                                }}>
-                                    <span style={{ fontSize: '16px', color: '#c9736e', fontWeight: '700' }}>#{idx + 1}</span>
-                                    <span style={{ color: 'var(--text-primary)', fontWeight: '600' }}>BAN {ban}</span>
+                                <div key={ban} className="clash-ban-card">
+                                    <span className="clash-ban-card__rank">#{idx + 1}</span>
+                                    <span className="clash-ban-card__name">BAN {ban}</span>
                                 </div>
                             ))}
                         </div>
@@ -352,44 +341,6 @@ const ClashPlan = ({ onBack }) => {
     );
 };
 
-// ─── Shared Styles ────────────────────────────────────────────────────────────
-const s = {
-    label: {
-        display: 'block', fontSize: '11px', color: 'var(--text-secondary)',
-        textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '6px',
-    },
-    select: {
-        width: '100%', padding: '7px 10px', background: 'var(--bg-secondary)',
-        border: '1px solid var(--border)', color: 'var(--text-primary)', borderRadius: '4px', fontSize: '13px',
-    },
-    input: {
-        width: '100%', padding: '5px 8px', background: 'var(--bg-secondary)',
-        border: '1px solid var(--border)', color: 'var(--text-primary)', borderRadius: '4px',
-        fontSize: '12px', boxSizing: 'border-box',
-    },
-    section: {
-        fontSize: '10px', color: 'var(--text-secondary)', textTransform: 'uppercase',
-        letterSpacing: '0.08em', fontWeight: '700', marginBottom: '10px',
-        borderBottom: '1px solid var(--border)', paddingBottom: '6px',
-    },
-    scoreCard: {
-        display: 'flex', gap: '14px', alignItems: 'center',
-        padding: '16px', background: 'var(--bg-secondary)',
-        border: '1px solid var(--border)', borderRadius: '8px',
-        flex: '1 1 200px',
-    },
-    scoreLabel: {
-        fontSize: '11px', color: 'var(--text-secondary)', textTransform: 'uppercase',
-        letterSpacing: '0.05em', marginBottom: '4px',
-    },
-    gapChip: {
-        background: 'hsl(0,45%,18%)', border: '1px solid hsl(0,45%,30%)',
-        color: '#c9736e', fontSize: '11px', padding: '3px 10px', borderRadius: '12px',
-    },
-    strengthChip: {
-        background: 'hsl(142,45%,16%)', border: '1px solid hsl(142,45%,28%)',
-        color: '#6ee087', fontSize: '11px', padding: '3px 10px', borderRadius: '12px',
-    },
-};
+/* Styles moved to index.css — see .clash-* classes */
 
 export default ClashPlan;

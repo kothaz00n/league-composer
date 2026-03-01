@@ -33,8 +33,12 @@ const Dashboard = ({ onViewChange, isClientReady }) => {
                 <div className="dashboard-grid">
                     {/* Team Builder Card */}
                     <div
-                        className="dashboard-card group"
+                        className="dashboard-card group animate-entry"
                         onClick={() => onViewChange('builder')}
+                        onKeyDown={e => e.key === 'Enter' && onViewChange('builder')}
+                        tabIndex={0}
+                        role="button"
+                        aria-label="Open Team Builder"
                         style={{ '--card-delay': '0ms' }}
                     >
                         <div className="dashboard-card__icon">
@@ -50,8 +54,12 @@ const Dashboard = ({ onViewChange, isClientReady }) => {
 
                     {/* Roster Card */}
                     <div
-                        className="dashboard-card group"
+                        className="dashboard-card group animate-entry"
                         onClick={() => onViewChange('roster')}
+                        onKeyDown={e => e.key === 'Enter' && onViewChange('roster')}
+                        tabIndex={0}
+                        role="button"
+                        aria-label="Open Roster & Favorites"
                         style={{ '--card-delay': '80ms' }}
                     >
                         <div className="dashboard-card__icon">
@@ -67,8 +75,12 @@ const Dashboard = ({ onViewChange, isClientReady }) => {
 
                     {/* Win Rates Card */}
                     <div
-                        className="dashboard-card group"
+                        className="dashboard-card group animate-entry"
                         onClick={() => onViewChange('winrates')}
+                        onKeyDown={e => e.key === 'Enter' && onViewChange('winrates')}
+                        tabIndex={0}
+                        role="button"
+                        aria-label="Open Win Rates Reference"
                         style={{ '--card-delay': '160ms' }}
                     >
                         <div className="dashboard-card__icon">
@@ -84,8 +96,12 @@ const Dashboard = ({ onViewChange, isClientReady }) => {
 
                     {/* Compositions Editor Card */}
                     <div
-                        className="dashboard-card group"
+                        className="dashboard-card group animate-entry"
                         onClick={() => onViewChange('editor')}
+                        onKeyDown={e => e.key === 'Enter' && onViewChange('editor')}
+                        tabIndex={0}
+                        role="button"
+                        aria-label="Open Compositions Editor"
                         style={{ '--card-delay': '240ms' }}
                     >
                         <div className="dashboard-card__icon">
@@ -101,8 +117,12 @@ const Dashboard = ({ onViewChange, isClientReady }) => {
 
                     {/* Clash Plan Card */}
                     <div
-                        className="dashboard-card group"
+                        className="dashboard-card group animate-entry"
                         onClick={() => onViewChange('clashplan')}
+                        onKeyDown={e => e.key === 'Enter' && onViewChange('clashplan')}
+                        tabIndex={0}
+                        role="button"
+                        aria-label="Open Clash Plan"
                         style={{ '--card-delay': '320ms' }}
                     >
                         <div className="dashboard-card__icon">
@@ -118,8 +138,12 @@ const Dashboard = ({ onViewChange, isClientReady }) => {
 
                     {/* Draft Preview Card */}
                     <div
-                        className="dashboard-card group"
+                        className="dashboard-card group animate-entry"
                         onClick={() => onViewChange('preview')}
+                        onKeyDown={e => e.key === 'Enter' && onViewChange('preview')}
+                        tabIndex={0}
+                        role="button"
+                        aria-label="Open Draft Preview"
                         style={{ '--card-delay': '400ms' }}
                     >
                         <div className="dashboard-card__icon">
@@ -135,15 +159,15 @@ const Dashboard = ({ onViewChange, isClientReady }) => {
                 </div>
 
                 {/* Status Section */}
-                <div className="dashboard-status">
+                <div className="dashboard-status" role="status" aria-live="polite">
                     <div className="status-indicator">
-                        <div className={`status-dot ${isClientReady ? 'connected' : 'waiting'}`}></div>
+                        <div className={`status-dot ${isClientReady ? 'connected' : 'waiting'}`} aria-hidden="true"></div>
                         <span className="status-text">
                             {isClientReady ? 'LEAGUE CLIENT CONNECTED' : 'WAITING FOR LEAGUE CLIENT...'}
                         </span>
                     </div>
                     {isClientReady && (
-                        <span className="status-badge ready">
+                        <span className="status-badge ready" aria-label="System ready">
                             SYSTEM READY
                         </span>
                     )}
