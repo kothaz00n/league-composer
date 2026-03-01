@@ -1,0 +1,5 @@
+## 2024-03-01 - Batching IPC calls and Promises
+
+**Learning:** When batching IPC calls in Electron using `ipcMain.handle`, it's critical to remember that Electron's IPC framework cannot serialize Promises. If you loop over data and call an asynchronous function (or a function wrapped in `invoke` which acts async), you must `await` the results before returning the object to the renderer. Failing to do so throws a `DataCloneError`. Additionally, when adding dependencies to `useEffect` in React (like a `statsMap`), be careful not to introduce infinite fetch loops if the fetched value is falsy and the fetch condition relies on the map's state.
+
+**Action:** Always ensure any batched data mapped over in an IPC handler is fully resolved (e.g., using `await Promise.all` or `await` in a `for...of` loop) before returning. Carefully review `useEffect` dependency arrays when dealing with dictionaries of fetched data to prevent infinite loops, explicitly omitting dependencies with an inline comment if necessary.

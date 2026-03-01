@@ -549,6 +549,16 @@ ipcMain.handle(IPC_CHANNELS.CHAMPION_GET_STATS, (_, name, role, queue) => {
     return getChampionStats(name, role, queue);
 });
 
+ipcMain.handle(IPC_CHANNELS.CHAMPION_GET_MULTIPLE_STATS, async (_, names, role, queue) => {
+    if (!Array.isArray(names)) return {};
+    const results = {};
+    for (const name of names) {
+        // getChampionStats is actually synchronous in the data provider, but wrapped in invoke it acts async
+        results[name] = await getChampionStats(name, role, queue);
+    }
+    return results;
+});
+
 ipcMain.handle(IPC_CHANNELS.CHAMPION_GET_IMPORTED_LIST, (_, queue, role) => {
     return getImportedChampions(queue, role);
 });

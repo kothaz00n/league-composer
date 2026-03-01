@@ -36,6 +36,7 @@ const IPC_CHANNELS = {
     CHAMPION_GET_OP_PICKS: 'champion:get-op-picks',
     CHAMPION_GET_DATA: 'champion:get-data',
     CHAMPION_GET_STATS: 'champion:get-stats',
+    CHAMPION_GET_MULTIPLE_STATS: 'champion:get-multiple-stats',
     CHAMPION_GET_IMPORTED_LIST: 'champion:get-imported-list',
     CHAMPION_GET_AVAILABLE_QUEUES: 'champion:get-available-queues',
 

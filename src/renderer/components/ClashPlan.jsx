@@ -122,7 +122,7 @@ const ClashPlan = ({ onBack }) => {
             window.electronAPI.analyzeTeamSynergy({ teamRoles: team, archetypeKey })
                 .then(r => { if (r) setSynergy(r); });
         }
-    }, [team, archetypeKey]);
+    }, [team, archetypeKey]); // statsMap intentionally omitted to prevent infinite loops
 
     // Derive ban recommendations from gaps
     useEffect(() => {

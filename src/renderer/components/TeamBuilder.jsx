@@ -217,7 +217,7 @@ const TeamBuilder = ({ allChampions, championData, onBack }) => {
                 }
             }
         });
-    }, [team]);
+    }, [team]); // statsMap intentionally omitted to prevent infinite loops
 
     // Update analysis + synergy when team changes
     useEffect(() => {
