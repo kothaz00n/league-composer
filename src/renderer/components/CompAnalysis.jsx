@@ -62,17 +62,7 @@ export default function CompAnalysis({ compositionAnalysis }) {
 
             {/* Out of Meta Alert */}
             {isOutOfMeta && (
-                <div style={{
-                    padding: '8px 12px',
-                    background: 'rgba(232, 64, 87, 0.15)',
-                    border: '1px solid rgba(232, 64, 87, 0.4)',
-                    borderRadius: '4px',
-                    color: '#e84057',
-                    fontSize: '13px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '8px'
-                }}>
+                <div className="comp-analysis__alert" role="alert">
                     <IconWarning size={16} />
                     <span><strong>Out of Meta:</strong> Low average win rate. Consider substitutions.</span>
                 </div>
@@ -81,27 +71,15 @@ export default function CompAnalysis({ compositionAnalysis }) {
             {/* Substitutions */}
             {suggestions && suggestions.length > 0 && (
                 <div className="comp-suggestions">
-                    <h4 style={{ margin: '0 0 8px 0', fontSize: '12px', color: 'var(--text-secondary)', textTransform: 'uppercase' }}>
-                        Recommended Substitutions
-                    </h4>
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                    <h4 className="comp-suggestions__title">Recommended Substitutions</h4>
+                    <div className="comp-suggestions__list">
                         {suggestions.map((s, idx) => (
-                            <div key={idx} style={{
-                                display: 'flex',
-                                alignItems: 'center',
-                                gap: '8px',
-                                background: 'var(--bg-secondary)',
-                                padding: '6px 10px',
-                                borderRadius: '4px',
-                                borderLeft: '3px solid var(--accent-success)'
-                            }}>
-                                <span style={{ color: 'var(--text-secondary)', fontSize: '12px' }}>Swap</span>
-                                <span style={{ color: '#e84057', fontWeight: 'bold' }}>{s.out}</span>
-                                <span style={{ color: 'var(--text-secondary)', fontSize: '12px' }}>⮕</span>
-                                <span style={{ color: 'var(--accent-success)', fontWeight: 'bold' }}>{s.in}</span>
-                                <span style={{ marginLeft: 'auto', fontSize: '11px', color: 'var(--accent-success)' }}>
-                                    +{s.diff}% WR
-                                </span>
+                            <div key={idx} className="comp-suggestions__item">
+                                <span className="comp-suggestions__swap-label">Swap</span>
+                                <span className="comp-suggestions__out">{s.out}</span>
+                                <span className="comp-suggestions__arrow">⮕</span>
+                                <span className="comp-suggestions__in">{s.in}</span>
+                                <span className="comp-suggestions__diff">+{s.diff}% WR</span>
                             </div>
                         ))}
                     </div>

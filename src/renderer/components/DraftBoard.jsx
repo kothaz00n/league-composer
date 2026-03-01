@@ -121,27 +121,13 @@ export default function DraftBoard({ allies, enemies, bans, localPlayer, enemyCo
 
             {/* Enemy Comp Badge */}
             {hasEnemyPicks && enemyComposition && enemyComposition.archetype !== 'unknown' && (
-                <div style={{
-                    margin: '8px 0 0',
-                    padding: '8px 12px',
-                    background: 'rgba(200, 60, 60, 0.08)',
-                    border: '1px solid rgba(200, 60, 60, 0.25)',
-                    borderRadius: '4px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '8px',
-                    flexWrap: 'wrap',
-                }}>
-                    <span style={{ fontSize: '11px', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-                        Enemy Comp:
-                    </span>
-                    <span style={{ fontSize: '13px', fontWeight: '700', color: '#e84057' }}>
+                <div className="enemy-comp-badge">
+                    <span className="enemy-comp-badge__label">Enemy Comp:</span>
+                    <span className="enemy-comp-badge__name">
                         {enemyComposition.icon} {enemyComposition.name}
                     </span>
                     {enemyComposition.desc && (
-                        <span style={{ fontSize: '11px', color: 'var(--text-muted)' }}>
-                            — {enemyComposition.desc}
-                        </span>
+                        <span className="enemy-comp-badge__desc">— {enemyComposition.desc}</span>
                     )}
                 </div>
             )}

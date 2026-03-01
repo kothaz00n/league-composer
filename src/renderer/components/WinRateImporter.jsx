@@ -230,22 +230,7 @@ const WinRateImporter = ({ onClose }) => {
                         <button
                             key={q.key}
                             onClick={() => setSelectedQueue(q.key)}
-                            style={{
-                                flex: 1,
-                                padding: '10px 16px',
-                                borderRadius: '8px',
-                                border: selectedQueue === q.key ? '2px solid var(--gold)' : '2px solid rgba(255,255,255,0.1)',
-                                background: selectedQueue === q.key ? 'rgba(201,171,102,0.15)' : 'rgba(255,255,255,0.03)',
-                                color: selectedQueue === q.key ? 'var(--gold)' : 'var(--text-secondary)',
-                                fontSize: '14px',
-                                fontWeight: '700',
-                                cursor: 'pointer',
-                                transition: 'all 0.2s',
-                                display: 'inline-flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                gap: '8px',
-                            }}
+                            className={`importer-queue-btn ${selectedQueue === q.key ? 'importer-queue-btn--active' : ''}`}
                         >
                             <q.Icon size={15} />
                             {q.label}
@@ -254,34 +239,18 @@ const WinRateImporter = ({ onClose }) => {
                 </div>
 
                 {/* Tabs */}
-                <div style={{ display: 'flex', gap: '10px', marginBottom: '20px', borderBottom: '1px solid #333' }}>
+                <div className="importer-tabs">
                     <button
                         onClick={() => setActiveTab('manual')}
-                        style={{
-                            padding: '10px 20px',
-                            background: 'none',
-                            border: 'none',
-                            borderBottom: activeTab === 'manual' ? '2px solid var(--gold)' : '2px solid transparent',
-                            color: activeTab === 'manual' ? 'var(--gold)' : 'var(--text-secondary)',
-                            cursor: 'pointer',
-                            fontWeight: 'bold'
-                        }}
+                        className={`importer-tab ${activeTab === 'manual' ? 'importer-tab--active' : ''}`}
                     >
-                        Manual Import (Copy/Paste)
+                        Manual Import
                     </button>
                     <button
                         onClick={() => setActiveTab('auto')}
-                        style={{
-                            padding: '10px 20px',
-                            background: 'none',
-                            border: 'none',
-                            borderBottom: activeTab === 'auto' ? '2px solid var(--gold)' : '2px solid transparent',
-                            color: activeTab === 'auto' ? 'var(--gold)' : 'var(--text-secondary)',
-                            cursor: 'pointer',
-                            fontWeight: 'bold'
-                        }}
+                        className={`importer-tab ${activeTab === 'auto' ? 'importer-tab--active' : ''}`}
                     >
-                        Auto-Import (U.GG Scraper)
+                        Auto-Import
                     </button>
                 </div>
 
@@ -292,42 +261,33 @@ const WinRateImporter = ({ onClose }) => {
                             Also includes "All Roles" data.
                         </p>
 
-                        <div style={{
-                            background: '#050505',
-                            padding: '15px',
-                            borderRadius: '8px',
-                            height: '200px',
-                            overflowY: 'auto',
-                            fontFamily: 'monospace',
-                            fontSize: '12px',
-                            border: '1px solid #333',
-                            marginBottom: '20px'
-                        }}>
+                        <div className="importer-logs">
                             {scrapeLogs.length === 0 ? (
-                                <span style={{ opacity: 0.5 }}>Logs will appear here...</span>
+                                <span className="importer-logs__placeholder">Logs will appear here...</span>
                             ) : (
                                 scrapeLogs.map((log, i) => (
-                                    <div key={i} style={{ marginBottom: '4px' }}>{log}</div>
+                                    <div key={i} className={`importer-log-entry ${log.startsWith('[OK]') ? 'importer-log-entry--ok' : log.startsWith('[ERR]') ? 'importer-log-entry--err' : log.startsWith('[SYSTEM]') ? 'importer-log-entry--system' : ''}`}>
+                                        {log}
+                                    </div>
                                 ))
                             )}
                             <div ref={logsEndRef} />
                         </div>
 
-                        {error && <div style={{ color: 'var(--red-accent)', fontSize: '12px', marginBottom: '10px' }}>{error}</div>}
-                        {successMsg && <div style={{ color: 'var(--green-accent)', fontSize: '12px', marginBottom: '10px' }}>{successMsg}</div>}
+                        {error && <div className="importer-message--error">{error}</div>}
+                        {successMsg && <div className="importer-message--success">{successMsg}</div>}
 
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '10px' }}>
+                        <div className="importer-checkbox">
                             <input
                                 type="checkbox"
                                 id="forceUpdate"
                                 checked={forceUpdate}
-                                style={{ accentColor: 'var(--gold)' }}
                                 onChange={(e) => {
                                     setForceUpdate(e.target.checked);
                                     if (e.target.checked) setError(null);
                                 }}
                             />
-                            <label htmlFor="forceUpdate" style={{ color: 'var(--text-secondary)', fontSize: '12px', cursor: 'pointer' }}>
+                            <label htmlFor="forceUpdate">
                                 Force Update (Ignore 24h limit)
                             </label>
                         </div>
@@ -354,7 +314,7 @@ const WinRateImporter = ({ onClose }) => {
                             <div className="import-step">
                                 <span className="import-step__num">1</span>
                                 <div className="import-step__content">
-                                    <p>Go to <strong><a href="https://u.gg/lol/tier-list" target="_blank" rel="noreferrer" style={{ color: 'var(--gold)' }}>u.gg/lol/tier-list</a></strong>.</p>
+                                    <p>Go to <strong><a href="https://u.gg/lol/tier-list" target="_blank" rel="noreferrer">u.gg/lol/tier-list</a></strong>.</p>
                                     <p>Select <strong>{selectedQueue === 'soloq' ? 'Ranked Solo/Duo' : 'Ranked Flex'}</strong>.</p>
                                 </div>
                             </div>
@@ -363,7 +323,7 @@ const WinRateImporter = ({ onClose }) => {
                                 <span className="import-step__num">2</span>
                                 <div className="import-step__content">
                                     <p>Open Console (<strong>F12</strong>), run this script:</p>
-                                    <button className="editor-btn editor-btn--edit" onClick={copyScript} style={{ marginTop: '8px', width: '100%', display: 'inline-flex', alignItems: 'center', gap: 8, justifyContent: 'center' }}>
+                                    <button className="editor-btn editor-btn--edit" onClick={copyScript} style={{ marginTop: '8px', width: '100%' }}>
                                         <IconClipboard size={14} /> Copy Script (v4)
                                     </button>
                                 </div>
@@ -373,23 +333,21 @@ const WinRateImporter = ({ onClose }) => {
                                 <span className="import-step__num">3</span>
                                 <div className="import-step__content">
                                     <p>Paste the result below.</p>
-
-                                    {/* "All" box for bulk import */}
                                     <div style={{ marginBottom: '10px' }}>
                                         <textarea
                                             className="editor-modal__field"
                                             value={inputs.all}
                                             onChange={(e) => handleInput('all', e.target.value)}
                                             placeholder="Paste bulk JSON here..."
-                                            style={{ height: '100px', fontSize: '11px', fontFamily: 'monospace', border: '1px solid var(--gold)' }}
+                                            style={{ height: '100px', fontSize: '11px', fontFamily: 'monospace' }}
                                         />
                                     </div>
                                 </div>
                             </div>
                         </div>
 
-                        {error && <div style={{ color: 'var(--red-accent)', fontSize: '12px', marginTop: '10px' }}>{error}</div>}
-                        {successMsg && <div style={{ color: 'var(--green-accent)', fontSize: '12px', marginTop: '10px' }}>{successMsg}</div>}
+                        {error && <div className="importer-message--error" style={{ marginTop: '10px' }}>{error}</div>}
+                        {successMsg && <div className="importer-message--success" style={{ marginTop: '10px' }}>{successMsg}</div>}
 
                         <div className="editor-modal__actions">
                             <button className="editor-btn editor-btn--cancel" onClick={onClose}>Cancel</button>
