@@ -28,13 +28,27 @@ function loadWinRates(externalData = null) {
 
         if (hasQueues) {
             // New format: { soloq: { top: {...} }, flex: { top: {...} } }
-            queueData = externalData;
+            queueData = {};
+            let totalChamps = 0;
+            const loadedQueues = [];
+
+            for (let i = 0; i < VALID_QUEUES.length; i++) {
+                const q = VALID_QUEUES[i];
+                if (externalData[q]) {
+                    queueData[q] = {};
+                    loadedQueues.push(q);
+                    for (const roleKey in externalData[q]) {
+                        const lowerRoleKey = roleKey.toLowerCase();
+                        queueData[q][lowerRoleKey] = externalData[q][roleKey];
+                        // Count champions
+                        let count = 0;
+                        for (const champ in externalData[q][roleKey]) count++;
+                        totalChamps += count;
+                    }
+                }
+            }
             dataSource = 'imported';
-            const queues = Object.keys(queueData).filter(q => VALID_QUEUES.includes(q));
-            const totalChamps = queues.reduce((sum, q) => {
-                return sum + Object.values(queueData[q] || {}).reduce((s, roleData) => s + Object.keys(roleData || {}).length, 0);
-            }, 0);
-            console.log(`[WinRate] Loaded queue-based win rates for ${queues.join(', ')} (${totalChamps} total entries)`);
+            console.log(`[WinRate] Loaded queue-based win rates for ${loadedQueues.join(', ')} (${totalChamps} total entries)`);
         } else if (hasLegacyRoles) {
             // Legacy format: { top: {...}, ... } → migrate to soloq
             queueData = { soloq: {} };
@@ -86,8 +100,7 @@ function getChampionStats(championName, role = null, queue = 'soloq') {
         if (role) {
             const qData = queueData[queue];
             if (qData) {
-                const roleKey = Object.keys(qData).find(k => k.toLowerCase() === role.toLowerCase());
-                const roleData = roleKey ? qData[roleKey] : null;
+                const roleData = qData[role.toLowerCase()];
                 if (roleData && roleData[championName]) {
                     entry = roleData[championName];
                     hasData = true;
@@ -155,8 +168,7 @@ function getImportedChampions(queue = 'soloq', role = null) {
     if (!qData) return [];
 
     if (role) {
-        const roleKey = Object.keys(qData).find(k => k.toLowerCase() === role.toLowerCase());
-        return roleKey ? Object.keys(qData[roleKey] || {}) : [];
+        return Object.keys(qData[role.toLowerCase()] || {});
     }
 
     // All roles: union
