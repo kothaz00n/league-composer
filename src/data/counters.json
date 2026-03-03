@@ -1,0 +1,583 @@
+{
+    "Aatrox": {
+        "roles": [
+            "top"
+        ],
+        "counters": {
+            "Fiora": 0.54,
+            "Irelia": 0.53,
+            "Riven": 0.52,
+            "Camille": 0.51
+        },
+        "synergies": {
+            "Amumu": 0.53,
+            "Orianna": 0.52,
+            "Jarvan IV": 0.51
+        },
+        "tags": [
+            "fighter",
+            "bruiser"
+        ]
+    },
+    "Ahri": {
+        "roles": [
+            "mid"
+        ],
+        "counters": {
+            "Zed": 0.53,
+            "Yasuo": 0.55,
+            "Fizz": 0.52,
+            "LeBlanc": 0.51
+        },
+        "synergies": {
+            "Amumu": 0.52,
+            "Leona": 0.53,
+            "Jarvan IV": 0.51
+        },
+        "tags": [
+            "mage",
+            "assassin"
+        ]
+    },
+    "Amumu": {
+        "roles": [
+            "jungle"
+        ],
+        "counters": {
+            "Lee Sin": 0.52,
+            "Elise": 0.51,
+            "Nidalee": 0.53
+        },
+        "synergies": {
+            "Miss Fortune": 0.56,
+            "Orianna": 0.55,
+            "Yasuo": 0.54
+        },
+        "tags": [
+            "tank",
+            "engage"
+        ]
+    },
+    "Ashe": {
+        "roles": [
+            "adc"
+        ],
+        "counters": {
+            "Draven": 0.53,
+            "Lucian": 0.52,
+            "Samira": 0.51
+        },
+        "synergies": {
+            "Leona": 0.53,
+            "Nautilus": 0.52,
+            "Braum": 0.53
+        },
+        "tags": [
+            "marksman",
+            "utility"
+        ]
+    },
+    "Camille": {
+        "roles": [
+            "top"
+        ],
+        "counters": {
+            "Jax": 0.54,
+            "Darius": 0.52,
+            "Renekton": 0.51
+        },
+        "synergies": {
+            "Orianna": 0.53,
+            "Lulu": 0.52,
+            "Jarvan IV": 0.51
+        },
+        "tags": [
+            "fighter",
+            "diver"
+        ]
+    },
+    "Darius": {
+        "roles": [
+            "top"
+        ],
+        "counters": {
+            "Vayne": 0.54,
+            "Quinn": 0.55,
+            "Kayle": 0.52
+        },
+        "synergies": {
+            "Yuumi": 0.53,
+            "Lulu": 0.52,
+            "Morgana": 0.51
+        },
+        "tags": [
+            "fighter",
+            "juggernaut"
+        ]
+    },
+    "Draven": {
+        "roles": [
+            "adc"
+        ],
+        "counters": {
+            "Caitlyn": 0.52,
+            "Ezreal": 0.51,
+            "Jhin": 0.50
+        },
+        "synergies": {
+            "Thresh": 0.54,
+            "Leona": 0.53,
+            "Nautilus": 0.52
+        },
+        "tags": [
+            "marksman",
+            "lane bully"
+        ]
+    },
+    "Ezreal": {
+        "roles": [
+            "adc"
+        ],
+        "counters": {
+            "Draven": 0.53,
+            "Lucian": 0.52,
+            "Kalista": 0.51
+        },
+        "synergies": {
+            "Karma": 0.52,
+            "Yuumi": 0.53,
+            "Nami": 0.52
+        },
+        "tags": [
+            "marksman",
+            "poke"
+        ]
+    },
+    "Fiora": {
+        "roles": [
+            "top"
+        ],
+        "counters": {
+            "Malphite": 0.53,
+            "Kennen": 0.52,
+            "Quinn": 0.51
+        },
+        "synergies": {
+            "Orianna": 0.51,
+            "Lulu": 0.52,
+            "Karma": 0.51
+        },
+        "tags": [
+            "fighter",
+            "duelist"
+        ]
+    },
+    "Fizz": {
+        "roles": [
+            "mid"
+        ],
+        "counters": {
+            "Lissandra": 0.54,
+            "Galio": 0.53,
+            "Malzahar": 0.52
+        },
+        "synergies": {
+            "Leona": 0.53,
+            "Nautilus": 0.52,
+            "Amumu": 0.51
+        },
+        "tags": [
+            "assassin",
+            "burst"
+        ]
+    },
+    "Garen": {
+        "roles": [
+            "top"
+        ],
+        "counters": {
+            "Vayne": 0.55,
+            "Quinn": 0.54,
+            "Kayle": 0.53
+        },
+        "synergies": {
+            "Yuumi": 0.55,
+            "Lulu": 0.53,
+            "Morgana": 0.52
+        },
+        "tags": [
+            "fighter",
+            "juggernaut"
+        ]
+    },
+    "Irelia": {
+        "roles": [
+            "top",
+            "mid"
+        ],
+        "counters": {
+            "Tryndamere": 0.52,
+            "Volibear": 0.53,
+            "Renekton": 0.51
+        },
+        "synergies": {
+            "Orianna": 0.54,
+            "Lulu": 0.53,
+            "Yuumi": 0.52
+        },
+        "tags": [
+            "fighter",
+            "diver"
+        ]
+    },
+    "Jhin": {
+        "roles": [
+            "adc"
+        ],
+        "counters": {
+            "Samira": 0.53,
+            "Draven": 0.52,
+            "Lucian": 0.51
+        },
+        "synergies": {
+            "Xerath": 0.54,
+            "Lux": 0.53,
+            "Morgana": 0.52
+        },
+        "tags": [
+            "marksman",
+            "utility"
+        ]
+    },
+    "Jinx": {
+        "roles": [
+            "adc"
+        ],
+        "counters": {
+            "Draven": 0.54,
+            "Lucian": 0.53,
+            "Tristana": 0.52
+        },
+        "synergies": {
+            "Thresh": 0.53,
+            "Lulu": 0.55,
+            "Nami": 0.52
+        },
+        "tags": [
+            "marksman",
+            "hypercarry"
+        ]
+    },
+    "Katarina": {
+        "roles": [
+            "mid"
+        ],
+        "counters": {
+            "Galio": 0.55,
+            "Kassadin": 0.53,
+            "Diana": 0.52
+        },
+        "synergies": {
+            "Amumu": 0.54,
+            "Jarvan IV": 0.53,
+            "Leona": 0.52
+        },
+        "tags": [
+            "assassin",
+            "burst"
+        ]
+    },
+    "Lee Sin": {
+        "roles": [
+            "jungle"
+        ],
+        "counters": {
+            "Rammus": 0.54,
+            "Amumu": 0.52,
+            "Udyr": 0.51
+        },
+        "synergies": {
+            "Yasuo": 0.55,
+            "Orianna": 0.53,
+            "Jhin": 0.52
+        },
+        "tags": [
+            "fighter",
+            "diver"
+        ]
+    },
+    "Leona": {
+        "roles": [
+            "support"
+        ],
+        "counters": {
+            "Morgana": 0.55,
+            "Janna": 0.53,
+            "Zyra": 0.52
+        },
+        "synergies": {
+            "Miss Fortune": 0.55,
+            "Jinx": 0.53,
+            "Ashe": 0.52
+        },
+        "tags": [
+            "tank",
+            "engage"
+        ]
+    },
+    "Lux": {
+        "roles": [
+            "mid",
+            "support"
+        ],
+        "counters": {
+            "Zed": 0.54,
+            "Fizz": 0.53,
+            "Yasuo": 0.52
+        },
+        "synergies": {
+            "Jinx": 0.53,
+            "Jhin": 0.52,
+            "Miss Fortune": 0.51
+        },
+        "tags": [
+            "mage",
+            "poke"
+        ]
+    },
+    "Malphite": {
+        "roles": [
+            "top"
+        ],
+        "counters": {
+            "Sylas": 0.53,
+            "Mordekaiser": 0.52,
+            "Vayne": 0.51
+        },
+        "synergies": {
+            "Yasuo": 0.56,
+            "Miss Fortune": 0.54,
+            "Orianna": 0.53
+        },
+        "tags": [
+            "tank",
+            "engage"
+        ]
+    },
+    "Miss Fortune": {
+        "roles": [
+            "adc"
+        ],
+        "counters": {
+            "Draven": 0.52,
+            "Caitlyn": 0.51,
+            "Vayne": 0.52
+        },
+        "synergies": {
+            "Amumu": 0.56,
+            "Leona": 0.54,
+            "Nautilus": 0.53
+        },
+        "tags": [
+            "marksman",
+            "teamfight"
+        ]
+    },
+    "Nautilus": {
+        "roles": [
+            "support"
+        ],
+        "counters": {
+            "Morgana": 0.54,
+            "Janna": 0.52,
+            "Braum": 0.51
+        },
+        "synergies": {
+            "Jinx": 0.53,
+            "Miss Fortune": 0.52,
+            "Draven": 0.54
+        },
+        "tags": [
+            "tank",
+            "engage"
+        ]
+    },
+    "Orianna": {
+        "roles": [
+            "mid"
+        ],
+        "counters": {
+            "Zed": 0.53,
+            "Fizz": 0.52,
+            "LeBlanc": 0.53
+        },
+        "synergies": {
+            "Malphite": 0.56,
+            "Amumu": 0.55,
+            "Jarvan IV": 0.54,
+            "Camille": 0.53
+        },
+        "tags": [
+            "mage",
+            "teamfight"
+        ]
+    },
+    "Thresh": {
+        "roles": [
+            "support"
+        ],
+        "counters": {
+            "Morgana": 0.54,
+            "Zyra": 0.52,
+            "Karma": 0.51
+        },
+        "synergies": {
+            "Draven": 0.54,
+            "Jinx": 0.53,
+            "Lucian": 0.52
+        },
+        "tags": [
+            "tank",
+            "catcher"
+        ]
+    },
+    "Vayne": {
+        "roles": [
+            "adc",
+            "top"
+        ],
+        "counters": {
+            "Draven": 0.55,
+            "Caitlyn": 0.53,
+            "Lucian": 0.52
+        },
+        "synergies": {
+            "Lulu": 0.56,
+            "Nami": 0.53,
+            "Thresh": 0.52
+        },
+        "tags": [
+            "marksman",
+            "hypercarry"
+        ]
+    },
+    "Yasuo": {
+        "roles": [
+            "mid",
+            "adc"
+        ],
+        "counters": {
+            "Renekton": 0.55,
+            "Pantheon": 0.54,
+            "Annie": 0.53
+        },
+        "synergies": {
+            "Malphite": 0.57,
+            "Amumu": 0.55,
+            "Lee Sin": 0.54,
+            "Diana": 0.53
+        },
+        "tags": [
+            "fighter",
+            "melee carry"
+        ]
+    },
+    "Zed": {
+        "roles": [
+            "mid"
+        ],
+        "counters": {
+            "Lissandra": 0.55,
+            "Malzahar": 0.54,
+            "Galio": 0.53
+        },
+        "synergies": {
+            "Lee Sin": 0.52,
+            "Thresh": 0.51,
+            "Jarvan IV": 0.51
+        },
+        "tags": [
+            "assassin",
+            "burst"
+        ]
+    },
+    "Lulu": {
+        "roles": [
+            "support"
+        ],
+        "counters": {
+            "Zyra": 0.53,
+            "Brand": 0.52,
+            "Xerath": 0.51
+        },
+        "synergies": {
+            "Vayne": 0.56,
+            "Jinx": 0.55,
+            "Kog'Maw": 0.56,
+            "Twitch": 0.54
+        },
+        "tags": [
+            "enchanter",
+            "peel"
+        ]
+    },
+    "Morgana": {
+        "roles": [
+            "support",
+            "mid"
+        ],
+        "counters": {
+            "Xerath": 0.53,
+            "Zyra": 0.52,
+            "Brand": 0.51
+        },
+        "synergies": {
+            "Caitlyn": 0.54,
+            "Jhin": 0.53,
+            "Jinx": 0.52
+        },
+        "tags": [
+            "mage",
+            "catcher"
+        ]
+    },
+    "Vi": {
+        "roles": [
+            "jungle"
+        ],
+        "counters": {
+            "Elise": 0.52,
+            "Lee Sin": 0.51,
+            "Kha'Zix": 0.51
+        },
+        "synergies": {
+            "Yasuo": 0.54,
+            "Orianna": 0.53,
+            "Jinx": 0.52
+        },
+        "tags": [
+            "fighter",
+            "diver"
+        ]
+    },
+    "Jarvan IV": {
+        "roles": [
+            "jungle",
+            "top"
+        ],
+        "counters": {
+            "Vi": 0.52,
+            "Elise": 0.51,
+            "Lee Sin": 0.51
+        },
+        "synergies": {
+            "Orianna": 0.56,
+            "Miss Fortune": 0.54,
+            "Katarina": 0.53
+        },
+        "tags": [
+            "fighter",
+            "engage"
+        ]
+    }
+}

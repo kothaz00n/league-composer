@@ -1,0 +1,829 @@
+/**
+ * main.js — Electron Main Process
+ *
+ * Manages the application lifecycle:
+ *  1. Creates the BrowserWindow
+ *  2. Polls for the League Client lockfile
+ *  3. Connects via WebSocket when lockfile is found
+ *  4. Forwards champ-select events to renderer via IPC
+ */
+
+const { app, BrowserWindow, ipcMain } = require('electron');
+const path = require('path');
+const fs = require('fs'); // Added fs import
+const { readLockfile } = require('./lcu/lockfileReader');
+const { createLcuClient, getCurrentSummoner, getChampSelectSession } = require('./lcu/lcuClient');
+const { LcuWebSocket } = require('./lcu/lcuWebSocket');
+const { getRecommendations, initializeEngine, analyzeTeamComposition } = require('../engine/recommend');
+const { loadChampionData, getIdToNameMap, getNameToIdMap, getChampionTags,
+    getLatestVersion,
+    getAllChampions,
+} = require('../data/champions');
+const { loadWinRates, getChampionStats, getAllWinRates, getImportedChampions, getAvailableQueues } = require('../data/winRateProvider');
+const { validateWinRateData } = require('./inputValidation');
+const { scrapeUGGChampions } = require('./scrapers/ugg');
+const { validateRosterData } = require('./validators');
+const { IPC_CHANNELS } = require('../common/ipcChannels');
+
+// ─── State ──────────────────────────────────────────────────────────────
+let mainWindow = null;
+
+// ─── Engine State ───────────────────────────────────────────────────────
+let isConnected = false;
+let lcuClient = null;
+let lcuWebSocket = null;
+let pollingInterval = null;
+let draftPreferences = { targetArchetype: 'auto', overrideRole: null };
+let rosterConfig = null; // Store roster data in memory
+const sessionState = { current: null };
+
+// ─── Constants ──────────────────────────────────────────────────────────
+const POLL_INTERVAL_MS = 5000;
+const IS_DEV = !app.isPackaged;
+const WINRATES_PATH = path.join(__dirname, '../data/winrates.json');
+const ROSTER_PATH = path.join(__dirname, '../data/roster.json');
+const COMPOSITIONS_PATH = path.join(__dirname, '../data/compositions.json');
+
+// ─── Window Creation ────────────────────────────────────────────────────
+function createWindow() {
+    mainWindow = new BrowserWindow({
+        width: 1100,
+        height: 800,
+        minWidth: 800,
+        minHeight: 600,
+        title: 'LoL Draft Recommender',
+        frame: false,
+        transparent: false,
+        backgroundColor: '#0a0e1a',
+        webPreferences: {
+            preload: path.join(__dirname, 'preload.js'),
+            contextIsolation: true,
+            nodeIntegration: false,
+            sandbox: false,
+        },
+    });
+
+    if (IS_DEV) {
+        mainWindow.loadURL('http://localhost:5173');
+        mainWindow.webContents.openDevTools({ mode: 'detach' });
+    } else {
+        mainWindow.loadFile(path.join(__dirname, '../../dist/index.html'));
+    }
+
+    mainWindow.on('closed', () => {
+        mainWindow = null;
+    });
+}
+
+// ─── Helper Functions ───────────────────────────────────────────────────
+/**
+ * Reloads win rates from the local file or uses a fallback.
+ * @param {object} [initialData={}] - Optional initial data to merge or use if file not found.
+ */
+function reloadWinRates(initialData = {}, skipFileRead = false) {
+    let winRateData = { ...initialData };
+    if (!skipFileRead && fs.existsSync(WINRATES_PATH)) {
+        try {
+            const raw = fs.readFileSync(WINRATES_PATH, 'utf8');
+            const fileData = JSON.parse(raw);
+            winRateData = { ...winRateData, ...fileData }; // Merge file data
+            console.log(`[Main] Loaded ${Object.keys(fileData).length} win rates from local file`);
+        } catch (e) {
+            console.error('[Main] Error reading local winrates.json:', e);
+        }
+    }
+    loadWinRates(winRateData); // Pass the combined data to the provider
+}
+
+// ─── IPC Handlers ───────────────────────────────────────────────────────
+function setupIPC() {
+    // Window controls (frameless window)
+    ipcMain.on(IPC_CHANNELS.WINDOW_MINIMIZE, () => mainWindow?.minimize());
+    ipcMain.on(IPC_CHANNELS.WINDOW_CLOSE, () => mainWindow?.close());
+
+    // Manual connection retry
+    ipcMain.on(IPC_CHANNELS.LCU_CONNECT, () => {
+        if (!isConnected) {
+            startPolling();
+        }
+    });
+
+    ipcMain.on(IPC_CHANNELS.DRAFT_UPDATE_PREFERENCES, (event, prefs) => {
+        console.log('[Main] Updated draft preferences:', prefs);
+        draftPreferences = { ...draftPreferences, ...prefs };
+        // If we have an active session, re-run analysis immediately
+        if (sessionState.current) {
+            handleChampSelectUpdate(sessionState.current);
+        }
+    });
+
+    ipcMain.on(IPC_CHANNELS.WINRATE_SAVE, async (event, data) => {
+        try {
+            validateWinRateData(data);
+
+            // Read existing file to merge
+            let existing = {};
+            try {
+                const raw = await fs.promises.readFile(WINRATES_PATH, 'utf8');
+                existing = JSON.parse(raw);
+            } catch (e) { /* ignore read or parse errors */ }
+
+            // If data has a queue key (soloq/flex), merge into existing
+            const queue = data._queue; // e.g. 'soloq' or 'flex'
+            const roleData = data._roleData; // { top: {...}, jungle: {...}, ... }
+
+            if (queue && roleData) {
+                // Ensure existing is in new format
+                if (!existing.soloq && !existing.flex) {
+                    // Migrate legacy: existing might be { top: {...}, ... }
+                    const firstKey = Object.keys(existing)[0];
+                    if (firstKey && ['top', 'jungle', 'mid', 'adc', 'support', 'all'].includes(firstKey.toLowerCase())) {
+                        existing = { soloq: existing };
+                    }
+                }
+                // MERGE logic: update only the roles provided in roleData
+                existing[queue] = { ...(existing[queue] || {}), ...roleData };
+            } else {
+                // Legacy format: treat as soloq
+                existing = { soloq: data };
+            }
+
+            console.log(`[Main] Saving win rates to ${WINRATES_PATH}`);
+            await fs.promises.writeFile(WINRATES_PATH, JSON.stringify(existing, null, 2));
+            reloadWinRates(existing, true);
+
+            if (sessionState.current) handleChampSelectUpdate(sessionState.current);
+            event.reply(IPC_CHANNELS.WINRATE_SAVE_SUCCESS, { count: Object.keys(data).length });
+        } catch (err) {
+            console.error('[Main] Failed to save winrates:', err);
+            event.reply(IPC_CHANNELS.WINRATE_SAVE_ERROR, { message: err.message });
+        }
+    });
+
+    // ─── Roster IPC ─────────────────────────────────────────────────────────
+
+    ipcMain.handle(IPC_CHANNELS.ROSTER_LOAD, async () => {
+        try {
+            const data = await fs.promises.readFile(ROSTER_PATH, 'utf8');
+            rosterConfig = JSON.parse(data); // Cache
+            return rosterConfig;
+        } catch (err) {
+            if (err.code !== 'ENOENT') {
+                console.error('[Main] Failed to load roster:', err);
+            }
+            return null;
+        }
+    });
+
+
+    ipcMain.on(IPC_CHANNELS.ROSTER_SAVE, (event, data) => {
+        try {
+            if (!validateRosterData(data)) {
+                console.error('[Main] Invalid roster data received');
+                event.reply(IPC_CHANNELS.ROSTER_SAVE_ERROR, { message: 'Invalid data format' });
+                return;
+            }
+
+            // Create a sanitized object to ensure no extra properties are saved
+            const cleanData = {
+                myRole: data.myRole,
+                gameMode: data.gameMode,
+                roster: {}
+            };
+
+            const validRoles = ['top', 'jungle', 'mid', 'adc', 'support'];
+            for (const role of validRoles) {
+                if (data.roster && data.roster[role]) {
+                    cleanData.roster[role] = {
+                        favorites: data.roster[role].favorites,
+                        player: data.roster[role].player || ""
+                    };
+                }
+            }
+
+            console.log(`[Main] Saving roster config to ${ROSTER_PATH}`);
+            fs.writeFileSync(ROSTER_PATH, JSON.stringify(cleanData, null, 2));
+            rosterConfig = cleanData; // Update cache with clean data
+            // Trigger update if session active
+            if (sessionState.current) handleChampSelectUpdate(sessionState.current);
+            event.reply(IPC_CHANNELS.ROSTER_SAVE_SUCCESS);
+        } catch (err) {
+            console.error('[Main] Failed to save roster:', err);
+            event.reply(IPC_CHANNELS.ROSTER_SAVE_ERROR, { message: err.message });
+        }
+    });
+
+    // ─── Compositions IPC ──────────────────────────────────────────────────
+    ipcMain.on(IPC_CHANNELS.COMPOSITION_SAVE_ARCHETYPE, (event, { name, composition }) => {
+        try {
+            console.log(`[Main] Saving new archetype "${name}" to ${COMPOSITIONS_PATH}`);
+            let data = { archetypes: [] };
+            if (fs.existsSync(COMPOSITIONS_PATH)) {
+                data = JSON.parse(fs.readFileSync(COMPOSITIONS_PATH, 'utf8'));
+            } else {
+                // Initialize if missing
+                data = { version: "1.0", last_updated: new Date().toISOString(), compositions: [], archetypes: [] };
+            }
+
+            // Create new archetype object
+            const newArchetype = {
+                name: name,
+                description: "Created via Team Builder",
+                notes: "",
+                examples: "",
+                typical_comp: composition, // { top: "...", jungle: "...", ... }
+                champion_pool: {
+                    top: [composition.top].filter(Boolean),
+                    jungle: [composition.jungle].filter(Boolean),
+                    mid: [composition.mid].filter(Boolean),
+                    adc: [composition.adc].filter(Boolean),
+                    support: [composition.support].filter(Boolean)
+                },
+                pro_games_info: ""
+            };
+
+            // Add to array
+            if (!data.archetypes) data.archetypes = [];
+            data.archetypes.push(newArchetype);
+
+            fs.writeFileSync(COMPOSITIONS_PATH, JSON.stringify(data, null, 2));
+            event.reply(IPC_CHANNELS.COMPOSITION_SAVE_SUCCESS, { name });
+            console.log('[Main] Archetype saved successfully.');
+
+        } catch (err) {
+            console.error('[Main] Failed to save archetype:', err);
+            event.reply(IPC_CHANNELS.COMPOSITION_SAVE_ERROR, { message: err.message });
+        }
+    });
+
+    ipcMain.handle(IPC_CHANNELS.COMPOSITION_GET_ALL, async () => {
+        try {
+            if (fs.existsSync(COMPOSITIONS_PATH)) {
+                const data = JSON.parse(fs.readFileSync(COMPOSITIONS_PATH, 'utf8'));
+                return data;
+            }
+            return { compositions: [], archetypes: [] };
+        } catch (err) {
+            console.error('[Main] Failed to load compositions:', err);
+            return { compositions: [], archetypes: [] };
+        }
+    });
+
+    ipcMain.on(IPC_CHANNELS.COMPOSITION_SAVE_COMP, (event, { composition, index }) => {
+        try {
+            console.log(`[Main] Saving composition to index ${index} in ${COMPOSITIONS_PATH}`);
+            let data = { compositions: [], archetypes: [] };
+            if (fs.existsSync(COMPOSITIONS_PATH)) {
+                data = JSON.parse(fs.readFileSync(COMPOSITIONS_PATH, 'utf8'));
+            }
+
+            if (!data.compositions) data.compositions = [];
+
+            if (index === -1) {
+                // New composition
+                data.compositions.push(composition);
+            } else if (index >= 0 && index < data.compositions.length) {
+                // Update existing
+                data.compositions[index] = composition;
+            } else {
+                // New composition if index out of bounds
+                data.compositions.push(composition);
+            }
+
+            fs.writeFileSync(COMPOSITIONS_PATH, JSON.stringify(data, null, 2));
+            event.reply(IPC_CHANNELS.COMPOSITION_SAVE_COMP_SUCCESS, { index });
+            console.log('[Main] Composition saved successfully.');
+
+        } catch (err) {
+            console.error('[Main] Failed to save composition:', err);
+            event.reply(IPC_CHANNELS.COMPOSITION_SAVE_COMP_ERROR, { message: err.message });
+        }
+    });
+
+    ipcMain.handle(IPC_CHANNELS.COMPOSITION_ANALYZE, async (event, team, queue = 'soloq') => {
+        // team: { top: "Name", jungle: "Name", ... }
+        try {
+            // Lazy load engine if not initialized? It should be initialized by now if app is running.
+            // But if we are in dev/testing, maybe not.
+            // Actually, champions and winrates should be loaded.
+            const { getCompositionAnalysis } = require('../engine/recommend');
+            const result = getCompositionAnalysis(team, queue);
+            return result;
+        } catch (err) {
+            console.error('[Main] Analysis failed:', err);
+            return null;
+        }
+    });
+
+    ipcMain.handle(IPC_CHANNELS.CHAMPION_GET_OP_PICKS, async (event, queue = 'soloq') => {
+        try {
+            const { getOpPicks } = require('../engine/recommend');
+            return getOpPicks(queue);
+        } catch (err) {
+            console.error('[Main] Failed to get OP picks:', err);
+            return [];
+        }
+    });
+
+    // ─── Scraper ────────────────────────────────────────────────────────
+    ipcMain.on(IPC_CHANNELS.SCRAPER_RUN_UGG, async (event, force = false, queueType = 'soloq') => {
+        console.log(`[Main] Request to run U.GG scrape (queue=${queueType}, force=${force})...`);
+        const onProgress = (msg) => {
+            console.log(`[Main] Scraper Progress: ${msg}`);
+            event.reply(IPC_CHANNELS.SCRAPER_PROGRESS, msg);
+        };
+
+        try {
+            onProgress('Checking local data status...');
+            // Check last updated time
+            let existing = {};
+            if (fs.existsSync(WINRATES_PATH)) {
+                try {
+                    existing = JSON.parse(fs.readFileSync(WINRATES_PATH, 'utf8'));
+                } catch (e) {
+                    console.error('[Main] Error parsing winrates.json:', e);
+                }
+            }
+
+            if (!force && existing.lastUpdated && existing.lastUpdatedQueue === queueType) {
+                const now = Date.now();
+                const diff = now - existing.lastUpdated;
+                const hours = diff / (1000 * 60 * 60);
+
+                if (hours < 24) {
+                    const remaining = Math.ceil(24 - hours);
+                    const skipMsg = `Data for ${queueType} is recent (updated ${hours.toFixed(1)}h ago). Wait ${remaining}h or use Force Update.`;
+                    console.log(`[Main] Scrape skipped: ${skipMsg}`);
+                    onProgress('[Skipped] ' + skipMsg);
+                    event.reply(IPC_CHANNELS.SCRAPER_COMPLETE, {
+                        success: false,
+                        message: skipMsg
+                    });
+                    return;
+                }
+            }
+
+            console.log(`[Main] Starting U.GG scrape for ${queueType}...`);
+            onProgress(`Initializing scraper for ${queueType}...`);
+
+            // Get name map for normalization
+            const { getChampionNameMap } = require('../data/champions');
+            const nameMap = getChampionNameMap();
+
+            const rawData = await scrapeUGGChampions(onProgress, queueType, nameMap);
+
+            if (!rawData || !rawData[queueType]) {
+                throw new Error('Scraper returned invalid data structure');
+            }
+
+            // Merge with existing data
+            const merged = {
+                ...existing,
+                [queueType]: rawData[queueType], // overwrite specific queue
+                lastUpdated: Date.now(),
+                lastUpdatedQueue: queueType // track which one was last updated
+            };
+
+            // Ensure directory exists
+            const dir = path.dirname(WINRATES_PATH);
+            if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+
+            fs.writeFileSync(WINRATES_PATH, JSON.stringify(merged, null, 2));
+            console.log('[Main] Scrape complete and saved.');
+
+            // Reload in memory
+            reloadWinRates();
+
+            // Create summary stats
+            const totalChamps = Object.values(rawData[queueType]).reduce((acc, roleObj) => acc + Object.keys(roleObj).length, 0);
+
+            event.reply(IPC_CHANNELS.SCRAPER_COMPLETE, {
+                success: true,
+                message: `Scrape complete! Updated ${totalChamps} champion entries for ${queueType}.`,
+                count: totalChamps
+            });
+
+            // Trigger engine update
+            if (sessionState.current) handleChampSelectUpdate(sessionState.current);
+
+        } catch (error) {
+            console.error('[Main] Scraper failed:', error);
+            event.reply(IPC_CHANNELS.SCRAPER_COMPLETE, {
+                success: false,
+                message: `Scraping failed: ${error.message}`
+            });
+        }
+    });
+
+    // ─── Synergy Analyzer ────────────────────────────────────────────────────
+    ipcMain.handle(IPC_CHANNELS.SYNERGY_ANALYZE, async (_event, { teamRoles, archetypeKey }) => {
+        try {
+            const { getTeamSynergyMatrix } = require('../engine/synergyMatrix');
+            const { detectCompositionGaps } = require('../data/archetypeMapping.cjs');
+            const { getChampionTags, getIdToNameMap } = require('../data/champions');
+
+            const idToName = getIdToNameMap();
+            const tagsMap = {};
+            for (const name of Object.values(idToName)) {
+                tagsMap[name] = getChampionTags(name);
+            }
+
+            const synergyResult = getTeamSynergyMatrix(teamRoles);
+            const gapResult = detectCompositionGaps(teamRoles, archetypeKey, tagsMap);
+            console.log(`[Main] Synergy analyzed: avgScore=${synergyResult.avgScore}, gaps=${gapResult.gaps.length}`);
+            return { ...synergyResult, ...gapResult };
+        } catch (err) {
+            console.error('[Main] Synergy analysis failed:', err);
+            return null;
+        }
+    });
+
+    // ─── Draft Preview (Sandbox Mode) ────────────────────────────────────────
+    // Simulates a champ select session from a predefined scenario
+    ipcMain.handle(IPC_CHANNELS.DRAFT_PREVIEW, async (_event, { scenario, role }) => {
+        try {
+            // Load compositions for scenario data
+            let compData = { compositions: [], archetypes: [] };
+            if (fs.existsSync(COMPOSITIONS_PATH)) {
+                compData = JSON.parse(fs.readFileSync(COMPOSITIONS_PATH, 'utf8'));
+            }
+
+            // Find the requested composition scenario
+            const comp = compData.compositions.find(c => c.name === scenario);
+            if (!comp) {
+                return { error: `Scenario "${scenario}" not found` };
+            }
+
+            const { nameToId } = require('../data/champions').getNameToIdMap
+                ? { nameToId: require('../data/champions').getNameToIdMap() }
+                : { nameToId: {} };
+
+            // Convert team names → champion IDs
+            function resolveId(name) {
+                if (!name) return 0;
+                const clean = name.split('/')[0].replace(/\*/g, '').trim();
+                return nameToId[clean] || 0;
+            }
+
+            const allies = [
+                { role: 'top', champName: comp.roles.top },
+                { role: 'jungle', champName: comp.roles.jungle },
+                { role: 'mid', champName: comp.roles.mid },
+                { role: 'adc', champName: comp.roles.adc },
+                { role: 'support', champName: comp.roles.support },
+            ].map((a, i) => ({
+                cellId: i,
+                championId: resolveId(a.champName),
+                role: a.role,
+                champName: a.champName,
+                isLocalPlayer: a.role === role,
+            }));
+
+            const allyPicks = allies.map(a => a.championId).filter(id => id > 0);
+
+            // Run recommendations
+            const { recommendations, compositionAnalysis } = getRecommendations({
+                role,
+                allyPicks,
+                enemyPicks: [],
+                bannedChampions: [],
+                targetArchetype: 'auto',
+                rosterConfig,
+                allies,
+            });
+
+            // Full composition analysis (detailed)
+            const { getCompositionAnalysis } = require('../engine/recommend');
+            const detailedAnalysis = getCompositionAnalysis(comp.roles, 'soloq');
+
+            return {
+                scenario,
+                allies,
+                enemies: [],
+                bans: [],
+                recommendations,
+                compositionAnalysis: detailedAnalysis || compositionAnalysis,
+                compMeta: {
+                    name: comp.name,
+                    good_against: comp.good_against,
+                    bad_against: comp.bad_against,
+                    difficulty: comp.difficulty,
+                    key_focus: comp.key_focus,
+                    best_in_meta: comp.best_in_meta,
+                },
+                ddragonVersion: getLatestVersion(),
+            };
+        } catch (err) {
+            console.error('[Main] Draft preview failed:', err);
+            return { error: err.message };
+        }
+    });
+}
+
+// ─── Send to Renderer ───────────────────────────────────────────────────
+// ─── Send to Renderer ───────────────────────────────────────────────────
+function sendToRenderer(channel, data) {
+    if (mainWindow && !mainWindow.isDestroyed()) {
+        mainWindow.webContents.send(channel, data);
+    }
+}
+
+// ─── Champion Data IPC ──────────────────────────────────────────────────
+
+ipcMain.handle(IPC_CHANNELS.CHAMPION_GET_DATA, () => {
+    const idToName = getIdToNameMap();
+    if (!idToName) return null;
+
+    const nameToId = getNameToIdMap();
+    const tagsMap = {};
+
+    // Populate tags map for renderer usage (e.g. TeamBuilder)
+    Object.values(idToName).forEach(name => {
+        tagsMap[name] = getChampionTags(name);
+    });
+
+    return { idToName, nameToId, tagsMap, version: getLatestVersion() };
+});
+
+ipcMain.handle(IPC_CHANNELS.CHAMPION_GET_STATS, (_, name, role, queue) => {
+    return getChampionStats(name, role, queue);
+});
+
+ipcMain.handle(IPC_CHANNELS.CHAMPION_GET_IMPORTED_LIST, (_, queue, role) => {
+    return getImportedChampions(queue, role);
+});
+
+ipcMain.handle(IPC_CHANNELS.CHAMPION_GET_AVAILABLE_QUEUES, () => {
+    return getAvailableQueues();
+});
+
+// ─── LCU Connection ────────────────────────────────────────────────────
+async function tryConnect() {
+    try {
+        const credentials = await readLockfile();
+        if (!credentials) {
+            sendToRenderer(IPC_CHANNELS.LCU_STATUS, { status: 'disconnected', message: 'League Client not detected' });
+            return;
+        }
+
+        // Create HTTP client
+        lcuClient = createLcuClient(credentials);
+
+        // Test the connection by fetching summoner info
+        try {
+            const summoner = await getCurrentSummoner(lcuClient);
+            console.log(`[Main] Connected as: ${summoner.displayName}`);
+            sendToRenderer(IPC_CHANNELS.LCU_STATUS, {
+                status: 'connected',
+                message: `Connected as ${summoner.displayName}`,
+                summoner,
+            });
+        } catch (err) {
+            sendToRenderer(IPC_CHANNELS.LCU_STATUS, { status: 'connected', message: 'Connected to League Client' });
+        }
+
+        isConnected = true;
+
+        // Stop polling, start WebSocket
+        stopPolling();
+        connectWebSocket(credentials);
+
+        // Check if already in champ select
+        try {
+            const session = await getChampSelectSession(lcuClient);
+            if (session) {
+                handleChampSelectUpdate(session);
+            }
+        } catch {
+            // Not in champ select, that's fine
+        }
+
+    } catch (err) {
+        console.error('[Main] Connection attempt failed:', err.message);
+        sendToRenderer(IPC_CHANNELS.LCU_STATUS, { status: 'disconnected', message: 'Connection failed' });
+    }
+}
+
+function connectWebSocket(credentials) {
+    lcuWebSocket = new LcuWebSocket();
+
+    lcuWebSocket.on('connected', () => {
+        console.log('[Main] WebSocket connected — listening for Champ Select');
+        sendToRenderer(IPC_CHANNELS.LCU_STATUS, { status: 'waiting', message: 'Waiting for Champ Select...' });
+    });
+
+    lcuWebSocket.on('champSelectStarted', (data) => {
+        console.log('[Main] Champ Select STARTED');
+        sendToRenderer(IPC_CHANNELS.LCU_STATUS, { status: 'inChampSelect', message: 'In Champ Select!' });
+        handleChampSelectUpdate(data);
+    });
+
+    lcuWebSocket.on('champSelectUpdated', (data) => {
+        handleChampSelectUpdate(data);
+    });
+
+    lcuWebSocket.on('champSelectEnded', () => {
+        console.log('[Main] Champ Select ENDED');
+        sendToRenderer(IPC_CHANNELS.LCU_STATUS, { status: 'waiting', message: 'Waiting for Champ Select...' });
+        sendToRenderer(IPC_CHANNELS.CHAMP_SELECT_ENDED, {});
+    });
+
+    lcuWebSocket.on('disconnected', () => {
+        console.log('[Main] WebSocket disconnected — resuming polling');
+        isConnected = false;
+        lcuClient = null;
+        sendToRenderer(IPC_CHANNELS.LCU_STATUS, { status: 'disconnected', message: 'League Client disconnected' });
+        startPolling();
+    });
+
+    lcuWebSocket.on('error', () => {
+        // Will trigger 'disconnected' after
+    });
+
+    lcuWebSocket.connect(credentials);
+}
+
+/**
+ * Process a champ-select session update and send recommendations.
+ */
+function handleChampSelectUpdate(session) {
+    try {
+        sessionState.current = session; // Update current session state
+
+        // Parse the session data
+        const { myTeam, theirTeam, bans, localPlayerCellId, timer } = session;
+
+        // Find the local player
+        const localPlayer = myTeam?.find(p => p.cellId === localPlayerCellId);
+        const assignedRole = localPlayer?.assignedPosition || 'unknown';
+
+        // Extract picks and bans
+        const allyPicks = (myTeam || [])
+            .filter(p => p.championId > 0)
+            .map(p => p.championId);
+
+        const enemyPicks = (theirTeam || [])
+            .filter(p => p.championId > 0)
+            .map(p => p.championId);
+
+        const allBans = [];
+        if (bans?.myTeamBans) allBans.push(...bans.myTeamBans.filter(id => id > 0));
+        if (bans?.theirTeamBans) allBans.push(...bans.theirTeamBans.filter(id => id > 0));
+        // Also check the numBans / bans array format
+        if (Array.isArray(bans)) {
+            bans.forEach(b => {
+                if (b.championId > 0) allBans.push(b.championId);
+            });
+        }
+
+        // LCU v1: bans are also in session.actions as type "ban"
+        if (session.actions && Array.isArray(session.actions)) {
+            for (const actionGroup of session.actions) {
+                const actions = Array.isArray(actionGroup) ? actionGroup : [actionGroup];
+                for (const action of actions) {
+                    if (action.type === 'ban' && action.championId > 0 && action.completed) {
+                        if (!allBans.includes(action.championId)) {
+                            allBans.push(action.championId);
+                        }
+                    }
+                }
+            }
+        }
+
+        if (allBans.length > 0) {
+            console.log(`[Main] Bans detected: ${allBans.map(id => getIdToNameMap()[id] || id).join(', ')}`);
+        }
+
+        // Resolve Target Archetype Definition (for Custom Flex Picks)
+        let targetArchetypeDef = null;
+        if (draftPreferences.targetArchetype && draftPreferences.targetArchetype !== 'auto') {
+            // Check if it's a custom archetype from JSON
+            if (fs.existsSync(COMPOSITIONS_PATH)) {
+                try {
+                    const compData = JSON.parse(fs.readFileSync(COMPOSITIONS_PATH, 'utf8'));
+                    if (compData.archetypes) {
+                        const custom = compData.archetypes.find(a => a.name === draftPreferences.targetArchetype);
+                        if (custom) {
+                            targetArchetypeDef = custom;
+                        }
+                    }
+                } catch (e) {
+                    console.error('[Main] Error reading custom archetypes:', e);
+                }
+            }
+        }
+
+        // Get recommendations + composition analysis
+        const { recommendations, compositionAnalysis } = getRecommendations({
+            role: draftPreferences.overrideRole || assignedRole,
+            allyPicks,
+            enemyPicks,
+            bannedChampions: allBans,
+            targetArchetype: draftPreferences.targetArchetype,
+            targetArchetypeDef, // Pass the custom definition
+            rosterConfig, // Pass roster data to engine
+            allies: (myTeam || []), // Need allies data for linking summoner names
+            localPlayerCellId,
+        });
+
+        // Compute enemy composition analysis for display
+        const enemyComposition = analyzeTeamComposition(enemyPicks);
+
+        // Send full state update to renderer
+        const draftState = {
+            phase: timer?.phase || 'UNKNOWN',
+            localPlayer: {
+                cellId: localPlayerCellId,
+                role: assignedRole,
+                championId: localPlayer?.championId || 0,
+            },
+            allies: (myTeam || []).map(p => ({
+                cellId: p.cellId,
+                championId: p.championId,
+                role: p.assignedPosition,
+                summonerName: p.summonerName || '',
+                isLocalPlayer: p.cellId === localPlayerCellId,
+            })),
+            enemies: (theirTeam || []).map(p => ({
+                cellId: p.cellId,
+                championId: p.championId,
+                role: p.assignedPosition || '',
+            })),
+            bans: allBans,
+            recommendations,
+            compositionAnalysis,
+            enemyComposition,
+            ddragonVersion: getLatestVersion(),
+        };
+
+        sendToRenderer(IPC_CHANNELS.CHAMP_SELECT_UPDATE, draftState);
+
+    } catch (err) {
+        console.error('[Main] Error processing champ select update:', err);
+    }
+}
+
+// ─── Polling ────────────────────────────────────────────────────────────
+function startPolling() {
+    if (pollingInterval) return;
+    console.log('[Main] Polling for League Client every 5s...');
+    pollingInterval = setInterval(tryConnect, POLL_INTERVAL_MS);
+    // Also try immediately
+    tryConnect();
+}
+
+function stopPolling() {
+    if (pollingInterval) {
+        clearInterval(pollingInterval);
+        pollingInterval = null;
+    }
+}
+
+// ─── App Lifecycle ──────────────────────────────────────────────────────
+app.whenReady().then(async () => {
+    createWindow();
+    setupIPC();
+
+    // Load data
+    try {
+        await loadChampionData();
+        console.log(`[Champions] Loaded ${Object.keys(getIdToNameMap()).length} champions with tags (${getLatestVersion()})`);
+
+        // Load win rates
+        reloadWinRates();
+
+        // Load roster
+        if (fs.existsSync(ROSTER_PATH)) {
+            const rData = fs.readFileSync(ROSTER_PATH, 'utf8');
+            rosterConfig = JSON.parse(rData);
+            console.log('[Main] Roster config loaded');
+        }
+
+        // Initialize the recommendation engine with Data Dragon data
+        const idToName = getIdToNameMap();
+        const nameToId = getNameToIdMap();
+        const tagsMap = {};
+        for (const champName of Object.values(idToName)) {
+            tagsMap[champName] = getChampionTags(champName);
+        }
+
+        initializeEngine({ idToName, nameToId, tagsMap });
+        console.log('[Main] Data Dragon + Win Rates loaded successfully');
+    } catch (err) {
+        console.error('[Main] Failed to load champion data:', err.message);
+    }
+
+    startPolling();
+});
+
+app.on('window-all-closed', () => {
+    stopPolling();
+    if (lcuWebSocket) lcuWebSocket.disconnect();
+    app.quit();
+});
+
+app.on('activate', () => {
+    if (BrowserWindow.getAllWindows().length === 0) {
+        createWindow();
+    }
+});
