@@ -59,23 +59,42 @@ export default function WinRateBrowser({ allChampions, onBack, onOpenImporter })
 
         const fetchAll = async () => {
             setLoading(true);
-            const results = {};
+            let results = {};
             const role = selectedRole;
-            const batchSize = 30;
+            const batchSize = 100; // Increase batch size now that IPC overhead is reduced
 
-            for (let i = 0; i < championsToFetch.length; i += batchSize) {
-                const batch = championsToFetch.slice(i, i + batchSize);
-                const promises = batch.map(async (name) => {
+            if (window.electronAPI.getMultipleChampionStats) {
+                for (let i = 0; i < championsToFetch.length; i += batchSize) {
+                    const batch = championsToFetch.slice(i, i + batchSize);
                     try {
-                        const data = await window.electronAPI.getChampionStats(name, role, selectedQueue);
-                        results[`${name}-${selectedQueue}-${selectedRole}`] = { ...data, name };
+                        const batchResults = await window.electronAPI.getMultipleChampionStats(batch, role, selectedQueue);
+                        results = { ...results, ...batchResults };
                     } catch (e) {
-                        results[`${name}-${selectedQueue}-${selectedRole}`] = {
-                            name, winRate: 0.50, tier: '?', pickRate: 0, banRate: 0, hasData: false
-                        };
+                        console.error("Failed to fetch multiple stats", e);
+                        batch.forEach(name => {
+                            results[`${name}-${selectedQueue}-${selectedRole}`] = {
+                                name, winRate: 0.50, tier: '?', pickRate: 0, banRate: 0, hasData: false
+                            };
+                        });
                     }
-                });
-                await Promise.all(promises);
+                }
+            } else {
+                // Fallback for older versions
+                const batchSizeFallback = 30;
+                for (let i = 0; i < championsToFetch.length; i += batchSizeFallback) {
+                    const batch = championsToFetch.slice(i, i + batchSizeFallback);
+                    const promises = batch.map(async (name) => {
+                        try {
+                            const data = await window.electronAPI.getChampionStats(name, role, selectedQueue);
+                            results[`${name}-${selectedQueue}-${selectedRole}`] = { ...data, name };
+                        } catch (e) {
+                            results[`${name}-${selectedQueue}-${selectedRole}`] = {
+                                name, winRate: 0.50, tier: '?', pickRate: 0, banRate: 0, hasData: false
+                            };
+                        }
+                    });
+                    await Promise.all(promises);
+                }
             }
 
             setStats(prev => ({ ...prev, ...results }));
