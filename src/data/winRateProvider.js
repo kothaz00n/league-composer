@@ -86,7 +86,9 @@ function getChampionStats(championName, role = null, queue = 'soloq') {
         if (role) {
             const qData = queueData[queue];
             if (qData) {
-                const roleKey = Object.keys(qData).find(k => k.toLowerCase() === role.toLowerCase());
+                // Optimize role lookup: direct access first, then fallback to case-insensitive search
+                const roleLower = role.toLowerCase();
+                const roleKey = qData[roleLower] ? roleLower : Object.keys(qData).find(k => k.toLowerCase() === roleLower);
                 const roleData = roleKey ? qData[roleKey] : null;
                 if (roleData && roleData[championName]) {
                     entry = roleData[championName];
@@ -155,7 +157,8 @@ function getImportedChampions(queue = 'soloq', role = null) {
     if (!qData) return [];
 
     if (role) {
-        const roleKey = Object.keys(qData).find(k => k.toLowerCase() === role.toLowerCase());
+        const roleLower = role.toLowerCase();
+        const roleKey = qData[roleLower] ? roleLower : Object.keys(qData).find(k => k.toLowerCase() === roleLower);
         return roleKey ? Object.keys(qData[roleKey] || {}) : [];
     }
 
