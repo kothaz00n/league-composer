@@ -549,6 +549,20 @@ ipcMain.handle(IPC_CHANNELS.CHAMPION_GET_STATS, (_, name, role, queue) => {
     return getChampionStats(name, role, queue);
 });
 
+ipcMain.handle(IPC_CHANNELS.CHAMPION_GET_MULTIPLE_STATS, async (_, names, role, queue) => {
+    // Return an array of objects corresponding to the names requested
+    return Promise.all(names.map(async name => {
+        try {
+            const data = await getChampionStats(name, role, queue);
+            return { name, ...data };
+        } catch (e) {
+            return {
+                name, winRate: 0.50, tier: '?', pickRate: 0, banRate: 0, hasData: false
+            };
+        }
+    }));
+});
+
 ipcMain.handle(IPC_CHANNELS.CHAMPION_GET_IMPORTED_LIST, (_, queue, role) => {
     return getImportedChampions(queue, role);
 });
