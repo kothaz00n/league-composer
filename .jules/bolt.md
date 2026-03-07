@@ -1,0 +1,3 @@
+## 2024-05-18 - Batching IPC Calls for Performance
+**Learning:** In Electron, frequently making individual IPC calls for data items (like champion stats) can block the IPC channel due to serialization overhead, creating a bottleneck that affects renderer frame rate.
+**Action:** When transferring large collections between the main and renderer processes, always create bulk/batched IPC handlers instead of iterating individual `.invoke()` calls, batching requests into groups (e.g., 100) to minimize the overhead of context crossing.

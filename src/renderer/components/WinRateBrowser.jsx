@@ -61,21 +61,48 @@ export default function WinRateBrowser({ allChampions, onBack, onOpenImporter })
             setLoading(true);
             const results = {};
             const role = selectedRole;
-            const batchSize = 30;
 
-            for (let i = 0; i < championsToFetch.length; i += batchSize) {
-                const batch = championsToFetch.slice(i, i + batchSize);
-                const promises = batch.map(async (name) => {
+            // If getMultipleChampionStats is available, use it to batch IPC calls (reduce overhead).
+            // Fallback to getChampionStats if not.
+            if (window.electronAPI?.getMultipleChampionStats) {
+                const batchSize = 100;
+                for (let i = 0; i < championsToFetch.length; i += batchSize) {
+                    const batch = championsToFetch.slice(i, i + batchSize);
                     try {
-                        const data = await window.electronAPI.getChampionStats(name, role, selectedQueue);
-                        results[`${name}-${selectedQueue}-${selectedRole}`] = { ...data, name };
+                        const batchData = await window.electronAPI.getMultipleChampionStats(batch, role, selectedQueue);
+                        for (const name of batch) {
+                            if (batchData[name]) {
+                                results[`${name}-${selectedQueue}-${selectedRole}`] = { ...batchData[name], name };
+                            } else {
+                                results[`${name}-${selectedQueue}-${selectedRole}`] = {
+                                    name, winRate: 0.50, tier: '?', pickRate: 0, banRate: 0, hasData: false
+                                };
+                            }
+                        }
                     } catch (e) {
-                        results[`${name}-${selectedQueue}-${selectedRole}`] = {
-                            name, winRate: 0.50, tier: '?', pickRate: 0, banRate: 0, hasData: false
-                        };
+                        for (const name of batch) {
+                            results[`${name}-${selectedQueue}-${selectedRole}`] = {
+                                name, winRate: 0.50, tier: '?', pickRate: 0, banRate: 0, hasData: false
+                            };
+                        }
                     }
-                });
-                await Promise.all(promises);
+                }
+            } else {
+                const batchSize = 30;
+                for (let i = 0; i < championsToFetch.length; i += batchSize) {
+                    const batch = championsToFetch.slice(i, i + batchSize);
+                    const promises = batch.map(async (name) => {
+                        try {
+                            const data = await window.electronAPI.getChampionStats(name, role, selectedQueue);
+                            results[`${name}-${selectedQueue}-${selectedRole}`] = { ...data, name };
+                        } catch (e) {
+                            results[`${name}-${selectedQueue}-${selectedRole}`] = {
+                                name, winRate: 0.50, tier: '?', pickRate: 0, banRate: 0, hasData: false
+                            };
+                        }
+                    });
+                    await Promise.all(promises);
+                }
             }
 
             setStats(prev => ({ ...prev, ...results }));
