@@ -1,0 +1,3 @@
+## 2024-03-09 - [Optimize getChampionStats role lookup performance]
+**Learning:** `getChampionStats` and `getImportedChampions` in `winRateProvider.js` used `Object.keys().find()` and `toLowerCase()` for every role lookup, scaling linearly with the number of roles per call, creating a significant overhead during heavy draft recommendation calculations involving hundreds of champions.
+**Action:** When performing repeated dictionary lookups with dynamic string keys that often perfectly match the case of the stored property, attempt a fast O(1) direct property access (`qData[role] || qData[role.toLowerCase()]`) first before falling back to `Object.keys().find()`. Avoid leaving benchmark and profile scripts in the workspace.

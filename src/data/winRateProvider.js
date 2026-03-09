@@ -86,8 +86,17 @@ function getChampionStats(championName, role = null, queue = 'soloq') {
         if (role) {
             const qData = queueData[queue];
             if (qData) {
-                const roleKey = Object.keys(qData).find(k => k.toLowerCase() === role.toLowerCase());
-                const roleData = roleKey ? qData[roleKey] : null;
+                // TRY DIRECT ACCESS FIRST for performance
+                let roleData = qData[role];
+                if (!roleData) {
+                    const lRole = role.toLowerCase();
+                    roleData = qData[lRole];
+                    if (!roleData) {
+                        const roleKey = Object.keys(qData).find(k => k.toLowerCase() === lRole);
+                        roleData = roleKey ? qData[roleKey] : null;
+                    }
+                }
+
                 if (roleData && roleData[championName]) {
                     entry = roleData[championName];
                     hasData = true;
@@ -155,8 +164,16 @@ function getImportedChampions(queue = 'soloq', role = null) {
     if (!qData) return [];
 
     if (role) {
-        const roleKey = Object.keys(qData).find(k => k.toLowerCase() === role.toLowerCase());
-        return roleKey ? Object.keys(qData[roleKey] || {}) : [];
+        let roleData = qData[role];
+        if (!roleData) {
+            const lRole = role.toLowerCase();
+            roleData = qData[lRole];
+            if (!roleData) {
+                const roleKey = Object.keys(qData).find(k => k.toLowerCase() === lRole);
+                roleData = roleKey ? qData[roleKey] : null;
+            }
+        }
+        return roleData ? Object.keys(roleData) : [];
     }
 
     // All roles: union
