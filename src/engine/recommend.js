@@ -198,6 +198,14 @@ function getRecommendations({
     // Flex Pick Strategy: Are we in early draft?
     const isEarlyDraft = allyCount <= 2;
 
+    // ⚡ Bolt Performance Optimization:
+    // deriveRolesFromPool iterates over the entire custom champion pool to map tags to roles.
+    // Calling this inside the loop (~165 iterations) causes an O(N * P) complexity where N is champions
+    // and P is the pool size. Memoizing it outside the loop saves redundant work.
+    const customArchetypeRolesMemo = targetArchetypeDef?.champion_pool
+        ? deriveRolesFromPool(targetArchetypeDef.champion_pool)
+        : null;
+
     for (const champId of Object.keys(allChampions)) {
         const champName = allChampions[champId];
         const champData = countersDB[champName]; // Still use countersDB for specific counter/synergy data
@@ -334,9 +342,9 @@ function getRecommendations({
             if (fitBonus > 0) {
                 scoreDetails.push(`Fits target ${targetArchetype} comp`);
             }
-        } else if (targetArchetypeDef?.champion_pool) {
-            // Custom archetype: derive roles from pool and score by tag fit
-            const derived = deriveRolesFromPool(targetArchetypeDef.champion_pool);
+        } else if (customArchetypeRolesMemo) {
+            // Custom archetype: use pre-derived roles from pool and score by tag fit
+            const derived = customArchetypeRolesMemo;
             const champRoles = getCompositionRoles(champTags);
             let customFit = 0;
             for (const req of derived.required) {

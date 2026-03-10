@@ -71,6 +71,9 @@ async function runTest() {
         }
     });
 
+    const winRateProvider = require('../src/data/winRateProvider');
+    winRateProvider.loadWinRates({ soloq: { top: { 'Gragas': { winRate: 0.51, matches: 100 }, 'Olaf': { winRate: 0.50, matches: 100 } } } });
+
     // We need to Monkey-patch the imported functions in recommend.js? 
     // No, `initializeEngine` sets module-level variables for idToName, etc.
     // BUT `getChampionStats` is imported. 
