@@ -1,0 +1,3 @@
+## 2024-03-12 - Extracted Loop-Invariant Calculations in Recommendation Engine
+**Learning:** The `getRecommendations` engine calculates custom archetype bonuses and role pools. Previously, `deriveRolesFromPool` (which does deep nesting and object creation) and array `.map()` operations were executed inside the main `160+` champion iteration loop, leading to O(N*P) complexity degradation and memory churn. The `flex` game mode logic also had `allies.find()` calls inside the loop.
+**Action:** Always memoize loop-invariant computations before the `for` loop over champions in draft/recommendation algorithms to maintain linear O(N) scoring complexity.
