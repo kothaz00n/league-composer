@@ -1,0 +1,3 @@
+## 2024-03-13 - O(N*P) loop optimization in recommend.js
+**Learning:** The `getRecommendations` scoring loop was performing loop-invariant calculations (like iterating over team roles to find flex synergy favorites, deriving roles from custom pools, and mapping custom role pools) inside the main iteration over all champions. This created an O(N*P) complexity degradation where N is the number of champions and P is the number of roles/allies.
+**Action:** Always verify if complex array manipulations or derivations inside main iterative scoring loops are truly dependent on the loop variable. Hoisting these calculations outside the loop can yield >50% performance improvements without changing the algorithm's output.
