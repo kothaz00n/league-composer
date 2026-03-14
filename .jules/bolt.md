@@ -1,0 +1,3 @@
+## 2024-03-14 - Loop-Invariant Computations in Recommendation Engine
+**Learning:** In the `getRecommendations` scoring loop, calculations that do not depend on the current champion (like `deriveRolesFromPool` for custom archetypes, mapping over champion pools, and `allies.find()` for flex synergy) were placed inside the loop. This causes O(N*P) complexity degradation where N is the number of champions and P is the size of the pool.
+**Action:** Always memoize loop-invariant calculations outside the main iteration to prevent performance degradation, especially in frequently executed O(N) scoring loops.
