@@ -1,0 +1,3 @@
+## 2024-03-15 - Array Allocations Inside the Recommendation Scoring Loop
+**Learning:** The core champion recommendation algorithm (`getRecommendations` in `src/engine/recommend.js`) is highly susceptible to O(N*M) iteration bottlenecks due to its O(N) main loop running >160 times. Constructing new arrays (via `.map`) and executing array filters (`.filter`) on user preferences and archetypes in every cycle heavily hits garbage collection and execution time.
+**Action:** Always identify and hoist loop invariants outside of high-frequency scoring loops. Pre-calculate constant values, flatten complex filter queries into single lookup arrays, and execute mapping procedures only once.
