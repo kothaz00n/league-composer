@@ -1,0 +1,3 @@
+## 2024-03-01 - [O(N*P) loop-invariant calculations in Recommendation Engine]
+**Learning:** The recommendation engine (`src/engine/recommend.js`) loops over 160+ champions multiple times. Running heavy functions like `deriveRolesFromPool`, iterating arrays with `.map()`, and using `Array.prototype.find()` on inner loops for every champion drastically degraded performance, creating an O(N*P) complexity bottleneck during champion selection drafting where speed is critical.
+**Action:** Always extract loop-invariant calculations (like role derivations, champion pool mappings, and pre-finding allies) and array/object value lookups to execute *before* the main scoring loops in the engine to guarantee optimal performance during drafting.
