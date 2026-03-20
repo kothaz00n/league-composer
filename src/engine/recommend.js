@@ -198,8 +198,29 @@ function getRecommendations({
     // Flex Pick Strategy: Are we in early draft?
     const isEarlyDraft = allyCount <= 2;
 
-    for (const champId of Object.keys(allChampions)) {
-        const champName = allChampions[champId];
+    // ⚡ Bolt: Cache loop-invariant values for custom archetypes
+    const cachedDerivedRoles = targetArchetypeDef?.champion_pool
+        ? deriveRolesFromPool(targetArchetypeDef.champion_pool)
+        : null;
+
+    const cachedChampionPool = targetArchetypeDef?.champion_pool?.[normalizedRole]
+        ? targetArchetypeDef.champion_pool[normalizedRole].map(n => cleanName(n))
+        : null;
+
+    // ⚡ Bolt: Cache loop-invariant values for flex roster
+    const cachedOtherRoles = rosterConfig?.gameMode === 'flex' && rosterConfig?.roster
+        ? Object.keys(rosterConfig.roster).filter(r => r !== normalizedRole)
+        : null;
+
+    const cachedAlliesByRole = cachedOtherRoles
+        ? cachedOtherRoles.reduce((acc, r) => {
+            acc[r] = allies.find(a => (a.role?.toLowerCase() || '') === r);
+            return acc;
+          }, {})
+        : null;
+
+    // ⚡ Bolt: Iterate over pre-extracted values instead of looking up by keys
+    for (const champName of Object.values(allChampions)) {
         const champData = countersDB[champName]; // Still use countersDB for specific counter/synergy data
 
         // Skip if unavailable or no specific data in countersDB
@@ -319,9 +340,8 @@ function getRecommendations({
         }
 
         // ─── Champion Pool Bonus (custom archetypes) ────────────
-        if (targetArchetypeDef?.champion_pool?.[normalizedRole]) {
-            const pool = targetArchetypeDef.champion_pool[normalizedRole].map(n => cleanName(n));
-            if (pool.includes(champName)) {
+        if (cachedChampionPool) {
+            if (cachedChampionPool.includes(champName)) {
                 score += 8;
                 scoreDetails.push('Champion Pool');
             }
@@ -334,9 +354,9 @@ function getRecommendations({
             if (fitBonus > 0) {
                 scoreDetails.push(`Fits target ${targetArchetype} comp`);
             }
-        } else if (targetArchetypeDef?.champion_pool) {
+        } else if (cachedDerivedRoles) {
             // Custom archetype: derive roles from pool and score by tag fit
-            const derived = deriveRolesFromPool(targetArchetypeDef.champion_pool);
+            const derived = cachedDerivedRoles;
             const champRoles = getCompositionRoles(champTags);
             let customFit = 0;
             for (const req of derived.required) {
@@ -382,12 +402,11 @@ function getRecommendations({
             }
 
             // Flex Mode Synergy
-            if (rosterConfig.gameMode === 'flex') {
-                const otherRoles = Object.keys(rosterConfig.roster).filter(r => r !== roleKey);
+            if (rosterConfig.gameMode === 'flex' && cachedOtherRoles) {
                 let flexSynergyParams = 0;
 
-                for (const r of otherRoles) {
-                    const allyInRole = allies.find(a => (a.role?.toLowerCase() || '') === r);
+                for (const r of cachedOtherRoles) {
+                    const allyInRole = cachedAlliesByRole[r];
                     if (allyInRole && allyInRole.championId === 0) {
                         const favs = rosterConfig.roster[r].favorites || [];
                         for (const fav of favs) {
@@ -514,6 +533,9 @@ function getCompositionAnalysis(teamRoles, queue = 'soloq') {
     const allChamps = getIdToNameMap(); // id -> name
     const allNames = Object.values(allChamps);
 
+    // ⚡ Bolt: Cache team roles array outside of O(N*P) loop
+    const teamRoleValues = Object.values(teamRoles);
+
     // Identify weak links (WR < 49% or just lowest in team)
     // For each member, try to find a better option
     for (const member of teamChampions) {
@@ -525,7 +547,7 @@ function getCompositionAnalysis(teamRoles, queue = 'soloq') {
         for (const candidateName of allNames) {
             if (candidateName === member.name) continue;
             // Check if candidate is already in team
-            if (Object.values(teamRoles).includes(candidateName)) continue;
+            if (teamRoleValues.includes(candidateName)) continue;
 
             const candStats = getChampionStats(candidateName, member.role, queue);
             if (!candStats || candStats.matches < 50) continue; // Skip low sample size
