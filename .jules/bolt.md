@@ -1,0 +1,3 @@
+## 2024-05-24 - Hot Loop Object Spreading in Draft Engine
+**Learning:** In `src/engine/recommend.js`, the `getRecommendations` function runs frequently during the draft phase and iterates over all champions. Using the object spread operator (`{ ...static, ...dynamic }`) inside this hot loop to merge counter objects creates unnecessary garbage collection overhead and scales poorly (O(n^2) relative to counters). A direct fallback lookup (`let val = dynamic[k]; if (val === undefined) val = static[k];`) is significantly faster.
+**Action:** Avoid object spreading inside hot loops (like the recommendation scoring loops). Prefer direct property lookups with fallbacks to minimize memory allocations.
