@@ -1,0 +1,3 @@
+## 2025-03-05 - Recommendation Engine Hot Loop Bottlenecks
+**Learning:** In `src/engine/recommend.js`, the `getRecommendations` loop over all champions (160+ iterations per evaluation) was re-computing loop-invariant values like `.map` on champion pools, `deriveRolesFromPool`, and `allies.find()` for flex synergies. Additionally, object spreading `{ ...staticCounters, ...dynamicCounters }` inside the hot loop caused significant garbage collection overhead.
+**Action:** Always pre-compute loop-invariant array/object derivations *before* iterating over large collections (e.g. champion maps). Replace object spreading with nullish coalescing direct property lookups (`obj1[key] ?? obj2[key]`) when checking merged dictionaries in performance-critical paths.
