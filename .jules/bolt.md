@@ -1,0 +1,3 @@
+## 2024-05-24 - Object Spread in Hot Loops
+**Learning:** Object spreading (`{ ...objA, ...objB }`) inside hot loops (like the O(N*P) loop in `getRecommendations`) causes continuous object allocation and massive garbage collection overhead in V8.
+**Action:** Replace object spreading inside hot loops with direct property lookups (`objB[key] !== undefined ? objB[key] : objA[key]`). Always hoist loop-invariant `.map()`, `.find()`, and property derivations outside the loop to prevent O(N*P) complexity degradation.
