@@ -1,0 +1,3 @@
+## 2025-02-28 - Engine Hot Loop Optimization
+**Learning:** In `src/engine/recommend.js`, the `getRecommendations` scoring loop was performing O(N*P) operations by unconditionally deriving custom roles (`deriveRolesFromPool`), parsing flex pick strings, and searching the `allies` array for flex synergy inside the O(N) loop over all champions. This created unnecessary allocations and CPU overhead during draft analysis.
+**Action:** Always hoist loop-invariant computations, especially array creations, string manipulations, and expensive derivations, outside of hot loops that iterate over the entire champion roster.
