@@ -1,0 +1,3 @@
+## 2024-03-30 - O(1) Role Lookup and Loop Invariants
+**Learning:** `getChampionStats` and `getImportedChampions` in `src/data/winRateProvider.js` rely on `Object.keys().find()` to resolve role keys, resulting in high array allocation and iteration overhead per call during draft analysis. Moreover, `getRecommendations` in `src/engine/recommend.js` recomputes `deriveRolesFromPool` and executes array `.find()` for allies repeatedly inside a hot loop traversing all champions.
+**Action:** Replace `Object.keys().find()` with direct property access `qData[role] || qData[role.toLowerCase()]` for O(1) lookup. Precompute loop invariants such as derived archetype roles and flex ally mapping outside the `getRecommendations` main champion iteration loop.
