@@ -135,6 +135,14 @@ function getNameToIdMap() {
 }
 
 /**
+ * Get the full name → tags array map.
+ * @returns {Object<string, string[]>}
+ */
+function getChampionTagsMap() {
+    return championTagsMap || {};
+}
+
+/**
  * Get a map of lowercase name -> correct ID (e.g., "twistedfate" -> "TwistedFate").
  * Also handles common mapping issues if possible.
  */
@@ -166,4 +174,5 @@ module.exports = {
     getIdToNameMap,
     getNameToIdMap,
     getChampionNameMap,
+    getChampionTagsMap,
 };
