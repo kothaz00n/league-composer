@@ -16,6 +16,7 @@ const { createLcuClient, getCurrentSummoner, getChampSelectSession } = require('
 const { LcuWebSocket } = require('./lcu/lcuWebSocket');
 const { getRecommendations, initializeEngine, analyzeTeamComposition } = require('../engine/recommend');
 const { loadChampionData, getIdToNameMap, getNameToIdMap, getChampionTags,
+    getChampionTagsMap,
     getLatestVersion,
     getAllChampions,
 } = require('../data/champions');
@@ -420,13 +421,9 @@ function setupIPC() {
         try {
             const { getTeamSynergyMatrix } = require('../engine/synergyMatrix');
             const { detectCompositionGaps } = require('../data/archetypeMapping.cjs');
-            const { getChampionTags, getIdToNameMap } = require('../data/champions');
+            const { getChampionTagsMap } = require('../data/champions');
 
-            const idToName = getIdToNameMap();
-            const tagsMap = {};
-            for (const name of Object.values(idToName)) {
-                tagsMap[name] = getChampionTags(name);
-            }
+            const tagsMap = getChampionTagsMap();
 
             const synergyResult = getTeamSynergyMatrix(teamRoles);
             const gapResult = detectCompositionGaps(teamRoles, archetypeKey, tagsMap);
@@ -535,12 +532,7 @@ ipcMain.handle(IPC_CHANNELS.CHAMPION_GET_DATA, () => {
     if (!idToName) return null;
 
     const nameToId = getNameToIdMap();
-    const tagsMap = {};
-
-    // Populate tags map for renderer usage (e.g. TeamBuilder)
-    Object.values(idToName).forEach(name => {
-        tagsMap[name] = getChampionTags(name);
-    });
+    const tagsMap = getChampionTagsMap();
 
     return { idToName, nameToId, tagsMap, version: getLatestVersion() };
 });
@@ -802,10 +794,7 @@ app.whenReady().then(async () => {
         // Initialize the recommendation engine with Data Dragon data
         const idToName = getIdToNameMap();
         const nameToId = getNameToIdMap();
-        const tagsMap = {};
-        for (const champName of Object.values(idToName)) {
-            tagsMap[champName] = getChampionTags(champName);
-        }
+        const tagsMap = getChampionTagsMap();
 
         initializeEngine({ idToName, nameToId, tagsMap });
         console.log('[Main] Data Dragon + Win Rates loaded successfully');

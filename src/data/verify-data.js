@@ -15,7 +15,7 @@ const {
     getArchetypeFitBonus,
 } = require('./archetypeMapping.cjs');
 const { getRecommendations, initializeEngine } = require('../engine/recommend');
-const { loadChampionData, getIdToNameMap, getNameToIdMap, getChampionTags } = require('./champions');
+const { loadChampionData, getIdToNameMap, getNameToIdMap, getChampionTags, getChampionTagsMap } = require('./champions');
 const countersDB = require('./counters.json');
 
 // ─── Color helpers ──────────────────────────────────────────────────────
@@ -164,10 +164,7 @@ async function main() {
     await loadChampionData();
     const idToName = getIdToNameMap();
     const nameToId = getNameToIdMap();
-    const tagsMap = {};
-    for (const champName of Object.values(idToName)) {
-        tagsMap[champName] = getChampionTags(champName);
-    }
+    const tagsMap = getChampionTagsMap();
     initializeEngine({ idToName, nameToId, tagsMap });
 
     // Load mock win rates so champions pass the stats.hasData filter
