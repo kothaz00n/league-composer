@@ -1,0 +1,3 @@
+## 2025-02-14 - Precomputation inside Hot Loops
+**Learning:** In large iteration loops (like scoring 160+ champions), calculating loop-invariant state (e.g. `Array.map`, `Array.find`, and function calls deriving roles from the pool) creates significant O(N*P) complexity bottlenecks and impacts recommendation speed. Repeated `.map` combined with `.includes` checks degrades to O(N^2) internally.
+**Action:** Always memoize loop-invariant computations outside the loop. Use `Set` for O(1) membership lookups instead of `.map().includes()`, and precalculate filter/find operations on configuration objects before entering the scoring loop.
