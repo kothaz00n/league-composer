@@ -198,6 +198,26 @@ function getRecommendations({
     // Flex Pick Strategy: Are we in early draft?
     const isEarlyDraft = allyCount <= 2;
 
+    // ─── Memoized Invariants (Bolt Optimization) ─────────────────────────
+    let precomputedChampionPool = null;
+    let precomputedDerivedRoles = null;
+    let precomputedFlexRoles = [];
+    let precomputedFlexAllies = {};
+
+    if (targetArchetypeDef?.champion_pool) {
+        if (targetArchetypeDef.champion_pool[normalizedRole]) {
+            precomputedChampionPool = new Set(targetArchetypeDef.champion_pool[normalizedRole].map(n => cleanName(n)));
+        }
+        precomputedDerivedRoles = deriveRolesFromPool(targetArchetypeDef.champion_pool);
+    }
+
+    if (rosterConfig?.gameMode === 'flex' && rosterConfig?.roster) {
+        precomputedFlexRoles = Object.keys(rosterConfig.roster).filter(r => r !== normalizedRole);
+        for (const r of precomputedFlexRoles) {
+            precomputedFlexAllies[r] = allies.find(a => (a.role?.toLowerCase() || '') === r);
+        }
+    }
+
     for (const champId of Object.keys(allChampions)) {
         const champName = allChampions[champId];
         const champData = countersDB[champName]; // Still use countersDB for specific counter/synergy data
@@ -319,9 +339,8 @@ function getRecommendations({
         }
 
         // ─── Champion Pool Bonus (custom archetypes) ────────────
-        if (targetArchetypeDef?.champion_pool?.[normalizedRole]) {
-            const pool = targetArchetypeDef.champion_pool[normalizedRole].map(n => cleanName(n));
-            if (pool.includes(champName)) {
+        if (precomputedChampionPool) {
+            if (precomputedChampionPool.has(champName)) {
                 score += 8;
                 scoreDetails.push('Champion Pool');
             }
@@ -336,13 +355,12 @@ function getRecommendations({
             }
         } else if (targetArchetypeDef?.champion_pool) {
             // Custom archetype: derive roles from pool and score by tag fit
-            const derived = deriveRolesFromPool(targetArchetypeDef.champion_pool);
             const champRoles = getCompositionRoles(champTags);
             let customFit = 0;
-            for (const req of derived.required) {
+            for (const req of precomputedDerivedRoles.required) {
                 if (champRoles.includes(req)) customFit += 3;
             }
-            for (const bon of derived.bonus) {
+            for (const bon of precomputedDerivedRoles.bonus) {
                 if (champRoles.includes(bon)) customFit += 1;
             }
             fitBonus = Math.min(customFit, 5);
@@ -383,11 +401,10 @@ function getRecommendations({
 
             // Flex Mode Synergy
             if (rosterConfig.gameMode === 'flex') {
-                const otherRoles = Object.keys(rosterConfig.roster).filter(r => r !== roleKey);
                 let flexSynergyParams = 0;
 
-                for (const r of otherRoles) {
-                    const allyInRole = allies.find(a => (a.role?.toLowerCase() || '') === r);
+                for (const r of precomputedFlexRoles) {
+                    const allyInRole = precomputedFlexAllies[r];
                     if (allyInRole && allyInRole.championId === 0) {
                         const favs = rosterConfig.roster[r].favorites || [];
                         for (const fav of favs) {
