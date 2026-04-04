@@ -1,0 +1,3 @@
+## $(date +%Y-%m-%d) - [Hoisting Loop Invariants in Recommendation Engine]
+**Learning:** Found an O(N*P) complexity degradation inside the hot loop of `getRecommendations` in `src/engine/recommend.js` because loop-invariant calculations (like `deriveRolesFromPool` for custom archetypes and `.map()` filtering on `allies.find()` for flex synergy) were evaluated for every champion.
+**Action:** Always verify if complex filtering, mapping, or role derivation steps within a large data-processing loop are dependent on the loop variable (`champName` / `champId`). If they depend only on the function parameters (`allies`, `rosterConfig`, `targetArchetypeDef`), extract them before the loop to avoid redundant recalculations.
