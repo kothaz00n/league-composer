@@ -198,6 +198,30 @@ function getRecommendations({
     // Flex Pick Strategy: Are we in early draft?
     const isEarlyDraft = allyCount <= 2;
 
+    // ─── Pre-calculate loop invariants ──────────────────────────────────
+    let derivedCustomRoles = null;
+    let targetArchetypePool = null;
+    let flexMissingRoles = [];
+
+    if (targetArchetypeDef) {
+        if (targetArchetypeDef.champion_pool) {
+            derivedCustomRoles = deriveRolesFromPool(targetArchetypeDef.champion_pool);
+        }
+        if (targetArchetypeDef.champion_pool?.[normalizedRole]) {
+            targetArchetypePool = targetArchetypeDef.champion_pool[normalizedRole].map(n => cleanName(n));
+        }
+    }
+
+    if (rosterConfig && rosterConfig.gameMode === 'flex' && normalizedRole) {
+        const otherRoles = Object.keys(rosterConfig.roster).filter(r => r !== normalizedRole);
+        for (const r of otherRoles) {
+            const allyInRole = allies.find(a => (a.role?.toLowerCase() || '') === r);
+            if (allyInRole && allyInRole.championId === 0) {
+                flexMissingRoles.push(r);
+            }
+        }
+    }
+
     for (const champId of Object.keys(allChampions)) {
         const champName = allChampions[champId];
         const champData = countersDB[champName]; // Still use countersDB for specific counter/synergy data
@@ -319,9 +343,8 @@ function getRecommendations({
         }
 
         // ─── Champion Pool Bonus (custom archetypes) ────────────
-        if (targetArchetypeDef?.champion_pool?.[normalizedRole]) {
-            const pool = targetArchetypeDef.champion_pool[normalizedRole].map(n => cleanName(n));
-            if (pool.includes(champName)) {
+        if (targetArchetypePool) {
+            if (targetArchetypePool.includes(champName)) {
                 score += 8;
                 scoreDetails.push('Champion Pool');
             }
@@ -334,15 +357,14 @@ function getRecommendations({
             if (fitBonus > 0) {
                 scoreDetails.push(`Fits target ${targetArchetype} comp`);
             }
-        } else if (targetArchetypeDef?.champion_pool) {
+        } else if (derivedCustomRoles) {
             // Custom archetype: derive roles from pool and score by tag fit
-            const derived = deriveRolesFromPool(targetArchetypeDef.champion_pool);
             const champRoles = getCompositionRoles(champTags);
             let customFit = 0;
-            for (const req of derived.required) {
+            for (const req of derivedCustomRoles.required) {
                 if (champRoles.includes(req)) customFit += 3;
             }
-            for (const bon of derived.bonus) {
+            for (const bon of derivedCustomRoles.bonus) {
                 if (champRoles.includes(bon)) customFit += 1;
             }
             fitBonus = Math.min(customFit, 5);
@@ -382,20 +404,16 @@ function getRecommendations({
             }
 
             // Flex Mode Synergy
-            if (rosterConfig.gameMode === 'flex') {
-                const otherRoles = Object.keys(rosterConfig.roster).filter(r => r !== roleKey);
+            if (rosterConfig.gameMode === 'flex' && flexMissingRoles.length > 0) {
                 let flexSynergyParams = 0;
 
-                for (const r of otherRoles) {
-                    const allyInRole = allies.find(a => (a.role?.toLowerCase() || '') === r);
-                    if (allyInRole && allyInRole.championId === 0) {
-                        const favs = rosterConfig.roster[r].favorites || [];
-                        for (const fav of favs) {
-                            const syn = champData.synergies?.[fav];
-                            if (syn && syn > 0.52) {
-                                flexSynergyParams++;
-                                score += (syn - 0.50) * 20;
-                            }
+                for (const r of flexMissingRoles) {
+                    const favs = rosterConfig.roster[r].favorites || [];
+                    for (const fav of favs) {
+                        const syn = champData.synergies?.[fav];
+                        if (syn && syn > 0.52) {
+                            flexSynergyParams++;
+                            score += (syn - 0.50) * 20;
                         }
                     }
                 }
