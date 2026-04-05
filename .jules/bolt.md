@@ -1,0 +1,3 @@
+## 2024-04-05 - Avoid Loop-Invariant Calculations in Recommendation Engine
+**Learning:** The `getRecommendations` engine was recalculating derived roles (`deriveRolesFromPool`), mapping custom archetype pools, and iterating over allies (`allies.find()`) inside the hot loop evaluating every champion in the game. This caused O(N*P) complexity degradation where N is the number of champions and P is the number of allies/pool size.
+**Action:** Always pre-calculate derived roles, array transformations, and derived ally data structures before entering the main champion iteration loop in `src/engine/recommend.js` to ensure the hot path only performs O(1) property access or simple calculations.
