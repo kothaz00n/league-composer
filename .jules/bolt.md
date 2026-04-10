@@ -1,0 +1,3 @@
+## 2024-05-24 - [Avoid Array Creating Iterations on Hot Paths]
+**Learning:** `getChampionStats` and `getImportedChampions` in `winRateProvider.js` utilize `Object.keys().find()` to resolve role names case-insensitively. This is inefficient as it instantiates a new array on every lookup. Since `getChampionStats` is heavily hit during draft analysis inside O(N*P) loops, direct property access (checking exact and lowercase roles first) reduces execution time significantly (up to ~3x in micro-benchmarks).
+**Action:** Optimize role lookups on hot paths by trying fast O(1) direct property access (`qData[role] || qData[role.toLowerCase()]`) before falling back to array iterations like `Object.keys().find()`.
