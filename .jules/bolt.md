@@ -1,0 +1,3 @@
+## 2024-05-23 - Avoid redundant array allocations in inner loops
+**Learning:** `Object.values(obj).includes(val)` in a nested loop generates a new array on every iteration and performs an O(N) lookup. In `getCompositionAnalysis`, iterating over all champions to find substitutions while doing this check caused redundant O(N) operations inside an inner loop.
+**Action:** Pre-calculate a `Set` of the object's values outside the nested loops, allowing an O(1) `.has(val)` check without the overhead of creating an array during every iteration.
