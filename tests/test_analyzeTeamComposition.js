@@ -1,4 +1,15 @@
 const assert = require('assert');
+
+// Mock axios before requiring modules that use it
+const Module = require('module');
+const originalRequire = Module.prototype.require;
+Module.prototype.require = function(id) {
+    if (id === 'axios') {
+        return { get: async () => ({ data: {} }) };
+    }
+    return originalRequire.apply(this, arguments);
+};
+
 const { analyzeTeamComposition, initializeEngine } = require('../src/engine/recommend');
 const winRateProvider = require('../src/data/winRateProvider');
 const champions = require('../src/data/champions');
