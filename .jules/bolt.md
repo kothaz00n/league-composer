@@ -1,0 +1,3 @@
+## 2024-04-15 - Memoize Loop-Invariant Calculations and Inner Loop Set Lookups
+**Learning:** In the `getRecommendations` and `getCompositionAnalysis` functions, computations that didn't depend on the current champion iteration were placed inside tight loops (like `deriveRolesFromPool`, `.map()` for pool processing, or `Object.values(teamRoles).includes(...)`). Given 160+ champions and potentially large pool combinations, this resulted in O(N*P) complexity degradation and significant performance overhead.
+**Action:** Always extract loop-invariant calculations before the main loop iteration when writing or modifying recommendation engine logic. Use `Set` for O(1) membership lookups in inner loops rather than repeated array operations like `includes` or `filter`.
