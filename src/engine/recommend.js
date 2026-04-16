@@ -516,6 +516,9 @@ function getCompositionAnalysis(teamRoles, queue = 'soloq') {
 
     // Identify weak links (WR < 49% or just lowest in team)
     // For each member, try to find a better option
+    // Pre-calculate Set to avoid O(N) lookup inside nested loops
+    const teamMembersSet = new Set(Object.values(teamRoles));
+
     for (const member of teamChampions) {
         if (member.winRate > 0.52) continue; // Don't replace strong picks
 
@@ -525,7 +528,7 @@ function getCompositionAnalysis(teamRoles, queue = 'soloq') {
         for (const candidateName of allNames) {
             if (candidateName === member.name) continue;
             // Check if candidate is already in team
-            if (Object.values(teamRoles).includes(candidateName)) continue;
+            if (teamMembersSet.has(candidateName)) continue;
 
             const candStats = getChampionStats(candidateName, member.role, queue);
             if (!candStats || candStats.matches < 50) continue; // Skip low sample size
