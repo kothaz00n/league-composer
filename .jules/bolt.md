@@ -1,0 +1,3 @@
+## 2024-04-17 - Avoid O(N) array transformations inside hot nested loops
+**Learning:** In code execution paths like `getCompositionAnalysis` where nested loops evaluate all champions (e.g. `allNames`) against team members, using inline object conversions and array searches like `Object.values(teamRoles).includes(...)` introduces unnecessary object instantiation, garbage collection overhead, and degrades lookup performance from O(1) to O(N). Because this loops over `allNames` (160+ champions) multiple times (once for each weak link), this results in O(M*C) scaling, with an inner check running N times, making it O(M*C*N) instead of O(M*C) total.
+**Action:** Always pre-calculate `Set` instances outside of nested loops for membership lookups.
