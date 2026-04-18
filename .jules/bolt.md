@@ -1,0 +1,3 @@
+## 2024-04-18 - Avoid Expensive Operations in getRecommendations Hot Loop
+**Learning:** The `getRecommendations` function iterates over the entire champion roster (160+ iterations). Loop-invariant calculations (like `deriveRolesFromPool` and `allies.find`) and object spread operations (`{...a, ...b}`) inside this loop cause O(N*P) complexity degradation and significant garbage collection overhead.
+**Action:** Always pre-calculate Sets, Arrays, and Maps (e.g., derived roles, `otherRoles` filters, `roleToAlly` maps) outside the main iteration. Use direct property lookups with fallbacks instead of object spreading inside hot loops.

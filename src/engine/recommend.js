@@ -198,6 +198,23 @@ function getRecommendations({
     // Flex Pick Strategy: Are we in early draft?
     const isEarlyDraft = allyCount <= 2;
 
+    // --- Pre-calculate loop invariants ---
+    const derivedArchetype = targetArchetypeDef?.champion_pool ? deriveRolesFromPool(targetArchetypeDef.champion_pool) : null;
+
+    // Convert allies array into a Map of role -> ally object for fast lookup
+    const roleToAlly = new Map();
+    if (rosterConfig && rosterConfig.gameMode === 'flex') {
+        for (const ally of allies) {
+            if (ally.role) {
+                roleToAlly.set(ally.role.toLowerCase(), ally);
+            }
+        }
+    }
+
+    const otherRolesFilters = rosterConfig && rosterConfig.gameMode === 'flex'
+        ? Object.keys(rosterConfig.roster).filter(r => r !== normalizedRole)
+        : [];
+
     for (const champId of Object.keys(allChampions)) {
         const champName = allChampions[champId];
         const champData = countersDB[champName]; // Still use countersDB for specific counter/synergy data
@@ -238,14 +255,16 @@ function getRecommendations({
         const champTier = stats.tier || '';
         const champPickRate = stats.pickRate || 0;
 
-        // Merge dynamic counters from U.GG scraper
-        const dynamicCounters = stats.counters || {};
-        const mergedCounters = { ...(champData.counters || {}), ...dynamicCounters };
-
         // ─── Counter bonus ──────────────────────────────────────
         for (const enemyName of enemyNames) {
-            if (mergedCounters[enemyName]) {
-                const winrate = mergedCounters[enemyName];
+            let winrate = null;
+            if (stats.counters && stats.counters[enemyName] !== undefined) {
+                winrate = stats.counters[enemyName];
+            } else if (champData.counters && champData.counters[enemyName] !== undefined) {
+                winrate = champData.counters[enemyName];
+            }
+
+            if (winrate !== null) {
                 const bonus = (winrate - 0.50) * 100 * counterSynergyMult;
                 score += bonus;
                 counterScore += bonus;
@@ -334,9 +353,9 @@ function getRecommendations({
             if (fitBonus > 0) {
                 scoreDetails.push(`Fits target ${targetArchetype} comp`);
             }
-        } else if (targetArchetypeDef?.champion_pool) {
+        } else if (derivedArchetype) {
             // Custom archetype: derive roles from pool and score by tag fit
-            const derived = deriveRolesFromPool(targetArchetypeDef.champion_pool);
+            const derived = derivedArchetype;
             const champRoles = getCompositionRoles(champTags);
             let customFit = 0;
             for (const req of derived.required) {
@@ -383,11 +402,11 @@ function getRecommendations({
 
             // Flex Mode Synergy
             if (rosterConfig.gameMode === 'flex') {
-                const otherRoles = Object.keys(rosterConfig.roster).filter(r => r !== roleKey);
+                const otherRoles = otherRolesFilters;
                 let flexSynergyParams = 0;
 
                 for (const r of otherRoles) {
-                    const allyInRole = allies.find(a => (a.role?.toLowerCase() || '') === r);
+                    const allyInRole = roleToAlly.get(r);
                     if (allyInRole && allyInRole.championId === 0) {
                         const favs = rosterConfig.roster[r].favorites || [];
                         for (const fav of favs) {
