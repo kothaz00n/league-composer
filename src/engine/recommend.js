@@ -238,14 +238,15 @@ function getRecommendations({
         const champTier = stats.tier || '';
         const champPickRate = stats.pickRate || 0;
 
-        // Merge dynamic counters from U.GG scraper
+        // Optimize: avoid object spreading `{ ...static, ...dynamic }` inside the hot loop.
+        // Direct property lookups save significant memory allocations and GC overhead.
         const dynamicCounters = stats.counters || {};
-        const mergedCounters = { ...(champData.counters || {}), ...dynamicCounters };
+        const staticCounters = champData.counters || {};
 
         // ─── Counter bonus ──────────────────────────────────────
         for (const enemyName of enemyNames) {
-            if (mergedCounters[enemyName]) {
-                const winrate = mergedCounters[enemyName];
+            const winrate = dynamicCounters[enemyName] !== undefined ? dynamicCounters[enemyName] : staticCounters[enemyName];
+            if (winrate !== undefined) {
                 const bonus = (winrate - 0.50) * 100 * counterSynergyMult;
                 score += bonus;
                 counterScore += bonus;
@@ -514,6 +515,9 @@ function getCompositionAnalysis(teamRoles, queue = 'soloq') {
     const allChamps = getIdToNameMap(); // id -> name
     const allNames = Object.values(allChamps);
 
+    // Pre-calculate Set of current team member names to avoid O(N) array conversions in the nested loop
+    const currentTeamNames = new Set(Object.values(teamRoles).filter(Boolean));
+
     // Identify weak links (WR < 49% or just lowest in team)
     // For each member, try to find a better option
     for (const member of teamChampions) {
@@ -525,7 +529,7 @@ function getCompositionAnalysis(teamRoles, queue = 'soloq') {
         for (const candidateName of allNames) {
             if (candidateName === member.name) continue;
             // Check if candidate is already in team
-            if (Object.values(teamRoles).includes(candidateName)) continue;
+            if (currentTeamNames.has(candidateName)) continue;
 
             const candStats = getChampionStats(candidateName, member.role, queue);
             if (!candStats || candStats.matches < 50) continue; // Skip low sample size

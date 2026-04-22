@@ -1,0 +1,3 @@
+## 2024-05-24 - Avoid object spreading and Object.values() in engine loops
+**Learning:** In the core recommendation engine (`src/engine/recommend.js`), doing object spreads (`{ ...static, ...dynamic }`) inside the O(N) champion iteration loop causes heavy memory allocations and GC overhead. Also, calling `Object.values(teamRoles).includes()` inside a nested loop degrades performance to O(N*M) where M is the number of all champions.
+**Action:** Always pre-calculate `Set`s outside of nested loops for membership checks to achieve O(1) lookups. Avoid object spreading inside hot loops; use direct property lookups (with fallbacks) to save allocations.
