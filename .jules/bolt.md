@@ -1,0 +1,3 @@
+## 2024-04-23 - [Pre-calculate Sets for O(1) Lookups in Hot Paths]
+**Learning:** In `src/engine/recommend.js`, the `getCompositionAnalysis` function used `Object.values(teamRoles).includes(candidateName)` inside a nested loop spanning all champions. This created a new array and performed an O(N) search on every single iteration, leading to significant redundant allocations and O(N^2) complexity degradation during substitution analysis.
+**Action:** Always pre-calculate sets (`new Set(Object.values(...))`) outside of loops for membership checks in hot paths to ensure O(1) lookup performance and avoid unnecessary garbage collection overhead.
