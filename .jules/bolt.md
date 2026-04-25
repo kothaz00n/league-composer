@@ -1,0 +1,3 @@
+## 2025-04-25 - Prevent O(N^2) Complexity Degradation in Recommendation Engine
+**Learning:** In `src/engine/recommend.js`, the hot loops iterate over the entire champion roster (~160 champions). Calling functions that allocate memory and iterate inside the loop (`deriveRolesFromPool`, `Object.keys().filter()`, `allies.find()`, `Object.values().includes()`) causes O(N^2) or O(N*P) complexity degradation and excessive garbage collection.
+**Action:** Always pre-calculate Sets and Maps, and hoist loop-invariant calculations (like role derivation or mapping objects) outside of the main loop to achieve O(1) lookups and prevent redundant object allocation during large iterative processes.
