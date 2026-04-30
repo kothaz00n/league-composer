@@ -513,6 +513,7 @@ function getCompositionAnalysis(teamRoles, queue = 'soloq') {
     const suggestions = [];
     const allChamps = getIdToNameMap(); // id -> name
     const allNames = Object.values(allChamps);
+    const teamRoleValues = new Set(Object.values(teamRoles));
 
     // Identify weak links (WR < 49% or just lowest in team)
     // For each member, try to find a better option
@@ -522,10 +523,13 @@ function getCompositionAnalysis(teamRoles, queue = 'soloq') {
         // Find candidates in same role with similar tags
         const candidates = [];
 
+        // ⚡ Bolt Optimization: Using a Set for `teamRoleValues` here reduces the O(N) lookup
+        // of `Object.values(teamRoles).includes(candidateName)` inside the loop to O(1).
+
         for (const candidateName of allNames) {
             if (candidateName === member.name) continue;
             // Check if candidate is already in team
-            if (Object.values(teamRoles).includes(candidateName)) continue;
+            if (teamRoleValues.has(candidateName)) continue;
 
             const candStats = getChampionStats(candidateName, member.role, queue);
             if (!candStats || candStats.matches < 50) continue; // Skip low sample size
