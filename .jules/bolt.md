@@ -1,0 +1,3 @@
+## 2024-05-01 - [Avoid array allocations in hot substitution loops]
+**Learning:** In `src/engine/recommend.js`'s `getCompositionAnalysis` function, using `Object.values(teamRoles).includes(...)` within the inner loop of substitution suggestions caused redundant array allocations and O(N) array lookups per iteration. When analyzing large rosters, this degrades performance to O(N * M^2) roughly where N is team size and M is the champion roster.
+**Action:** Always pre-calculate `Set` structures outside of nested loops for membership checks to optimize lookups to O(1) and eliminate memory allocation overhead inside hot loops.
