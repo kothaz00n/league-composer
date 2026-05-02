@@ -1,0 +1,3 @@
+## 2024-05-02 - [Optimize Array Operations in Hot Loops]
+**Learning:** In V8/Node environments, dynamically creating arrays using `Object.values()` and subsequently calling `.includes()` inside hot loops (like `getRecommendations` and `getCompositionAnalysis`) triggers O(N) traversal inside an already nested loop, significantly degrading performance as the champion pool scales. Re-evaluating invariant logic (like deriving roles from custom archetypes) on every iteration also wastes cycles unnecessarily.
+**Action:** Always hoist loop-invariant operations out of iterative loops. Pre-calculate values into constant-time lookup structures, such as a `Set` for inclusion checks or a `Map` for role-to-champion lookups, before entering hot N-times iteration paths.
