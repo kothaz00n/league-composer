@@ -198,6 +198,24 @@ function getRecommendations({
     // Flex Pick Strategy: Are we in early draft?
     const isEarlyDraft = allyCount <= 2;
 
+    // ─── Loop Invariant Memoizations ─────────────────────────────────────
+    // Pre-calculate custom archetype derived roles if defined
+    let customArchetypeDerived = null;
+    if (targetArchetypeDef?.champion_pool) {
+        customArchetypeDerived = deriveRolesFromPool(targetArchetypeDef.champion_pool);
+    }
+
+    // Pre-calculate other roles and role->ally map for flex mode synergy
+    let flexModeOtherRoles = null;
+    let roleToAllyMap = null;
+    if (rosterConfig && rosterConfig.gameMode === 'flex' && rosterConfig.roster && normalizedRole) {
+        flexModeOtherRoles = Object.keys(rosterConfig.roster).filter(r => r !== normalizedRole);
+        roleToAllyMap = new Map();
+        for (const a of allies) {
+            if (a.role) roleToAllyMap.set(a.role.toLowerCase(), a);
+        }
+    }
+
     for (const champId of Object.keys(allChampions)) {
         const champName = allChampions[champId];
         const champData = countersDB[champName]; // Still use countersDB for specific counter/synergy data
@@ -334,15 +352,14 @@ function getRecommendations({
             if (fitBonus > 0) {
                 scoreDetails.push(`Fits target ${targetArchetype} comp`);
             }
-        } else if (targetArchetypeDef?.champion_pool) {
-            // Custom archetype: derive roles from pool and score by tag fit
-            const derived = deriveRolesFromPool(targetArchetypeDef.champion_pool);
+        } else if (customArchetypeDerived) {
+            // Custom archetype: use pre-calculated derived roles to score by tag fit
             const champRoles = getCompositionRoles(champTags);
             let customFit = 0;
-            for (const req of derived.required) {
+            for (const req of customArchetypeDerived.required) {
                 if (champRoles.includes(req)) customFit += 3;
             }
-            for (const bon of derived.bonus) {
+            for (const bon of customArchetypeDerived.bonus) {
                 if (champRoles.includes(bon)) customFit += 1;
             }
             fitBonus = Math.min(customFit, 5);
@@ -382,12 +399,11 @@ function getRecommendations({
             }
 
             // Flex Mode Synergy
-            if (rosterConfig.gameMode === 'flex') {
-                const otherRoles = Object.keys(rosterConfig.roster).filter(r => r !== roleKey);
+            if (rosterConfig.gameMode === 'flex' && flexModeOtherRoles && roleToAllyMap) {
                 let flexSynergyParams = 0;
 
-                for (const r of otherRoles) {
-                    const allyInRole = allies.find(a => (a.role?.toLowerCase() || '') === r);
+                for (const r of flexModeOtherRoles) {
+                    const allyInRole = roleToAllyMap.get(r);
                     if (allyInRole && allyInRole.championId === 0) {
                         const favs = rosterConfig.roster[r].favorites || [];
                         for (const fav of favs) {
@@ -514,6 +530,9 @@ function getCompositionAnalysis(teamRoles, queue = 'soloq') {
     const allChamps = getIdToNameMap(); // id -> name
     const allNames = Object.values(allChamps);
 
+    // Pre-calculate team member names set to prevent O(N) lookup in hot loop
+    const teamMemberNames = new Set(Object.values(teamRoles || {}));
+
     // Identify weak links (WR < 49% or just lowest in team)
     // For each member, try to find a better option
     for (const member of teamChampions) {
@@ -525,7 +544,7 @@ function getCompositionAnalysis(teamRoles, queue = 'soloq') {
         for (const candidateName of allNames) {
             if (candidateName === member.name) continue;
             // Check if candidate is already in team
-            if (Object.values(teamRoles).includes(candidateName)) continue;
+            if (teamMemberNames.has(candidateName)) continue;
 
             const candStats = getChampionStats(candidateName, member.role, queue);
             if (!candStats || candStats.matches < 50) continue; // Skip low sample size
