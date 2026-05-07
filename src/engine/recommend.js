@@ -513,6 +513,8 @@ function getCompositionAnalysis(teamRoles, queue = 'soloq') {
     const suggestions = [];
     const allChamps = getIdToNameMap(); // id -> name
     const allNames = Object.values(allChamps);
+    // Bolt: Pre-calculate current team set to avoid O(N^2) complexity in the loop below
+    const currentTeamSet = new Set(Object.values(teamRoles).filter(Boolean));
 
     // Identify weak links (WR < 49% or just lowest in team)
     // For each member, try to find a better option
@@ -525,7 +527,7 @@ function getCompositionAnalysis(teamRoles, queue = 'soloq') {
         for (const candidateName of allNames) {
             if (candidateName === member.name) continue;
             // Check if candidate is already in team
-            if (Object.values(teamRoles).includes(candidateName)) continue;
+            if (currentTeamSet.has(candidateName)) continue;
 
             const candStats = getChampionStats(candidateName, member.role, queue);
             if (!candStats || candStats.matches < 50) continue; // Skip low sample size
