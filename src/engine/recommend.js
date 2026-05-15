@@ -195,6 +195,21 @@ function getRecommendations({
     const results = [];
     const allChampions = championIdMap; // Use internal map (injected or loaded)
 
+    // Precalculate for custom archetype logic
+    const derivedArchetypeRoles = targetArchetypeDef?.champion_pool ? deriveRolesFromPool(targetArchetypeDef.champion_pool) : null;
+
+    // Precalculate flex roles map to avoid O(N) find in loop
+    let roleToAlly = null;
+    let flexOtherRoles = null;
+    if (rosterConfig && rosterConfig.gameMode === 'flex') {
+        const roleKey = normalizedRole;
+        flexOtherRoles = Object.keys(rosterConfig.roster).filter(r => r !== roleKey);
+        roleToAlly = {};
+        for (const a of allies) {
+            if (a.role) roleToAlly[a.role.toLowerCase()] = a;
+        }
+    }
+
     // Flex Pick Strategy: Are we in early draft?
     const isEarlyDraft = allyCount <= 2;
 
@@ -240,12 +255,12 @@ function getRecommendations({
 
         // Merge dynamic counters from U.GG scraper
         const dynamicCounters = stats.counters || {};
-        const mergedCounters = { ...(champData.counters || {}), ...dynamicCounters };
+        const staticCounters = champData.counters || {};
 
         // ─── Counter bonus ──────────────────────────────────────
         for (const enemyName of enemyNames) {
-            if (mergedCounters[enemyName]) {
-                const winrate = mergedCounters[enemyName];
+            const winrate = dynamicCounters[enemyName] !== undefined ? dynamicCounters[enemyName] : staticCounters[enemyName];
+            if (winrate !== undefined) {
                 const bonus = (winrate - 0.50) * 100 * counterSynergyMult;
                 score += bonus;
                 counterScore += bonus;
@@ -336,7 +351,7 @@ function getRecommendations({
             }
         } else if (targetArchetypeDef?.champion_pool) {
             // Custom archetype: derive roles from pool and score by tag fit
-            const derived = deriveRolesFromPool(targetArchetypeDef.champion_pool);
+            const derived = derivedArchetypeRoles;
             const champRoles = getCompositionRoles(champTags);
             let customFit = 0;
             for (const req of derived.required) {
@@ -383,11 +398,10 @@ function getRecommendations({
 
             // Flex Mode Synergy
             if (rosterConfig.gameMode === 'flex') {
-                const otherRoles = Object.keys(rosterConfig.roster).filter(r => r !== roleKey);
                 let flexSynergyParams = 0;
 
-                for (const r of otherRoles) {
-                    const allyInRole = allies.find(a => (a.role?.toLowerCase() || '') === r);
+                for (const r of flexOtherRoles) {
+                    const allyInRole = roleToAlly[r];
                     if (allyInRole && allyInRole.championId === 0) {
                         const favs = rosterConfig.roster[r].favorites || [];
                         for (const fav of favs) {
@@ -514,6 +528,8 @@ function getCompositionAnalysis(teamRoles, queue = 'soloq') {
     const allChamps = getIdToNameMap(); // id -> name
     const allNames = Object.values(allChamps);
 
+    const teamRoleValues = new Set(Object.values(teamRoles));
+
     // Identify weak links (WR < 49% or just lowest in team)
     // For each member, try to find a better option
     for (const member of teamChampions) {
@@ -525,7 +541,7 @@ function getCompositionAnalysis(teamRoles, queue = 'soloq') {
         for (const candidateName of allNames) {
             if (candidateName === member.name) continue;
             // Check if candidate is already in team
-            if (Object.values(teamRoles).includes(candidateName)) continue;
+            if (teamRoleValues.has(candidateName)) continue;
 
             const candStats = getChampionStats(candidateName, member.role, queue);
             if (!candStats || candStats.matches < 50) continue; // Skip low sample size
