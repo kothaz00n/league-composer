@@ -198,6 +198,26 @@ function getRecommendations({
     // Flex Pick Strategy: Are we in early draft?
     const isEarlyDraft = allyCount <= 2;
 
+    // ⚡ Bolt Optimization: Pre-calculate loop invariants outside the main iteration
+    let customArchetypeDerived = null;
+    if (targetArchetypeDef?.champion_pool) {
+        customArchetypeDerived = deriveRolesFromPool(targetArchetypeDef.champion_pool);
+    }
+
+    // Pre-calculate Flex Mode Synergy invariants
+    const flexModeData = {};
+    if (rosterConfig && rosterConfig.roster && rosterConfig.gameMode === 'flex') {
+        const roleKey = normalizedRole;
+        const otherRoles = Object.keys(rosterConfig.roster).filter(r => r !== roleKey);
+
+        for (const r of otherRoles) {
+            const allyInRole = allies.find(a => (a.role?.toLowerCase() || '') === r);
+            if (allyInRole && allyInRole.championId === 0) {
+                flexModeData[r] = rosterConfig.roster[r].favorites || [];
+            }
+        }
+    }
+
     for (const champId of Object.keys(allChampions)) {
         const champName = allChampions[champId];
         const champData = countersDB[champName]; // Still use countersDB for specific counter/synergy data
@@ -334,15 +354,14 @@ function getRecommendations({
             if (fitBonus > 0) {
                 scoreDetails.push(`Fits target ${targetArchetype} comp`);
             }
-        } else if (targetArchetypeDef?.champion_pool) {
-            // Custom archetype: derive roles from pool and score by tag fit
-            const derived = deriveRolesFromPool(targetArchetypeDef.champion_pool);
+        } else if (customArchetypeDerived) {
+            // Custom archetype: score by tag fit using pre-calculated derived roles
             const champRoles = getCompositionRoles(champTags);
             let customFit = 0;
-            for (const req of derived.required) {
+            for (const req of customArchetypeDerived.required) {
                 if (champRoles.includes(req)) customFit += 3;
             }
-            for (const bon of derived.bonus) {
+            for (const bon of customArchetypeDerived.bonus) {
                 if (champRoles.includes(bon)) customFit += 1;
             }
             fitBonus = Math.min(customFit, 5);
@@ -383,19 +402,15 @@ function getRecommendations({
 
             // Flex Mode Synergy
             if (rosterConfig.gameMode === 'flex') {
-                const otherRoles = Object.keys(rosterConfig.roster).filter(r => r !== roleKey);
                 let flexSynergyParams = 0;
 
-                for (const r of otherRoles) {
-                    const allyInRole = allies.find(a => (a.role?.toLowerCase() || '') === r);
-                    if (allyInRole && allyInRole.championId === 0) {
-                        const favs = rosterConfig.roster[r].favorites || [];
-                        for (const fav of favs) {
-                            const syn = champData.synergies?.[fav];
-                            if (syn && syn > 0.52) {
-                                flexSynergyParams++;
-                                score += (syn - 0.50) * 20;
-                            }
+                for (const r in flexModeData) {
+                    const favs = flexModeData[r];
+                    for (const fav of favs) {
+                        const syn = champData.synergies?.[fav];
+                        if (syn && syn > 0.52) {
+                            flexSynergyParams++;
+                            score += (syn - 0.50) * 20;
                         }
                     }
                 }
