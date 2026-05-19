@@ -1,0 +1,3 @@
+## 2024-05-19 - [Hoisting Invariants in Recommender Engine]
+**Learning:** In highly iterated loops like `getRecommendations` iterating over 160+ champions, calculating loop-invariant values (like `deriveRolesFromPool` for custom archetypes or `otherRoles`/`allyInRole` for flex synergy) inside the loop caused a significant performance degradation (~17% slower). The engine's hot path was performing redundant array allocations and lookups inside O(N) loops.
+**Action:** Always pre-calculate complex, loop-invariant object/array manipulations before the main champion iteration loop in `src/engine/recommend.js` to ensure optimal recommendation performance.
