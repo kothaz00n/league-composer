@@ -1,0 +1,3 @@
+## 2024-05-20 - [Loop invariant code motion in recommend.js]
+**Learning:** `getRecommendations` iterated over the entire champion roster and repeatedly performed identical array mappings (`champion_pool.map`), loop evaluations (`deriveRolesFromPool`), and team roster filterings (`emptyAllyFavorites`) that were entirely independent of the current champion being evaluated. This caused an $O(N \times M)$ complexity degradation.
+**Action:** Always pre-calculate sets and loop-invariant configuration properties outside of hot paths (such as the main recommendation loop) to significantly improve recommendation scoring performance.
