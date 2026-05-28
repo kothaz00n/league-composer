@@ -240,12 +240,12 @@ function getRecommendations({
 
         // Merge dynamic counters from U.GG scraper
         const dynamicCounters = stats.counters || {};
-        const mergedCounters = { ...(champData.counters || {}), ...dynamicCounters };
 
         // ─── Counter bonus ──────────────────────────────────────
         for (const enemyName of enemyNames) {
-            if (mergedCounters[enemyName]) {
-                const winrate = mergedCounters[enemyName];
+            // Optimization: direct lookup instead of object spreading { ...static, ...dynamic }
+            const winrate = dynamicCounters[enemyName] ?? champData.counters?.[enemyName];
+            if (winrate !== undefined) {
                 const bonus = (winrate - 0.50) * 100 * counterSynergyMult;
                 score += bonus;
                 counterScore += bonus;
