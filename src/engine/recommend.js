@@ -198,6 +198,33 @@ function getRecommendations({
     // Flex Pick Strategy: Are we in early draft?
     const isEarlyDraft = allyCount <= 2;
 
+    // ⚡ Bolt: Pre-calculate loop-invariant custom pool Set and derived roles for O(1) checks
+    let customPoolSet = null;
+    if (targetArchetypeDef?.champion_pool?.[normalizedRole]) {
+        customPoolSet = new Set(targetArchetypeDef.champion_pool[normalizedRole].map(n => cleanName(n)));
+    }
+
+    let customArchetypeDerivedRoles = null;
+    if (targetArchetypeDef?.champion_pool) {
+        customArchetypeDerivedRoles = deriveRolesFromPool(targetArchetypeDef.champion_pool);
+    }
+
+    // ⚡ Bolt: Pre-calculate flex mode empty role favorites outside hot loop
+    let emptyAllyFavorites = null;
+    if (rosterConfig && rosterConfig.roster && rosterConfig.gameMode === 'flex') {
+        const roleKey = normalizedRole;
+        const otherRoles = Object.keys(rosterConfig.roster).filter(r => r !== roleKey);
+        emptyAllyFavorites = [];
+
+        for (const r of otherRoles) {
+            const allyInRole = allies.find(a => (a.role?.toLowerCase() || '') === r);
+            if (allyInRole && allyInRole.championId === 0) {
+                const favs = rosterConfig.roster[r].favorites || [];
+                emptyAllyFavorites.push(...favs);
+            }
+        }
+    }
+
     for (const champId of Object.keys(allChampions)) {
         const champName = allChampions[champId];
         const champData = countersDB[champName]; // Still use countersDB for specific counter/synergy data
@@ -319,12 +346,9 @@ function getRecommendations({
         }
 
         // ─── Champion Pool Bonus (custom archetypes) ────────────
-        if (targetArchetypeDef?.champion_pool?.[normalizedRole]) {
-            const pool = targetArchetypeDef.champion_pool[normalizedRole].map(n => cleanName(n));
-            if (pool.includes(champName)) {
-                score += 8;
-                scoreDetails.push('Champion Pool');
-            }
+        if (customPoolSet && customPoolSet.has(champName)) {
+            score += 8;
+            scoreDetails.push('Champion Pool');
         }
 
         // Standard Archetype Logic
@@ -334,9 +358,9 @@ function getRecommendations({
             if (fitBonus > 0) {
                 scoreDetails.push(`Fits target ${targetArchetype} comp`);
             }
-        } else if (targetArchetypeDef?.champion_pool) {
-            // Custom archetype: derive roles from pool and score by tag fit
-            const derived = deriveRolesFromPool(targetArchetypeDef.champion_pool);
+        } else if (customArchetypeDerivedRoles) {
+            // Custom archetype: use pre-calculated derived roles and score by tag fit
+            const derived = customArchetypeDerivedRoles;
             const champRoles = getCompositionRoles(champTags);
             let customFit = 0;
             for (const req of derived.required) {
@@ -382,21 +406,14 @@ function getRecommendations({
             }
 
             // Flex Mode Synergy
-            if (rosterConfig.gameMode === 'flex') {
-                const otherRoles = Object.keys(rosterConfig.roster).filter(r => r !== roleKey);
+            if (emptyAllyFavorites && emptyAllyFavorites.length > 0) {
                 let flexSynergyParams = 0;
 
-                for (const r of otherRoles) {
-                    const allyInRole = allies.find(a => (a.role?.toLowerCase() || '') === r);
-                    if (allyInRole && allyInRole.championId === 0) {
-                        const favs = rosterConfig.roster[r].favorites || [];
-                        for (const fav of favs) {
-                            const syn = champData.synergies?.[fav];
-                            if (syn && syn > 0.52) {
-                                flexSynergyParams++;
-                                score += (syn - 0.50) * 20;
-                            }
-                        }
+                for (const fav of emptyAllyFavorites) {
+                    const syn = champData.synergies?.[fav];
+                    if (syn && syn > 0.52) {
+                        flexSynergyParams++;
+                        score += (syn - 0.50) * 20;
                     }
                 }
 
@@ -514,6 +531,9 @@ function getCompositionAnalysis(teamRoles, queue = 'soloq') {
     const allChamps = getIdToNameMap(); // id -> name
     const allNames = Object.values(allChamps);
 
+    // Pre-calculate team names to avoid O(N) lookup in the inner loop
+    const currentTeamNames = new Set(Object.values(teamRoles).filter(Boolean));
+
     // Identify weak links (WR < 49% or just lowest in team)
     // For each member, try to find a better option
     for (const member of teamChampions) {
@@ -525,7 +545,7 @@ function getCompositionAnalysis(teamRoles, queue = 'soloq') {
         for (const candidateName of allNames) {
             if (candidateName === member.name) continue;
             // Check if candidate is already in team
-            if (Object.values(teamRoles).includes(candidateName)) continue;
+            if (currentTeamNames.has(candidateName)) continue;
 
             const candStats = getChampionStats(candidateName, member.role, queue);
             if (!candStats || candStats.matches < 50) continue; // Skip low sample size
