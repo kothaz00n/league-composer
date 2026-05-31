@@ -1,0 +1,3 @@
+## 2026-05-31 - [Hoist Invariants and Sets in Engine Hot Loops]
+**Learning:** In the core recommendation engine (`src/engine/recommend.js`), placing array transformations like `.map()`, `.filter()`, `Object.values().includes()`, or computationally heavy role derivations (`deriveRolesFromPool`) inside the hot loop (e.g., iterating through all champions) results in O(N*M) time complexity degradation, recalculating identical values thousands of times per UI update.
+**Action:** Always pre-calculate invariant array derivations outside of loops and convert arrays meant for membership checking into `Set`s for O(1) lookups to maintain responsive event loop execution.
