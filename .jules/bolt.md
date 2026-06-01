@@ -1,0 +1,3 @@
+## 2024-05-18 - [Optimize Object Spreading and Loop Invariants in Hot Paths]
+**Learning:** Object spreading (`{ ...objA, ...objB }`) inside nested loops over large collections (like champion lists) introduces significant overhead due to object allocation and garbage collection. Also, loop-invariant calculations within conditional branches inside hot paths scale with O(N*M) instead of O(N+M).
+**Action:** Replace object spreading with direct property lookup (`objA.prop ?? objB.prop`) in performance-critical areas. Extract loop-invariant operations and array allocations to variables before entering the loop to ensure they are calculated only once.
