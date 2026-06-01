@@ -198,6 +198,20 @@ function getRecommendations({
     // Flex Pick Strategy: Are we in early draft?
     const isEarlyDraft = allyCount <= 2;
 
+    // Pre-calculate empty ally favorites for flex mode to avoid O(N*M) in the loop
+    const emptyAllyFavorites = [];
+    if (rosterConfig && rosterConfig.gameMode === 'flex' && rosterConfig.roster) {
+        const roleKey = normalizedRole;
+        const otherRoles = Object.keys(rosterConfig.roster).filter(r => r !== roleKey);
+        for (const r of otherRoles) {
+            const allyInRole = allies.find(a => (a.role?.toLowerCase() || '') === r);
+            if (allyInRole && allyInRole.championId === 0) {
+                const favs = rosterConfig.roster[r].favorites || [];
+                emptyAllyFavorites.push(...favs);
+            }
+        }
+    }
+
     for (const champId of Object.keys(allChampions)) {
         const champName = allChampions[champId];
         const champData = countersDB[champName]; // Still use countersDB for specific counter/synergy data
@@ -240,12 +254,13 @@ function getRecommendations({
 
         // Merge dynamic counters from U.GG scraper
         const dynamicCounters = stats.counters || {};
-        const mergedCounters = { ...(champData.counters || {}), ...dynamicCounters };
 
         // ─── Counter bonus ──────────────────────────────────────
         for (const enemyName of enemyNames) {
-            if (mergedCounters[enemyName]) {
-                const winrate = mergedCounters[enemyName];
+            // Avoid object spread ({ ...static, ...dynamic }) in hot loop.
+            // Check dynamic first, fallback to static.
+            const winrate = dynamicCounters[enemyName] ?? champData.counters?.[enemyName];
+            if (winrate) {
                 const bonus = (winrate - 0.50) * 100 * counterSynergyMult;
                 score += bonus;
                 counterScore += bonus;
@@ -383,20 +398,13 @@ function getRecommendations({
 
             // Flex Mode Synergy
             if (rosterConfig.gameMode === 'flex') {
-                const otherRoles = Object.keys(rosterConfig.roster).filter(r => r !== roleKey);
                 let flexSynergyParams = 0;
 
-                for (const r of otherRoles) {
-                    const allyInRole = allies.find(a => (a.role?.toLowerCase() || '') === r);
-                    if (allyInRole && allyInRole.championId === 0) {
-                        const favs = rosterConfig.roster[r].favorites || [];
-                        for (const fav of favs) {
-                            const syn = champData.synergies?.[fav];
-                            if (syn && syn > 0.52) {
-                                flexSynergyParams++;
-                                score += (syn - 0.50) * 20;
-                            }
-                        }
+                for (const fav of emptyAllyFavorites) {
+                    const syn = champData.synergies?.[fav];
+                    if (syn && syn > 0.52) {
+                        flexSynergyParams++;
+                        score += (syn - 0.50) * 20;
                     }
                 }
 
