@@ -238,14 +238,19 @@ function getRecommendations({
         const champTier = stats.tier || '';
         const champPickRate = stats.pickRate || 0;
 
-        // Merge dynamic counters from U.GG scraper
+        // ⚡ Bolt Optimization: Avoid object spread in hot loop
+        // Prefer dynamic counter data over static using direct lookup
         const dynamicCounters = stats.counters || {};
-        const mergedCounters = { ...(champData.counters || {}), ...dynamicCounters };
+        const staticCounters = champData.counters || {};
 
         // ─── Counter bonus ──────────────────────────────────────
         for (const enemyName of enemyNames) {
-            if (mergedCounters[enemyName]) {
-                const winrate = mergedCounters[enemyName];
+            let winrate = dynamicCounters[enemyName];
+            if (winrate === undefined) {
+                winrate = staticCounters[enemyName];
+            }
+
+            if (winrate !== undefined) {
                 const bonus = (winrate - 0.50) * 100 * counterSynergyMult;
                 score += bonus;
                 counterScore += bonus;
